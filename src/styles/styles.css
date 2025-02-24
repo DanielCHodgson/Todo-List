@@ -1,0 +1,21 @@
+:root {
+    --primary-grey: #F4F5F7;
+    --primary-white: #FFFFFF;
+    --teritary-color: #D0DDD0;
+    --quaternary-color: #F0F0D7;
+}
+
+.app-wrapper {
+    width: 100%;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 400px auto;
+}
+
+.nav {
+    background-color: var(--primary-grey);
+}
+
+.content {
+    background-color: var(--primary-white);
+}
