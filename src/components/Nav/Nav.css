@@ -76,7 +76,6 @@
 }
 
 .nav-list {
-    width: 90%;
     place-content: center;
     display: flex;
     flex-direction: column;

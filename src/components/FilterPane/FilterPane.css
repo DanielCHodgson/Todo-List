@@ -1,0 +1,30 @@
+.search-container {
+    display: flex;
+    height: 3rem;
+    padding: 0 2rem;
+    align-items: center;
+}
+
+#search-input {
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 0.5rem;
+    height: 2.5rem;
+    outline: none;
+    border: none;
+    background-color: #F4F5F7;
+}
+
+
+.search-icon {
+    height: 2.5rem;
+    background-color: #F4F5F7;
+    fill: #FFFFFF;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon svg {
+    fill: #969696;
+    padding-right: 0.5rem;
+    width: 2rem;
+}
