@@ -3,7 +3,7 @@
     justify-content: flex-start;
     align-items: center;
     gap: 2rem;
-    padding: 2rem;
+    padding: 2rem 2rem 0 2rem ;
 }
 
 .new-task {
@@ -19,7 +19,7 @@
 }
 
 .new-task:hover {
-    opacity: 0.9;
+    opacity: 0.8;
 }
 
 
@@ -28,9 +28,9 @@
     font-size: 2rem;
 }
 
-
 .swim-lanes {
     width: 100%;
     height: calc(100vh - 10rem);
     padding: 0 2rem;
 }
+

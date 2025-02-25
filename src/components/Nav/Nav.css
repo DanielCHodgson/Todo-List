@@ -23,12 +23,15 @@
 
 .logo-img {
     height: 1rem;
+    cursor: pointer;
 }
 
 
-.search, .add {
+.search,
+.add {
     width: 1.5rem;
 }
+
 .logo-container>.title {
     font-family: "Roboto", serif;
     font-size: 2rem;
@@ -42,6 +45,7 @@
     width: 2.5rem;
     height: 2.5rem;
     fill: #FFFFFF;
+    cursor: pointer;
 }
 
 .right-nav {
@@ -92,6 +96,7 @@
     color: #5e5e5e;
     display: flex;
     gap: 1rem;
+    cursor: pointer;
 }
 
 .nav-list li:hover {
@@ -99,5 +104,5 @@
 }
 
 .nav-list li svg {
-  fill: #223558;
+    fill: #223558;
 }

@@ -24,7 +24,7 @@
     width: 350px;
     height: 500px;
     position: absolute;
-    bottom: 50px;
+    bottom: 25px;
     right: 200px;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
@@ -77,9 +77,9 @@ label {
     font-weight: bold;
 }
 
-#project-select {
+#new-task-form select {
     width: 100%;
-    padding: 10px 15px;
+    padding: 0.5rem 0.5rem;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #f9f9f9;
@@ -88,18 +88,26 @@ label {
 }
 
 
-#project-select:hover {
+#new-task-form select:hover {
     border-color: #aaa;
-    /* Slightly darker border on hover */
 }
 
-#project-select option {
+#new-task-form select option {
     padding: 10px;
     background-color: #fff;
 }
 
-#description {
+#summary {
     width: 100%;
+    height: 2.2rem;
+    padding: 0 0.5rem;
+    border-radius: 5px;
+}
+
+#description{
+    width: 100%;
+    min-height: 2rem;
+    border-radius: 5px;
     resize: none;
     field-sizing: content;
 }
@@ -112,4 +120,18 @@ label {
     align-items: center;
     gap: 0.5rem;
     box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.modal-footer button {
+    width: 4rem;
+    height: 2.3rem;
+    border: none;
+    border-radius: 8px;
+    color: #FFFFFF;
+    cursor: pointer;
+    background-color: #0049B0;
+}
+
+.modal-footer button:hover {
+    opacity: 0.8;
 }
