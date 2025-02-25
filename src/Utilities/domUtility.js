@@ -65,4 +65,24 @@ export default class Utility {
         return formGroup;
     }
 
+    static createTextAreaFormGroup(id, labelText, required, minLength, maxLength) {
+        const formGroup = document.createElement("div");
+        formGroup.classList.add("form-group");
+
+        const label = document.createElement("label");
+        label.setAttribute("for", id);
+        label.textContent = labelText;
+
+        const input = document.createElement("textarea");
+        input.id = id;
+        input.required = required;
+        input.minLength = minLength;
+        input.maxLength = maxLength;
+
+        formGroup.appendChild(label);
+        formGroup.appendChild(input);
+        return formGroup;
+
+    }
+
 }

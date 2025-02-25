@@ -1,5 +1,5 @@
 import "./FilterPane.css";
-import Utility from "../../Utilities/utility.js";
+import Utility from "../../Utilities/domUtility.js";
 
 export default function FilterPane() {
 

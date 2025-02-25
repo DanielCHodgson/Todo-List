@@ -1,4 +1,4 @@
-import Utility from "../../Utilities/utility.js";
+import Utility from "../../Utilities/domUtility.js";
 import "./NewTaskModal.css"
 
 export default function NewTaskModal() {
@@ -45,28 +45,17 @@ export default function NewTaskModal() {
         return Utility.createSelectFormGroup("priority", "Priority", options);
     }
 
-
     function createSummaryField() {
         return Utility.createInputFormGroup("summary", "Summary", true, "1", "40");
     }
 
-    function createDescriptionField() {
-        const formGroup = document.createElement("div");
-        formGroup.classList.add("form-group");
-
-        const label = document.createElement("label");
-        label.setAttribute("for", "description");
-        label.textContent = "Description";
-
-        const input = document.createElement("textarea");
-        input.id = "description";
-        input.maxLength = "500";
-
-        formGroup.appendChild(label);
-        formGroup.appendChild(input);
-        return formGroup;
+    function createDueDate() {
+        return Utility.createInputFormGroup("date", "Due date", true, "8", "10");
     }
 
+    function createDescriptionField() {
+        return Utility.createTextAreaFormGroup("description", "Description", false, 0, 500);
+    }
 
     function createFooter() {
         const footer = document.createElement("div");
@@ -85,10 +74,6 @@ export default function NewTaskModal() {
         return footer;
     }
 
-
-    function createDueDate() {
-        return Utility.createInputFormGroup("date", "Due date", true, "8", "10");
-    }
 
     function render() {
 
