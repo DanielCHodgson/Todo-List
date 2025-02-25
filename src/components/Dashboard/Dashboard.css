@@ -1,5 +1,29 @@
+.header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.new-task {
+    width: 5rem;
+    height: 2.5rem;
+    border: none;
+    border-radius: 8px;
+    background-color: #0049B0;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.new-task:hover {
+    opacity: 0.9;
+}
+
+
 .dashboard-title {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 2rem;
-    padding: 1rem 2rem;
 }

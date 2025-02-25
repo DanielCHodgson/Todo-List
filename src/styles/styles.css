@@ -9,7 +9,8 @@
     width: 100%;
     height: 100vh;
     display: grid;
-    grid-template-columns: 400px auto;
+    grid-template-columns: 350px auto;
+    position: relative;
 }
 
 .nav {
