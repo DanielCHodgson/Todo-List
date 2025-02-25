@@ -47,22 +47,7 @@ export default function NewTaskModal() {
 
 
     function createSummaryField() {
-        const formGroup = document.createElement("div");
-        formGroup.classList.add("form-group");
-
-        const label = document.createElement("label");
-        label.setAttribute("for", "summary");
-        label.textContent = "Summary";
-
-        const input = document.createElement("input");
-        input.id = "summary";
-        input.required = true;
-        input.minlength = "1";
-        input.maxlength = "25";
-
-        formGroup.appendChild(label);
-        formGroup.appendChild(input);
-        return formGroup;
+        return Utility.createInputFormGroup("summary", "Summary", true, "1", "40");
     }
 
     function createDescriptionField() {
@@ -100,6 +85,11 @@ export default function NewTaskModal() {
         return footer;
     }
 
+
+    function createDueDate() {
+        return Utility.createInputFormGroup("date", "Due date", true, "8", "10");
+    }
+
     function render() {
 
         const modal = document.createElement("div");
@@ -113,6 +103,7 @@ export default function NewTaskModal() {
         form.appendChild(createSummaryField());
         form.appendChild(createDescriptionField());
         form.appendChild(createPriorityField());
+        form.appendChild(createDueDate());
 
         modal.appendChild(form);
         modal.appendChild(createFooter());

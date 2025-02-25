@@ -26,7 +26,7 @@ export default class Utility {
         const formGroup = document.createElement("div");
         formGroup.classList.add("form-group");
 
-        const label = document.createElement("labeltext");
+        const label = document.createElement("label");
         label.setAttribute("for", id);
         label.textContent = labeltext;
 
@@ -42,6 +42,26 @@ export default class Utility {
 
         formGroup.appendChild(label);
         formGroup.appendChild(select);
+        return formGroup;
+    }
+
+
+    static createInputFormGroup(id, labelText, required, minLength, maxLength) {
+        const formGroup = document.createElement("div");
+        formGroup.classList.add("form-group");
+
+        const date = document.createElement("label");
+        date.setAttribute("for", id);
+        date.textContent = labelText;
+
+        const input = document.createElement("input");
+        input.id = id;
+        input.required = required;
+        input.minLength = minLength;
+        input.maxLength = maxLength;
+
+        formGroup.appendChild(date);
+        formGroup.appendChild(input);
         return formGroup;
     }
 
