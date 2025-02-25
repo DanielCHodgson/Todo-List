@@ -1,15 +1,37 @@
+#new-task-form::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+
+#new-task-form::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+
+#new-task-form::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border: 3px solid #f1f1f1;
+}
+
+
+#new-task-form::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+
 .create-task-modal {
-    width: 400px;
-    height: 600px;
+    width: 350px;
+    height: 500px;
     position: absolute;
     bottom: 50px;
     right: 200px;
-
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
-
-    font-family: Arial, Helvetica, sans-serif;
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+    font-family: Arial, Helvetica, sans-serif;
+    display: grid;
+    grid-template-rows: auto auto 1fr;
 }
 
 .modal-header {
@@ -17,6 +39,8 @@
     justify-content: space-between;
     padding: 1rem;
 }
+
+
 .modal-title {
     font-size: 1rem;
     font-weight: 600;
@@ -27,8 +51,25 @@
     gap: 0.5rem;
 }
 
+.icon-row svg {
+    cursor: pointer;
+}
+
+.icon-row svg:hover {
+    opacity: 0.5;
+}
+
 #new-task-form {
-  
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
 }
 
 label {
@@ -44,37 +85,31 @@ label {
     background-color: #f9f9f9;
     font-size: 16px;
     color: #333;
-    appearance: none; 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: border-color 0.3s, box-shadow 0.3s ease; 
 }
 
-#project-select:focus {
-    border-color: #007bff;
-    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3); 
-    outline: none;
-}
 
 #project-select:hover {
-    border-color: #aaa; /* Slightly darker border on hover */
+    border-color: #aaa;
+    /* Slightly darker border on hover */
 }
 
 #project-select option {
     padding: 10px;
     background-color: #fff;
-    color: #333;
 }
 
-#project-select option:disabled {
-    color: #888;
+#description {
+    width: 100%;
+    resize: none;
+    field-sizing: content;
 }
 
-
-
-
-
-
-#new-task-form {
-
-    padding: 1rem;
+.modal-footer {
+    padding: 0.5rem;
+    align-self: end;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 -2px 2px rgba(0, 0, 0, 0.1);
 }

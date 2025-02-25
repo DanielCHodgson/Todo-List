@@ -1,6 +1,5 @@
-import { se } from "date-fns/locale";
 import "./FilterPane.css";
-import Utility from "../../Utility/utility";
+import Utility from "../../Utilities/utility.js";
 
 export default function FilterPane() {
 
