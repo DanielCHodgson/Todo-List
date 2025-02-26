@@ -3,26 +3,23 @@
     height: 12px;
 }
 
-
 #new-task-form::-webkit-scrollbar-track {
     background-color: #f1f1f1;
 }
-
 
 #new-task-form::-webkit-scrollbar-thumb {
     background-color: #888;
     border: 3px solid #f1f1f1;
 }
 
-
 #new-task-form::-webkit-scrollbar-thumb:hover {
     background-color: #555;
 }
 
-
 .create-task-modal {
     width: 350px;
     height: 500px;
+    background-color: #FFFFFF;
     position: absolute;
     bottom: 25px;
     right: 200px;
@@ -39,7 +36,6 @@
     justify-content: space-between;
     padding: 1rem;
 }
-
 
 .modal-title {
     font-size: 1rem;
@@ -110,6 +106,7 @@ select {
 #description{
     width: 100%;
     min-height: 4.5rem;
+    padding: 0.5rem;
     border-radius: 5px;
     resize: none;
     field-sizing: content;

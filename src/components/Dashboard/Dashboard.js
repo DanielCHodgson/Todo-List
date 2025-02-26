@@ -1,13 +1,11 @@
 import "./Dashboard.css"
 import FilterPane from "../FilterPane/FilterPane";
-import NewTaskModal from "../NewTaskModal/NewTaskModal";
 import SwimLane from "../SwimLane/SwimLane";
 
-export default function Dashboard() {
+export default function Dashboard(events) {
 
     const container = document.querySelector(".content");
     const filterPane = FilterPane();
-    const newTaskModal = NewTaskModal();
     const lane = SwimLane();
 
     function createHeader(title) {
@@ -24,17 +22,17 @@ export default function Dashboard() {
         const newTaskBtn = document.createElement("button");
         newTaskBtn.classList.add("new-task");
         newTaskBtn.textContent = "Create";
+
         newTaskBtn.addEventListener("click", handleNewTaskClick);
 
         header.appendChild(newTaskBtn);
-
         container.appendChild(header);
     }
 
 
     function handleNewTaskClick() {
         if (!document.querySelector("create-task-modal")) {
-            newTaskModal.render();
+            events.emit("renderModal", {})
         }
     }
 
@@ -44,7 +42,6 @@ export default function Dashboard() {
         const swimLanes = document.createElement("div");
         swimLanes.classList.add("swim-lanes");
         lane.render(swimLanes);
-
         container.appendChild(swimLanes);
     }
 
@@ -53,6 +50,7 @@ export default function Dashboard() {
         createHeader("Board")
         filterPane.render(container);
         renderSwimLanes();
+        events.emit("han")
     }
 
     return {
