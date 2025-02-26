@@ -1,4 +1,4 @@
-export default class ToDoItem {
+export default class Task {
 
     #id
     #project;

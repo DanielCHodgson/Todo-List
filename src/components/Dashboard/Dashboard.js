@@ -36,7 +36,6 @@ export default function Dashboard(events) {
         }
     }
 
-
     function renderSwimLanes() {
 
         const swimLanes = document.createElement("div");
@@ -44,7 +43,6 @@ export default function Dashboard(events) {
         lane.render(swimLanes);
         container.appendChild(swimLanes);
     }
-
 
     function render() {
         createHeader("Board")
