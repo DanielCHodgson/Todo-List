@@ -1,29 +1,28 @@
 export default class TaskManager {
 
     #tasks;
-    #status;
+    #index;
 
-    constructor(status) {
-        this.#status = status;
+    constructor() {
         this.#tasks = [];
+        this.#index = 1;
     }
 
     addTask(task) {
-        if (task.status === this.#status) {
-            const exists = this.#tasks.some(t => t.id === task.id);
-            if (!exists) {
-                this.#tasks.push(task);
-            }
+
+        console.log(task)
+        const exists = this.#tasks.some(task => task.id === task.id);
+        if (!exists) {
+            this.#tasks.push(task);
+            this.#index += 1;
         }
     }
 
     addTasks(tasks) {
         tasks.forEach(task => {
-            const exists = this.#tasks.some(t => t.id === task.id);
+            const exists = this.#tasks.some(task => task.id === task.id);
             if (!exists) {
-                if (task.status === this.#status) {
                     this.#tasks.push(task);
-                }
             }
         });
     }
@@ -37,6 +36,10 @@ export default class TaskManager {
     }
 
     getTasks() {
-        return this.getTasks;
+        return this.#tasks;
+    }
+
+    getIndex() {
+        return this.#index;
     }
 }

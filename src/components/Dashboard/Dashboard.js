@@ -7,7 +7,6 @@ export default function Dashboard(events) {
 
     const container = document.querySelector(".content");
     const filterPane = FilterPane();
-    const lane = new SwimLane();
 
     function createHeader(title) {
 
@@ -34,15 +33,16 @@ export default function Dashboard(events) {
 
         const swimLanes = document.createElement("div");
         swimLanes.classList.add("swim-lanes");
-        lane.render(swimLanes);
         container.appendChild(swimLanes);
+
+        const lane = new SwimLane(swimLanes, events);
+        lane.render(container, events);
     }
 
     function render() {
         createHeader("Board")
         filterPane.render(container);
         renderSwimLanes();
-        events.emit("han")
     }
 
     return {
