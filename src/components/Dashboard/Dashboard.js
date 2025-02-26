@@ -1,30 +1,27 @@
 import "./Dashboard.css"
 import FilterPane from "../FilterPane/FilterPane";
-import SwimLane from "../SwimLane/SwimLane";
+import SwimLane from "../../Classes/SwimLane/SwimLane";
+import Utility from "../../Utilities/domUtility";
 
 export default function Dashboard(events) {
 
     const container = document.querySelector(".content");
     const filterPane = FilterPane();
-    const lane = SwimLane();
+    const lane = new SwimLane();
+
+
 
     function createHeader(title) {
 
-        const header = document.createElement("div")
-        header.classList.add("header");
+        const header = Utility.createElement("div", "header");
 
-        const heading = document.createElement("h2");
-        heading.classList.add("dashboard-title");
-        heading.textContent = title;
-        container.appendChild(heading);
-        header.appendChild(heading);
-
-        const newTaskBtn = document.createElement("button");
-        newTaskBtn.classList.add("new-task");
-        newTaskBtn.textContent = "Create";
-
+        const heading = Utility.createElement("h2", "dashboard-title", title)
+   
+        const newTaskBtn = Utility.createElement("button", "new-task", "create");
         newTaskBtn.addEventListener("click", handleNewTaskClick);
 
+        
+        header.appendChild(heading);
         header.appendChild(newTaskBtn);
         container.appendChild(header);
     }

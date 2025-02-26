@@ -19,7 +19,7 @@ export default class Task {
     get id() {
         return this.#id;
     }
-    
+
     set id(value) {
         this.#id = value;
     }
@@ -27,7 +27,7 @@ export default class Task {
     get project() {
         return this.#project;
     }
-    
+
     set project(value) {
         this.#project = value;
     }
@@ -35,7 +35,7 @@ export default class Task {
     get summary() {
         return this.#summary;
     }
-    
+
     set summary(value) {
         this.#summary = value;
     }
@@ -43,7 +43,7 @@ export default class Task {
     get description() {
         return this.#description;
     }
-    
+
     set description(value) {
         this.#description = value;
     }
@@ -51,7 +51,7 @@ export default class Task {
     get priority() {
         return this.#priority;
     }
-    
+
     set priority(value) {
         this.#priority = value;
     }
@@ -59,7 +59,7 @@ export default class Task {
     get dueDate() {
         return this.#dueDate;
     }
-    
+
     set dueDate(value) {
         this.#dueDate = value;
     }

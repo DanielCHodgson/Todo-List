@@ -1,5 +1,18 @@
 export default class Utility {
 
+
+    static createElement(tag, className, textContent = "", attributes = {}) {
+        const element = document.createElement(tag);
+        if (className) element.classList.add(className);
+        if (textContent) element.textContent = textContent;
+        
+        for (const [key, value] of Object.entries(attributes)) {
+          element.setAttribute(key, value);
+        }
+      
+        return element;
+      }
+
     static renderSvg(svgString) {
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = svgString;
