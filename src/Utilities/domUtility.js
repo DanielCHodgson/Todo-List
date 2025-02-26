@@ -19,7 +19,6 @@ export default class Utility {
         return tempDiv.firstChild;
     }
 
-
     static createImg(imgSrc, imgClass, width, height) {
         const img = document.createElement("img");
         img.classList.add(imgClass);
@@ -28,10 +27,6 @@ export default class Utility {
         img.style.height = height;
 
         return img;
-    }
-
-    static printHey() {
-        console.log("HEY!")
     }
 
     static createSelectFormGroup(id, labeltext, options) {
@@ -57,7 +52,6 @@ export default class Utility {
         formGroup.appendChild(select);
         return formGroup;
     }
-
 
     static createInputFormGroup(id, labelText, required, minLength, maxLength) {
         const formGroup = document.createElement("div");
@@ -94,8 +88,8 @@ export default class Utility {
 
         formGroup.appendChild(label);
         formGroup.appendChild(input);
-        return formGroup;
 
+        return formGroup;
     }
 
 }

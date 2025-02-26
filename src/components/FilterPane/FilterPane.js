@@ -9,18 +9,17 @@ export default function FilterPane() {
         const filterPane = Utility.createElement("div", "filter-pane");
 
         const searchContainer = Utility.createElement("div", "search-container");
-      
+
         const searchInput = Utility.createElement("input", "", "", { id: "search-input", type: "text" });
         searchContainer.appendChild(searchInput);
-      
+
         const searchIcon = Utility.createElement("div", "search-icon");
-        searchIcon.append(Utility.renderSvg(img)); // Assuming `img` is defined somewhere
+        searchIcon.append(Utility.renderSvg(img));
         searchContainer.appendChild(searchIcon);
-      
+
         filterPane.appendChild(searchContainer);
         parent.appendChild(filterPane);
-      }
-
+    }
 
     return {
         render

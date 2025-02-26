@@ -5,7 +5,7 @@ import Utility from "../../Utilities/domUtility";
 export default class SwimLane {
 
     #taskManager;
- 
+
     constructor() {
         this.#taskManager = new TaskManager();
 
@@ -16,10 +16,8 @@ export default class SwimLane {
         parent.appendChild(swimLane);
     }
 
-
     get taskManager() {
         return this.#taskManager;
     }
-    
 
 }

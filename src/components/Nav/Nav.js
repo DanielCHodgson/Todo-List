@@ -32,7 +32,6 @@ export default function nav() {
         leftNav.appendChild(iconsContainer);
     }
 
-
     function renderHeader() {
         const navHeader = Utility.createElement("div", "nav-header");
 
@@ -44,7 +43,6 @@ export default function nav() {
         navHeader.append(icon, name, type);
         rightNav.appendChild(navHeader);
     }
-
 
     function renderNavList() {
 
@@ -72,10 +70,8 @@ export default function nav() {
     }
 
     function render() {
-
         renderLeftNav();
         renderRightNav();
-
     }
 
 

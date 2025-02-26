@@ -9,8 +9,6 @@ export default function Dashboard(events) {
     const filterPane = FilterPane();
     const lane = new SwimLane();
 
-
-
     function createHeader(title) {
 
         const header = Utility.createElement("div", "header");
@@ -20,7 +18,6 @@ export default function Dashboard(events) {
         const newTaskBtn = Utility.createElement("button", "new-task", "create");
         newTaskBtn.addEventListener("click", handleNewTaskClick);
 
-        
         header.appendChild(heading);
         header.appendChild(newTaskBtn);
         container.appendChild(header);
