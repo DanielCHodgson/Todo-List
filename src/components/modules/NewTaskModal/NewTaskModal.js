@@ -1,5 +1,5 @@
-import Task from "../../Classes/Tasks/Task.js";
-import Utility from "../../Utilities/domUtility.js";
+import Task from "../../../data/Tasks/Task.js";
+import Utility from "../../../Utilities/domUtility.js";
 import "./NewTaskModal.css"
 
 export default function NewTaskModal(events) {
