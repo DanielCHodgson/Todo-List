@@ -1,4 +1,4 @@
-export default class TaskManager {
+export default class TaskService {
 
     #tasks;
     #index;
@@ -8,15 +8,16 @@ export default class TaskManager {
         this.#index = 1;
     }
 
-    addTask(task) {
-        const exists = this.#tasks.some(t => t.id === task.id);
+    addTask(newTask) {
+        const exists = this.#tasks.some(task => task.getId() === newTask.getId());
         if (!exists) {
-            this.#tasks.push(task);
+            this.#tasks.push(newTask);
             this.#index += 1;
             console.log(this.#tasks)
         }
     }
 
+    /*
     addTasks(tasks) {
         tasks.forEach(task => {
             const exists = this.#tasks.some(task => task.id === task.id);
@@ -25,6 +26,7 @@ export default class TaskManager {
             }
         });
     }
+    */
 
     removeTask(id) {
         this.#tasks = this.#tasks.filter(task => task.id !== id);

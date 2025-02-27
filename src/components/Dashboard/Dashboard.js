@@ -35,7 +35,7 @@ export default function Dashboard(events) {
         swimLanes.classList.add("swim-lanes");
         container.appendChild(swimLanes);
 
-        const lane = new SwimLane(swimLanes, events);
+        const lane = new SwimLane(swimLanes, events, "ready-to-start");
         lane.render(container, events);
     }
 
