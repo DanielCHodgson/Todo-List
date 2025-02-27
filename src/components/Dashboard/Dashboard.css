@@ -32,5 +32,6 @@
     width: 100%;
     height: calc(100vh - 10rem);
     padding: 0 2rem;
+    overflow-y: auto;
 }
 

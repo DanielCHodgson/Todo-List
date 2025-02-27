@@ -1,9 +1,10 @@
 .task-card {
-    height: 180px;
-    width: 280px;
+    height: 125px;
+    width: 300px;
     background-color: #FFFFFF;
     border-left: 1rem solid #33dd11;
     border-radius: 10px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
     padding: 1rem;
     font-family: Arial, Helvetica, sans-serif;
     display: grid;
