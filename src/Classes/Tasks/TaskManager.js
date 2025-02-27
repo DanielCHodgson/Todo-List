@@ -9,12 +9,11 @@ export default class TaskManager {
     }
 
     addTask(task) {
-
-        console.log(task)
-        const exists = this.#tasks.some(task => task.id === task.id);
+        const exists = this.#tasks.some(t => t.id === task.id);
         if (!exists) {
             this.#tasks.push(task);
             this.#index += 1;
+            console.log(this.#tasks)
         }
     }
 

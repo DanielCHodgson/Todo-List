@@ -2,4 +2,10 @@
     background-color: #F4F5F7;
     width: 300px;
     height: 100%;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
 }

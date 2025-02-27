@@ -12,14 +12,12 @@ export default class TaskCard {
     }
 
     createHeaderElement() {
-        const header = createElement("div", "task-header");
+        const header = Utility.createElement("div", "task-header");
 
         const id = Utility.createElement("h3", "task-id", this.#task.getId());
-        const assignee = Utility.createElement("img", "task-assignee", "", { src: this.#task.getAssignee() });
-
+        //const assignee = Utility.createElement("img", "task-assignee", "", { src: this.#task.getAssignee() });
         header.appendChild(id);
-        header.appendChild(assignee);
-    
+        //header.appendChild(assignee);
         return header;
     }
 
@@ -61,5 +59,10 @@ export default class TaskCard {
   
     destroy() {
       this.#element.remove();
+    }
+
+
+    getCard() {
+      return this.#element;
     }
   }

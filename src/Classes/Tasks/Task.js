@@ -16,51 +16,51 @@ export default class Task {
         this.#dueDate = dueDate;
     }
 
-    get id() {
+    getId() {
         return this.#id;
     }
 
-    set id(value) {
+    setId(value) {
         this.#id = value;
     }
 
-    get project() {
+    getProject() {
         return this.#project;
     }
 
-    set project(value) {
+    setProject(value) {
         this.#project = value;
     }
 
-    get summary() {
+    getSummary() {
         return this.#summary;
     }
 
-    set summary(value) {
+    setSummary(value) {
         this.#summary = value;
     }
 
-    get description() {
+    getDescription() {
         return this.#description;
     }
 
-    set description(value) {
+    setDescription(value) {
         this.#description = value;
     }
 
-    get priority() {
+    getPriority() {
         return this.#priority;
     }
 
-    set priority(value) {
+    setPriority(value) {
         this.#priority = value;
     }
 
-    get dueDate() {
+    getDueDate() {
         return this.#dueDate;
     }
 
-    set dueDate(value) {
+    setDueDate(value) {
         this.#dueDate = value;
     }
 }
