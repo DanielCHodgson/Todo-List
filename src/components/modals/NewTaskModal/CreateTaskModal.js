@@ -41,7 +41,7 @@ export default function NewTaskModal(events) {
     function createForm() {
         form = Utility.createElement("form", null, null, { id: "new-task-form" });
         form.appendChild(Utility.createSelectFormGroup("project", "Project", ["My project"]));
-        form.appendChild(Utility.createInputFormGroup("summary", "Summary", true, "1", "40"));
+        form.appendChild(Utility.createInputFormGroup("summary", "Summary", true, 1, 35));
         form.appendChild(Utility.createTextAreaFormGroup("description", "Description", false, 0, 500));
         form.appendChild(Utility.createSelectFormGroup("priority", "Priority", ["P1", "P2", "P3", "P4", "P5"]));
         form.appendChild(Utility.createInputFormGroup("date", "Due date", true, "8", "10"));

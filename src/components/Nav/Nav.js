@@ -1,9 +1,8 @@
 import "./Nav.css";
 import logoIcon from "../../res/icons/giro-logo-white.svg";
-import teamIcon from "../../res/images/team-icon.png";
 import Utility from "../../Utilities/domUtility";
 
-export default function nav() {
+export default function nav(project) {
     const nav = document.querySelector(".nav");
     const leftNav = nav.querySelector(".left-nav");
     const rightNav = nav.querySelector(".right-nav");
@@ -35,10 +34,10 @@ export default function nav() {
     function renderHeader() {
         const navHeader = Utility.createElement("div", "nav-header");
 
-        const icon = Utility.createImg(teamIcon, "team-icon", "3rem", "3rem");
+        const icon = Utility.createImg(project.getIcon(), "team-icon", "3rem", "3rem");
 
-        const name = Utility.createElement("p", "project-name", "Teams in Space");
-        const type = Utility.createElement("p", "project-type", "Software project");
+        const name = Utility.createElement("p", "project-name", project.getName());
+        const type = Utility.createElement("p", "project-type", `${project.getType()} project`);
 
         navHeader.append(icon, name, type);
         rightNav.appendChild(navHeader);

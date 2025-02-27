@@ -1,8 +1,8 @@
 :root {
-    --primary-grey: #F4F5F7;
-    --primary-white: #FFFFFF;
-    --teritary-color: #D0DDD0;
-    --quaternary-color: #F0F0D7;
+    --primary-light: #0049B0;
+    --secondary-light: #F4F5F7;
+    --tertiary-light: #FFFFFF;
+    --icons-light: #223558;
 }
 
 .app-wrapper {
@@ -14,10 +14,10 @@
 }
 
 .nav {
-    background-color: var(--primary-grey);
+    background-color: var(--secondary-grey);
 }
 
 .content {
     height: 100%;
-    background-color: var(--primary-white);
+    background-color: var(--tertiary-light);
 }

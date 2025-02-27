@@ -1,21 +1,22 @@
 import "./SwimLane.css";
-import TaskService from "../../data/Models/TaskService";
 import Utility from "../../Utilities/domUtility";
 import Task from "../../data/Models/TaskModel";
 import TaskCard from "../TaskCard/TaskCard";
 
 export default class SwimLane {
 
-    #taskManager;
+    #parent
+    #taskService;
     #container;
     #status;
 
-    constructor(parent, events, status) {
-        this.parent = parent;
+    constructor(parent, taskService, events, status) {
+        this.#parent = parent;
+        this.#taskService = taskService;
         this.#status = status;
         this.#container = Utility.createElement("div", "swim-lane");
         this.#container.dataset.status = this.#status;
-        this.#taskManager = new TaskService();
+
         events.on("createTask", (data) => this.addNewTask(data))
     }
 
@@ -26,18 +27,19 @@ export default class SwimLane {
 
     addNewTask(data) {
         const { project, summary, description, priority, date } = data
-        const task = new Task(this.#taskManager.getIndex(), project, summary, description, priority, date);
-        console.log(task)
-        this.#taskManager.addTask(task);
+        const id = `${project}-${this.#taskService.getIndex()}`;
+        const task = new Task(id, project, summary, description, priority, date);
+        this.#taskService.addTask(task);
         this.render();
     }
 
     render() {
         this.destroy();
-        this.parent.appendChild(this.#container);
-        this.#taskManager.getTasks().forEach(task => {
-          this.#container.appendChild(this.createCard(task));
+        this.#taskService.getTasks().forEach(task => {
+            this.#container.appendChild(this.createCard(task));
         })
+        console.log(this.#container)
+        this.#parent.appendChild(this.#container);
     }
 
     destroy() {
@@ -45,7 +47,7 @@ export default class SwimLane {
     }
 
     get taskManager() {
-        return this.#taskManager;
+        return this.#taskService;
     }
 
 }

@@ -1,7 +1,7 @@
 .task-card {
     height: 125px;
     width: 300px;
-    background-color: #FFFFFF;
+    background-color: var(--tertiary-light);
     border-left: 1rem solid #33dd11;
     border-radius: 10px;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
@@ -10,6 +10,7 @@
     display: grid;
     grid-template-rows: auto 1fr auto;
     gap: 0.5rem;
+    cursor: pointer;
 }
 
 .task-header, .task-footer {

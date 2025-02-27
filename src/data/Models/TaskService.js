@@ -13,7 +13,6 @@ export default class TaskService {
         if (!exists) {
             this.#tasks.push(newTask);
             this.#index += 1;
-            console.log(this.#tasks)
         }
     }
 
