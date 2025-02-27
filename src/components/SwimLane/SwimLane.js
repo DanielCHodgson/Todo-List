@@ -1,7 +1,7 @@
 import "./SwimLane.css";
-import TaskManager from "../../../data/Tasks/TaskManager";
-import Utility from "../../../Utilities/domUtility";
-import Task from "../../../data/Tasks/Task";
+import TaskManager from "../../data/Models/TaskService";
+import Utility from "../../Utilities/domUtility";
+import Task from "../../data/Models/TaskModel";
 import TaskCard from "../TaskCard/TaskCard";
 
 export default class SwimLane {

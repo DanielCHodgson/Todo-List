@@ -1,9 +1,9 @@
 import "./styles/reset-modern.css";
 import "./styles/styles.css";
-import nav from "./components/modules/Nav/Nav.js"
-import dashboard from "./components/modules/Dashboard/Dashboard.js";
+import nav from "./components/Nav/Nav.js"
+import dashboard from "./components/Dashboard/Dashboard.js";
 import EventBus from "./Utilities/EventBus.js";
-import NewTaskModal from "./components/modules/NewTaskModal/NewTaskModal.js";
+import NewTaskModal from "./components/modals/NewTaskModal/CreateTaskModal.js";
 
 const events = new EventBus();
 

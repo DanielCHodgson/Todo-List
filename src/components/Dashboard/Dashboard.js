@@ -1,7 +1,7 @@
 import "./Dashboard.css"
 import FilterPane from "../FilterPane/FilterPane";
-import SwimLane from "../../classes/SwimLane/SwimLane";
-import Utility from "../../../Utilities/domUtility";
+import SwimLane from "../SwimLane/SwimLane";
+import Utility from "../../Utilities/domUtility";
 
 export default function Dashboard(events) {
 

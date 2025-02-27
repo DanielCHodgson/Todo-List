@@ -1,5 +1,5 @@
 import "./TaskCard.css"
-import Utility from "../../../Utilities/domUtility";
+import Utility from "../../Utilities/domUtility";
 
 export default class TaskCard {
 
