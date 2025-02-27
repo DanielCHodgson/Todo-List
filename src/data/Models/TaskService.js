@@ -16,23 +16,25 @@ export default class TaskService {
         }
     }
 
-    /*
     addTasks(tasks) {
         tasks.forEach(task => {
-            const exists = this.#tasks.some(task => task.id === task.id);
+            const exists = this.#tasks.some(task => getId() === task.id);
             if (!exists) {
                     this.#tasks.push(task);
             }
         });
     }
-    */
 
     removeTask(id) {
-        this.#tasks = this.#tasks.filter(task => task.id !== id);
+        this.#tasks = this.#tasks.filter(task => task.getId() !== id);
     }
 
     getTaskById(id) {
-        return this.#tasks.find(task => task.id === id);
+        return this.#tasks.find(task => task.getId() === id);
+    }
+
+    getTasksByStatus(status) {
+        return this.#tasks.filter(task => task.getStatus() === status);
     }
 
     getTasks() {

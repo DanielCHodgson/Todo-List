@@ -44,6 +44,7 @@ export default function NewTaskModal(events) {
         form.appendChild(Utility.createInputFormGroup("summary", "Summary", true, 1, 35));
         form.appendChild(Utility.createTextAreaFormGroup("description", "Description", false, 0, 500));
         form.appendChild(Utility.createSelectFormGroup("priority", "Priority", ["P1", "P2", "P3", "P4", "P5"]));
+        form.appendChild(Utility.createSelectFormGroup("status", "Status", ["ready to start", "in progress", "in review", "closed"]));
         form.appendChild(Utility.createInputFormGroup("date", "Due date", true, "8", "10"));
 
         return form;
@@ -72,7 +73,13 @@ export default function NewTaskModal(events) {
             description: form.querySelector("#description").value,
             priority: form.querySelector("#priority").value,
             date: form.querySelector("#date").value,
+            status: form.querySelector("#status").value
         }
+
+        console.log("field value");
+        console.log(form.querySelector("#status").value)
+        console.log("data object");
+        console.log({data});
 
         events.emit("createTask", data);
         destroy();

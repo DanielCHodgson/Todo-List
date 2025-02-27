@@ -9,15 +9,16 @@ export default class SwimLane {
     #taskService;
     #container;
     #status;
+    #tasks;
 
-    constructor(parent, taskService, events, status) {
+    constructor(parent, taskService, status) {
         this.#parent = parent;
         this.#taskService = taskService;
         this.#status = status;
+        this.#tasks = this.#taskService.getTasksByStatus(status);
+
         this.#container = Utility.createElement("div", "swim-lane");
         this.#container.dataset.status = this.#status;
-
-        events.on("createTask", (data) => this.addNewTask(data))
     }
 
     createHeader() {
@@ -28,20 +29,15 @@ export default class SwimLane {
         return header;
     }
 
-
-    createCardList() {
-
-    }
-
     createCard(task) {
         const card = new TaskCard(task);
         return card.getCard();
     }
 
     addNewTask(data) {
-        const { project, summary, description, priority, date } = data
+        const { project, summary, description, priority, date, status } = data
         const id = `${project}-${this.#taskService.getIndex()}`;
-        const task = new Task(id, project, summary, description, priority, date);
+        const task = new Task(id, project, summary, description, priority, date, status);
         this.#taskService.addTask(task);
         this.render();
     }
@@ -51,7 +47,7 @@ export default class SwimLane {
         this.#container.appendChild(this.createHeader())
         const cardsList = Utility.createElement("div", "card-list")
 
-        this.#taskService.getTasks().forEach(task => {
+        this.#taskService.getTasksByStatus(this.#status).forEach(task => {
             cardsList.appendChild(this.createCard(task));
         })
 
@@ -63,8 +59,12 @@ export default class SwimLane {
         this.#container.innerHTML = "";
     }
 
-    get taskManager() {
+    geTaskManager() {
         return this.#taskService;
+    }
+
+    getStatus() {
+        return this.#status;
     }
 
 }

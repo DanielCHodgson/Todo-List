@@ -6,14 +6,16 @@ export default class Task {
     #description;
     #priority;
     #dueDate;
+    #status
 
-    constructor(id, project, summary, description, priority, dueDate) {
+    constructor(id, project, summary, description, priority, dueDate, status) {
         this.#id = id;
         this.#project = project;
         this.#summary = summary;
         this.#description = description;
         this.#priority = priority;
         this.#dueDate = dueDate;
+        this.#status = status;
     }
 
     getId() {
@@ -62,5 +64,13 @@ export default class Task {
 
     setDueDate(value) {
         this.#dueDate = value;
+    }
+
+    getStatus() {
+        return this.#status;
+    }
+    
+    setStatus(value) {
+        this.#status = value;
     }
 }

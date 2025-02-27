@@ -7,19 +7,26 @@ export default function Dashboard(project, events) {
 
     const container = document.querySelector(".content");
     const filterPane = FilterPane();
+    let lanes = [];
+
+    events.on("createTask", (data) => addTaskToSwimLane(data));
 
     function createHeader(title) {
-
         const header = Utility.createElement("div", "header");
         const heading = Utility.createElement("h2", "dashboard-title", title)
         const newTaskBtn = Utility.createElement("button", "new-task", "create");
         newTaskBtn.addEventListener("click", handleNewTaskClick);
-
         header.appendChild(heading);
         header.appendChild(newTaskBtn);
         return header;
     }
 
+    function addTaskToSwimLane(data) {
+        console.log("after emit");
+        console.log({data});
+        const lane = lanes.find(lane => data.status === lane.getStatus());
+        lane.addNewTask(data);
+    }
 
     function handleNewTaskClick() {
         if (!document.querySelector("create-task-modal")) {
@@ -28,12 +35,15 @@ export default function Dashboard(project, events) {
     }
 
     function createSwimLanes() {
-
         const swimLanes = document.createElement("div");
-        swimLanes.classList.add("swim-lanes");
+        swimLanes.classList.add("swim-lane-list");
 
-        const lane = new SwimLane(swimLanes, project.getTaskService(), events, "ready-to-start");
-        lane.render();
+        lanes.push(
+            new SwimLane(swimLanes, project.getTaskService(), "ready to start"),
+            new SwimLane(swimLanes, project.getTaskService(), "in progress"),
+            new SwimLane(swimLanes, project.getTaskService(), "in review"),
+            new SwimLane(swimLanes, project.getTaskService(), "closed"),
+        );
 
         return swimLanes;
     }
@@ -43,6 +53,7 @@ export default function Dashboard(project, events) {
         dashboard.appendChild(createHeader("Board"));
         filterPane.render(dashboard);
         dashboard.appendChild(createSwimLanes());
+        lanes.forEach(lane => lane.render())
         container.appendChild(dashboard);
     }
 
