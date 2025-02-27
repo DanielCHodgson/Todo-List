@@ -5,23 +5,19 @@ import TaskCard from "../TaskCard/TaskCard";
 
 export default class SwimLane {
 
-    #parent
     #taskService;
     #container;
     #status;
-    #tasks;
+    #parent = null;
 
-    constructor(parent, taskService, status) {
-        this.#parent = parent;
+    constructor(taskService, status) {
         this.#taskService = taskService;
         this.#status = status;
-        this.#tasks = this.#taskService.getTasksByStatus(status);
-
         this.#container = Utility.createElement("div", "swim-lane");
         this.#container.dataset.status = this.#status;
     }
 
-    createHeader() {
+    #createHeader() {
         const header = Utility.createElement("div", "lane-header");
         const titleStr = this.#status.replace(/-/g, " ")
         const title = Utility.createElement("h3", "", titleStr);
@@ -29,42 +25,58 @@ export default class SwimLane {
         return header;
     }
 
-    createCard(task) {
-        const card = new TaskCard(task);
-        return card.getCard();
+    #createCard(task) {
+        return new TaskCard(task).getCard();
+    }
+
+    #renderCards() {
+        const cardsList = Utility.createElement("div", "card-list");
+        const tasks = this.#taskService.getTasksByStatus(this.#status);
+        tasks.forEach(task => cardsList.appendChild(this.#createCard(task)));
+        return cardsList;
     }
 
     addNewTask(data) {
-        const { project, summary, description, priority, date, status } = data
+
+      
+        const { project, summary, description, priority, date, status } = data;
         const id = `${project}-${this.#taskService.getIndex()}`;
         const task = new Task(id, project, summary, description, priority, date, status);
         this.#taskService.addTask(task);
-        this.render();
+        
+        this.#container.querySelector(".card-list").appendChild(this.#createCard(task));
     }
 
-    render() {
-        this.destroy();
-        this.#container.appendChild(this.createHeader())
-        const cardsList = Utility.createElement("div", "card-list")
-
-        this.#taskService.getTasksByStatus(this.#status).forEach(task => {
-            cardsList.appendChild(this.createCard(task));
-        })
-
-        this.#container.appendChild(cardsList);
-        this.#parent.appendChild(this.#container);
+    render(parent) {
+        this.#container.innerHTML = "";
+        this.#container.appendChild(this.#createHeader());
+        this.#container.appendChild(this.#renderCards());
+        parent.appendChild(this.#container);
+        this.#parent = parent;
     }
 
     destroy() {
-        this.#container.innerHTML = "";
+        if (this.#parent && this.#container) {
+            this.#parent.removeChild(this.#container);
+            this.#parent = null;
+        }
     }
 
-    geTaskManager() {
+    getTaskService() {
         return this.#taskService;
     }
 
     getStatus() {
         return this.#status;
     }
+
+    getParent() {
+        return this.#parent;
+    }
+    
+    setParent(value) {
+        this.#parent = value;
+    }
+
 
 }

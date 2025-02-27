@@ -76,11 +76,6 @@ export default function NewTaskModal(events) {
             status: form.querySelector("#status").value
         }
 
-        console.log("field value");
-        console.log(form.querySelector("#status").value)
-        console.log("data object");
-        console.log({data});
-
         events.emit("createTask", data);
         destroy();
     }
