@@ -51,6 +51,7 @@
 .right-nav {
     display: grid;
     grid-template-rows: auto 1fr;
+    background-color: var(--secondary-light);
 }
 
 .nav-header {

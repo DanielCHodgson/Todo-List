@@ -20,6 +20,19 @@ export default class SwimLane {
         events.on("createTask", (data) => this.addNewTask(data))
     }
 
+    createHeader() {
+        const header = Utility.createElement("div", "lane-header");
+        const titleStr = this.#status.replace(/-/g, " ")
+        const title = Utility.createElement("h3", "", titleStr);
+        header.appendChild(title);
+        return header;
+    }
+
+
+    createCardList() {
+
+    }
+
     createCard(task) {
         const card = new TaskCard(task);
         return card.getCard();
@@ -35,10 +48,14 @@ export default class SwimLane {
 
     render() {
         this.destroy();
+        this.#container.appendChild(this.createHeader())
+        const cardsList = Utility.createElement("div", "card-list")
+
         this.#taskService.getTasks().forEach(task => {
-            this.#container.appendChild(this.createCard(task));
+            cardsList.appendChild(this.createCard(task));
         })
-        console.log(this.#container)
+
+        this.#container.appendChild(cardsList);
         this.#parent.appendChild(this.#container);
     }
 
