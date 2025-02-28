@@ -29,6 +29,13 @@ export default class Utility {
         return img;
     }
 
+    static createIconButton(className, icon, onClick = null) {
+        const btn = this.createElement("div", className);
+        btn.appendChild(this.renderSvg(icon));
+        if (onClick) btn.addEventListener("click", onClick);
+        return btn;
+    }
+
     static createSelectFormGroup(id, labeltext, options) {
 
         const formGroup = document.createElement("div");

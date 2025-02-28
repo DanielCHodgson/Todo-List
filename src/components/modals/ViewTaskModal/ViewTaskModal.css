@@ -1,0 +1,14 @@
+.view-task-modal {
+    width: 1000px;
+    height: 800px;
+    background-color: #FFFFFF;
+    position: absolute;
+    bottom: 25px;
+    right: 200px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+    font-family: Arial, Helvetica, sans-serif;
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+}

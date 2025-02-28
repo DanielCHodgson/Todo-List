@@ -9,10 +9,10 @@ export default function Dashboard(project, events) {
     const filterPane = FilterPane();
 
     let lanes = [
-        new SwimLane(project.getTaskService(), "ready to start"),
-        new SwimLane(project.getTaskService(), "in progress"),
-        new SwimLane(project.getTaskService(), "in review"),
-        new SwimLane(project.getTaskService(), "closed")
+        new SwimLane(project.getTaskService(), events, "ready to start"),
+        new SwimLane(project.getTaskService(), events, "in progress"),
+        new SwimLane(project.getTaskService(), events, "in review"),
+        new SwimLane(project.getTaskService(), events, "closed")
     ];
 
     events.on("createTask", (data) => addTaskToSwimLane(data));
@@ -34,17 +34,16 @@ export default function Dashboard(project, events) {
 
     function handleNewTaskClick() {
         if (!document.querySelector("create-task-modal")) {
-            events.emit("renderModal", {})
+            events.emit("openNewTaskModal", {})
         }
     }
-
 
     function render() {
         const dashboard = Utility.createElement("div", "dashboard");
         dashboard.appendChild(createHeader("Board"));
         filterPane.render(dashboard);
 
-    
+
         const lanesContainer = document.createElement("div");
         lanesContainer.classList.add("swim-lane-list");
         dashboard.appendChild(lanesContainer)

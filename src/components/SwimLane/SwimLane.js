@@ -6,12 +6,14 @@ import TaskCard from "../TaskCard/TaskCard";
 export default class SwimLane {
 
     #taskService;
+    #events;
     #container;
     #status;
     #parent = null;
 
-    constructor(taskService, status) {
+    constructor(taskService, events, status) {
         this.#taskService = taskService;
+        this.#events = events;
         this.#status = status;
         this.#container = Utility.createElement("div", "swim-lane");
         this.#container.dataset.status = this.#status;
@@ -26,7 +28,7 @@ export default class SwimLane {
     }
 
     #createCard(task) {
-        return new TaskCard(task).getCard();
+        return new TaskCard(task, this.#events).getCard();
     }
 
     #renderCards() {

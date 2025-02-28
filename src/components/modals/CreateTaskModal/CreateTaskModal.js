@@ -12,7 +12,7 @@ export default function NewTaskModal(events) {
     let modal;
     let form;
 
-    events.on("renderModal", showModal);
+    events.on("openNewTaskModal", showModal);
 
     function showModal() {
         render();
@@ -24,18 +24,11 @@ export default function NewTaskModal(events) {
         header.appendChild(Utility.createElement("h2", "modal-title", "New task"));
 
         const iconRow = Utility.createElement("div", "icon-row");
-        iconRow.appendChild(createIconButton("expand", icons.expand));
-        iconRow.appendChild(createIconButton("close", icons.close, destroy));
+        iconRow.appendChild(Utility.createIconButton("expand", icons.expand));
+        iconRow.appendChild(Utility.createIconButton("close", icons.close, destroy));
 
         header.appendChild(iconRow);
         return header;
-    }
-
-    function createIconButton(className, icon, onClick = null) {
-        const btn = Utility.createElement("div", className);
-        btn.appendChild(Utility.renderSvg(icon));
-        if (onClick) btn.addEventListener("click", onClick);
-        return btn;
     }
 
     function createForm() {

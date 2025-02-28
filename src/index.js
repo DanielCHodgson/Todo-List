@@ -4,6 +4,7 @@ import nav from "./components/Nav/Nav.js"
 import dashboard from "./components/Dashboard/Dashboard.js";
 import EventBus from "./Utilities/EventBus.js";
 import NewTaskModal from "./components/modals/CreateTaskModal/CreateTaskModal.js";
+import ViewTaskModal from "./components/modals/ViewTaskModal/ViewTaskModal.js";
 import ProjectModel from "./data/Models/ProjectModel.js";
 import teamIcon from "./res/images/team-icon.png";
 
@@ -15,4 +16,5 @@ navModule.render();
 
 const dashboardModule = dashboard(project, events);
 dashboardModule.render();
-const modal = NewTaskModal(events);
+const newTask = NewTaskModal(events);
+const viewTask = ViewTaskModal(events);

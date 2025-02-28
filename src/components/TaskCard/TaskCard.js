@@ -6,10 +6,10 @@ export default class TaskCard {
   #task
   #element
 
-  constructor(task) {
+  constructor(task, events) {
     this.#task = task;
     this.#element = this.createCardElement();
-
+    //this.#element.addEventListener("click", events.emit("viewTask"));
   }
 
   createHeaderElement() {
