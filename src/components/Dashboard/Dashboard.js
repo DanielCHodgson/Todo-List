@@ -26,7 +26,7 @@ export default function Dashboard(project, events) {
     }
 
     function handleNewTaskClick() {
-        if (!document.querySelector("create-task-modal")) {
+        if (!document.querySelector(".create-task-modal")) {
             events.emit("openNewTaskModal", {})
         }
     }

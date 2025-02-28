@@ -68,14 +68,14 @@
 }
 
 .project-name {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: "Roboto", serif;
     font-size: 1rem;
     font-weight: bold;
     padding-left: 0.5rem;
 }
 
 .project-type {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: "Roboto", serif;
     font-size: 0.95rem;
     padding-left: 0.5rem;
     color: #464646;
@@ -93,7 +93,7 @@
     list-style: none;
     padding: 1rem;
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: "Roboto", serif;
     font-size: 1.2rem;
     color: #5e5e5e;
     display: flex;

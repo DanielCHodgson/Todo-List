@@ -21,7 +21,7 @@
     border-radius: 8px;
     background-color: #0049B0;
     color: white;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: "Roboto", serif;
     font-weight: bold;
     cursor: pointer;
 }
@@ -32,7 +32,7 @@
 
 
 .dashboard-title {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: "Roboto", serif;
     font-size: 2rem;
 }
 
