@@ -3,7 +3,7 @@ import "./styles/styles.css";
 import nav from "./components/Nav/Nav.js"
 import dashboard from "./components/Dashboard/Dashboard.js";
 import EventBus from "./Utilities/EventBus.js";
-import NewTaskModal from "./components/modals/NewTaskModal/CreateTaskModal.js";
+import NewTaskModal from "./components/modals/CreateTaskModal/CreateTaskModal.js";
 import ProjectModel from "./data/Models/ProjectModel.js";
 import teamIcon from "./res/images/team-icon.png";
 
