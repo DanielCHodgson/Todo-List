@@ -67,22 +67,62 @@ export default function NewTaskModal(events) {
 
     function createTask() {
 
-        let data = {
-            project: form.querySelector("#project").value,
-            summary: form.querySelector("#summary").value,
-            description: form.querySelector("#description").value,
-            priority: form.querySelector("#priority").value,
-            date: form.querySelector("#date").value,
-            status: form.querySelector("#status").value
+        const fields = {
+            project: form.querySelector("#project"),
+            summary: form.querySelector("#summary"),
+            description: form.querySelector("#description"),
+            priority: form.querySelector("#priority"),
+            date: form.querySelector("#date"),
+            status: form.querySelector("#status")
+        };
+    
+        if (isValidTaskData(fields)) {
+            const data = Object.fromEntries(Object.entries(fields).map(([key, element]) => [key, element.value.trim()]));
+            events.emit("createTask", data);
+            destroy();
+        }
+    }
+
+    function isValidTaskData(fields) {
+
+        const errors = [];
+
+        Object.entries(fields)
+            .filter(([key]) => key !== "description" && key !== "date")
+            .forEach(([key, element]) => {
+                if (!element.value) {
+                    element.classList.add("invalid-field");
+                    errors.push(`${key} is a mandatory field.`);
+                } else {
+                    element.classList.remove("invalid-field");
+                }
+            });
+
+        if (fields.summary.value.length > 35) {
+            errors.push("Summary must be 35 characters or less.");
         }
 
-        events.emit("createTask", data);
-        destroy();
+        const dateRegex = /^([0-2][0-9]|(3)[0-1])-(0[1-9]|1[0-2])-\d{4}$/;
+        if (!dateRegex.test(fields.date.value)) {
+            errors.push("Date must be in the format DD-MM-YYYY.");
+        }
+
+        if (errors.length > 0) {
+            displayErrorMessages(errors);
+            return false;
+        }
+
+        return true;
+    }
+
+
+    function displayErrorMessages(errors) {
+        // To DO - print to UI
+        alert(errors.join("\n"));
     }
 
     function render() {
         modal = Utility.createElement("div", "create-task-modal");
-
         modal.appendChild(createHeader());
         modal.appendChild(createForm());
         modal.appendChild(createFooter());

@@ -8,16 +8,15 @@ export default class Task {
     #status;
 
     constructor(id, project, summary, description, priority, dueDate, status) {
-        if (!id || !project || !summary || !status) {
-            throw new Error("Missing required task fields.");
+        if (!id || !project || !summary || !priority || !status) {
+            throw new Error("Missing required fields.");
         }
-
         this.#id = id;
         this.#project = project;
         this.#summary = summary;
         this.#description = description || "";
-        this.setPriority(priority);
-        this.setDueDate(dueDate);
+        this.#priority = priority;
+        this.#dueDate = dueDate;
         this.#status = status;
     }
 
@@ -54,19 +53,8 @@ export default class Task {
         this.#description = value.trim();
     }
 
-    setPriority(value) {
-        const validPriorities = ["low", "medium", "high"];
-        if (!validPriorities.includes(value)) {
-            throw new Error(`Invalid priority: ${value}. Expected values: ${validPriorities.join(", ")}`);
-        }
-        this.#priority = value;
-    }
-
     setDueDate(value) {
-        if (value && isNaN(new Date(value).getTime())) {
-            throw new Error(`Invalid due date: ${value}`);
-        }
-        this.#dueDate = value ? new Date(value).toISOString() : null;
+       //To do
     }
 
     setStatus(value) {

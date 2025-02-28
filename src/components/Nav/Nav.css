@@ -82,6 +82,7 @@
 }
 
 .nav-list {
+    padding: 0.5rem;
     place-content: center;
     display: flex;
     flex-direction: column;

@@ -20,7 +20,7 @@ export default class SwimLane {
     #createHeader() {
         const header = Utility.createElement("div", "lane-header");
         const titleStr = this.#status.replace(/-/g, " ")
-        const title = Utility.createElement("h3", "", titleStr);
+        const title = Utility.createElement("h3", "", titleStr.toUpperCase());
         header.appendChild(title);
         return header;
     }

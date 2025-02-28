@@ -1,8 +1,9 @@
 :root {
     --primary-light: #0049B0;
-    --secondary-light: #F4F5F7;
+    --secondary-light: #F7F8F9;
     --tertiary-light: #FFFFFF;
     --icons-light: #223558;
+    --text-sublist: #626f86;
 }
 
 .app-wrapper {
@@ -11,6 +12,8 @@
     display: grid;
     grid-template-columns: 350px auto;
     position: relative;
+    background-color: #EEEFF2;
+    gap: 0.2rem;
 }
 
 .nav {

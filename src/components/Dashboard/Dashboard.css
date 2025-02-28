@@ -1,5 +1,6 @@
 .dashboard {
     display: grid;
+    padding: 0 2rem 0 1rem;
     grid-template-rows: auto auto 1fr;
     gap: 1rem;
 }
