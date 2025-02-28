@@ -1,3 +1,6 @@
+import Task from "./TaskModel";
+import testData from "../test/dummyTests.json" assert { type: 'json' };
+
 export default class TaskService {
 
     #tasks;
@@ -6,7 +9,11 @@ export default class TaskService {
     constructor() {
         this.#tasks = [];
         this.#index = 1;
+        testData.tests.forEach(test => {
+            this.addTask(Task.fromJSON(test));
+        })
     }
+
 
     addTask(newTask) {
         const exists = this.#tasks.some(task => task.getId() === newTask.getId());
@@ -20,7 +27,8 @@ export default class TaskService {
         tasks.forEach(task => {
             const exists = this.#tasks.some(task => getId() === task.id);
             if (!exists) {
-                    this.#tasks.push(task);
+                this.#tasks.push(task);
+                this.#index += 1;
             }
         });
     }

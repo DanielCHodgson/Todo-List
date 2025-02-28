@@ -8,13 +8,6 @@ export default function Dashboard(project, events) {
     const container = document.querySelector(".content");
     const filterPane = FilterPane();
 
-    let lanes = [
-        new SwimLane(project.getTaskService(), events, "ready to start"),
-        new SwimLane(project.getTaskService(), events, "in progress"),
-        new SwimLane(project.getTaskService(), events, "in review"),
-        new SwimLane(project.getTaskService(), events, "closed")
-    ];
-
     events.on("createTask", (data) => addTaskToSwimLane(data));
 
     function createHeader(title) {
@@ -43,10 +36,18 @@ export default function Dashboard(project, events) {
         dashboard.appendChild(createHeader("Board"));
         filterPane.render(dashboard);
 
-
         const lanesContainer = document.createElement("div");
         lanesContainer.classList.add("swim-lane-list");
         dashboard.appendChild(lanesContainer)
+
+
+        let lanes = [
+            new SwimLane(lanesContainer, project.getTaskService(), events, "ready to start"),
+            new SwimLane(lanesContainer,project.getTaskService(), events, "in progress"),
+            new SwimLane(lanesContainer,project.getTaskService(), events, "in review"),
+            new SwimLane(lanesContainer,project.getTaskService(), events, "closed")
+        ];
+    
 
         lanes.forEach(lane => {
             lane.render(lanesContainer)

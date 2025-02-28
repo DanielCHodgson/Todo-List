@@ -79,7 +79,6 @@ export default function ViewTaskModal(events) {
 
     function destroy() {
         if (parent.querySelector(".view-task-modal")) {
-            console.log(parent.querySelector(".view-task-modal"))
             parent.removeChild(container);
         }
             

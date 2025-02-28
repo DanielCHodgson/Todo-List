@@ -9,14 +9,16 @@ export default class SwimLane {
     #events;
     #container;
     #status;
-    #parent = null;
+    #parent;
 
-    constructor(taskService, events, status) {
+    constructor(parent, taskService, events, status) {
+        this.#parent = parent;
         this.#taskService = taskService;
         this.#events = events;
         this.#status = status;
         this.#container = Utility.createElement("div", "swim-lane");
         this.#container.dataset.status = this.#status;
+        this.render();
     }
 
     #createHeader() {
@@ -39,8 +41,6 @@ export default class SwimLane {
     }
 
     addNewTask(data) {
-
-      
         const { project, summary, description, priority, date, status } = data;
         const id = `${project}-${this.#taskService.getIndex()}`;
         const task = new Task(id, project, summary, description, priority, date, status);
@@ -49,12 +49,11 @@ export default class SwimLane {
         this.#container.querySelector(".card-list").appendChild(this.#createCard(task));
     }
 
-    render(parent) {
+    render() {
         this.#container.innerHTML = "";
         this.#container.appendChild(this.#createHeader());
         this.#container.appendChild(this.#renderCards());
-        parent.appendChild(this.#container);
-        this.#parent = parent;
+        this.#parent.appendChild(this.#container);
     }
 
     destroy() {
