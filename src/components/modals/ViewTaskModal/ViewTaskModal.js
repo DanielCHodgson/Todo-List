@@ -13,8 +13,6 @@ export default function ViewTaskModal(events) {
     events.on("viewTask", (task) => showModal(task));
 
     function showModal(task) {
-
-        console.log("triggered")
         destroy();
         createElement();
         setData(task);
@@ -22,16 +20,17 @@ export default function ViewTaskModal(events) {
     }
 
     function setData(task) {
-
-        const summary = container.querySelector("view-task-summary");
+        const summary = container.querySelector(".view-task-summary");
         summary.textContent = task.getSummary();
-        const description = container.querySelector("view-task-description");
-        description.textContent = task.getDescription();
-        const priority = container.querySelector("view-task-priority");
-        priority.textContent = task.getPriority();
-        const date = container.querySelector("view-task-date");
-        date.textContent = task.getDate();
 
+        const description = container.querySelector(".view-task-description");
+        description.textContent = task.getDescription();
+
+        const priority = container.querySelector(".view-task-priority");
+        priority.textContent = task.getPriority();
+
+        const date = container.querySelector(".view-task-date");
+        date.textContent = task.getDueDate();
     }
 
     function createElement() {
@@ -82,7 +81,11 @@ export default function ViewTaskModal(events) {
     }
 
     function destroy() {
-        parent.removeChild(container);
+        if (parent.querySelector(".view-task-modal")) {
+            console.log(parent.querySelector(".view-task-modal"))
+            parent.removeChild(container);
+        }
+            
     }
 
 

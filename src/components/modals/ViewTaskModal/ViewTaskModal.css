@@ -1,14 +1,24 @@
 .view-task-modal {
-    width: 1000px;
-    height: 800px;
+    width: clamp(400px, 1000px, 70%);
+    height: 700px;
     background-color: #FFFFFF;
     position: absolute;
-    bottom: 25px;
-    right: 200px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
     font-family: Arial, Helvetica, sans-serif;
     display: grid;
-    grid-template-rows: auto auto 1fr;
+    grid-template-rows: auto 1fr 50px;
+    grid-template-columns: 100%;
+    place-content: center;
 }
+
+.view-task-description {
+    height: 400px;
+    width: 100%;
+}
+
+
