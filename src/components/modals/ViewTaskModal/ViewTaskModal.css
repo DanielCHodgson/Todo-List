@@ -1,6 +1,7 @@
 .view-task-modal {
-    width: clamp(400px, 1200px, 90%);
-    height: 700px;
+    width: clamp(200px, 800px, 90%);
+    height: 600px;
+    padding: 1rem;
     background-color: #FFFFFF;
     position: absolute;
     top: 50%;
@@ -13,6 +14,7 @@
     display: grid;
     grid-template-rows: auto 1fr 50px;
     grid-template-columns: 100%;
+    gap: 1rem;
     place-content: center;
 }
 
@@ -21,8 +23,11 @@
     flex-direction: column;
 }
 
-.view-task-header .upper, .lower {
-    padding: 0.5rem 1rem;
+.view-task-header .upper {
+    display: flex;
+}
+
+.view-task-header .lower {
     display: flex;
 }
 
@@ -38,12 +43,25 @@
     font-weight: bold;
 }
 
+.view-task-header #summary {
+    border: none;
+}
+.view-task-header #summary {
+    border: none;
+}
+
 .view-task-body {
-    padding: 1rem;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+}
+
+.modal-left {
+}
+
+.modal-right {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    overflow-y: auto;
+    gap: 1rem;
 }
 
 .view-task-body label {
@@ -75,4 +93,3 @@
     field-sizing: content;
     border: 1px solid black;
 }
-

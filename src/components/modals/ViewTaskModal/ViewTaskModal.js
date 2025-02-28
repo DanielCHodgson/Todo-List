@@ -20,17 +20,18 @@ export default function ViewTaskModal(events) {
     }
 
     function setData(task) {
-        const summary = container.querySelector(".view-task-summary");
-        //summary.textContent = task.getSummary();
+        const summary = container.querySelector("#summary");
+        console.log(task.getSummary())
+        summary.value = task.getSummary();
 
         const description = container.querySelector("#view-task-description");
-        //description.textContent = task.getDescription();
+        description.value = task.getDescription();
 
-        const priority = container.querySelector(".view-task-priority");
-        //priority.textContent = task.getPriority();
+        const priority = container.querySelector("#priority");
+        priority.value = task.getPriority();
 
-        const date = container.querySelector(".view-task-date");
-        //date.textContent = task.getDueDate();
+        const date = container.querySelector("#date");
+        date.value = task.getDueDate();
     }
 
     function createElement() {
@@ -51,7 +52,11 @@ export default function ViewTaskModal(events) {
         upper.appendChild(iconRow);
 
         const lower = Utility.createElement("div", "lower");
-        const summary = Utility.createElement("p", "view-task-summary");
+        const summary = document.createElement("input");
+        summary.id = "summary";
+        summary.required = true;
+        summary.minLength = 1;
+        summary.maxLength = 35;
         lower.appendChild(summary);
 
 
@@ -62,7 +67,18 @@ export default function ViewTaskModal(events) {
 
     function createBody() {
         const container = Utility.createElement("div", "view-task-body");
-        container.appendChild(Utility.createTextAreaFormGroup("view-task-description", "Description", false, 0, 1000));
+
+        const left = Utility.createElement("div", "modal-left");
+        left.appendChild(Utility.createTextAreaFormGroup("view-task-description", "Description", false, 0, 1000));
+
+        const right = Utility.createElement("div", "modal-right");
+        right.appendChild(Utility.createSelectFormGroup("project", "Project", ["SAAS"]));
+        right.appendChild(Utility.createSelectFormGroup("priority", "Priority", ["P1", "P2", "P3", "P4", "P5"]));
+        right.appendChild(Utility.createSelectFormGroup("status", "Status", ["ready to start", "in progress", "in review", "closed"]));
+        right.appendChild(Utility.createInputFormGroup("date", "Due date", true, "8", "10"));
+
+        container.appendChild(left);
+        container.appendChild(right);
         return container;
     }
 
@@ -81,7 +97,7 @@ export default function ViewTaskModal(events) {
         if (parent.querySelector(".view-task-modal")) {
             parent.removeChild(container);
         }
-            
+
     }
 
 
