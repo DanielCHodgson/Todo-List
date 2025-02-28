@@ -21,16 +21,16 @@ export default function ViewTaskModal(events) {
 
     function setData(task) {
         const summary = container.querySelector(".view-task-summary");
-        summary.textContent = task.getSummary();
+        //summary.textContent = task.getSummary();
 
-        const description = container.querySelector(".view-task-description");
-        description.textContent = task.getDescription();
+        const description = container.querySelector("#view-task-description");
+        //description.textContent = task.getDescription();
 
         const priority = container.querySelector(".view-task-priority");
-        priority.textContent = task.getPriority();
+        //priority.textContent = task.getPriority();
 
         const date = container.querySelector(".view-task-date");
-        date.textContent = task.getDueDate();
+        //date.textContent = task.getDueDate();
     }
 
     function createElement() {
@@ -62,10 +62,7 @@ export default function ViewTaskModal(events) {
 
     function createBody() {
         const container = Utility.createElement("div", "view-task-body");
-        container.appendChild(Utility.createElement("div", "view-task-description"));
-        container.appendChild(Utility.createElement("div", "view-task-priority"));
-        container.appendChild(Utility.createElement("div", "view-task-date"));
-
+        container.appendChild(Utility.createTextAreaFormGroup("view-task-description", "Description", false, 0, 1000));
         return container;
     }
 
