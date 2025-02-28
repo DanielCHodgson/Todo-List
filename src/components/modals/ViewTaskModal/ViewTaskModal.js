@@ -1,16 +1,21 @@
 import "./ViewTaskModal.css";
 import Utility from "../../../Utilities/domUtility";
+import validator from "../../../Utilities/Validator";
 
 export default function ViewTaskModal(events) {
 
     const parent = document.querySelector(".app-wrapper");
+    let currentTask = null;
 
     const icons = {
         close: `<svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 384 512"><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5C45.3 29.9 25.1 28.1 11.5 39.4S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306 327.4 468.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z"/></svg>`,
     };
 
     const container = createElement();
-    events.on("viewTask", (task) => showModal(task));
+    events.on("viewTask", (task) => {
+        showModal(task)
+        currentTask = task;
+    });
 
     function showModal(task) {
         destroy();
@@ -20,6 +25,10 @@ export default function ViewTaskModal(events) {
     }
 
     function setData(task) {
+
+        const slug = container.querySelector(".slug");
+        slug.textContent = `${task.getProject()}-${task.getId()}`;
+
         const summary = container.querySelector("#summary");
         console.log(task.getSummary())
         summary.value = task.getSummary();
@@ -47,6 +56,8 @@ export default function ViewTaskModal(events) {
         const container = Utility.createElement("div", "view-task-header");
 
         const upper = Utility.createElement("div", "upper");
+        upper.appendChild(Utility.createElement("p", "slug"))
+
         const iconRow = Utility.createElement("div", "icon-row");
         iconRow.appendChild(Utility.createIconButton("close", icons.close, destroy));
         upper.appendChild(iconRow);
@@ -82,10 +93,36 @@ export default function ViewTaskModal(events) {
         return container;
     }
 
-    function createFooter() {
-        const container = Utility.createElement("div", "view-task-footer");
 
-        return container;
+    function updateTask() {
+        const fields = {
+            project: container.querySelector("#project"),
+            summary: container.querySelector("#summary"),
+            description: container.querySelector("#description"),
+            priority: container.querySelector("#priority"),
+            date: container.querySelector("#date"),
+            status: container.querySelector("#status")
+        };
+
+        if (validator().isValidTaskData(fields)) {
+            const data = Object.fromEntries(Object.entries(fields).map(([key, element]) => [key, element.value.trim()]));
+            events.emit("updateTask", { oldTask: currentTask, data});
+            destroy();
+        }
+    }
+
+    function createFooter() {
+        const footer = Utility.createElement("div", "view-task-footer");
+        const updateBtn = Utility.createElement("button", "update-btn", "Update");
+        updateBtn.addEventListener("click", updateTask);
+
+        const cancelBtn = Utility.createElement("button", "cancel-btn", "Cancel");
+        cancelBtn.addEventListener("click", destroy);
+
+        footer.appendChild(updateBtn);
+        footer.appendChild(cancelBtn);
+
+        return footer;
     }
 
 
@@ -95,6 +132,7 @@ export default function ViewTaskModal(events) {
 
     function destroy() {
         if (parent.querySelector(".view-task-modal")) {
+            currentTask = null;
             parent.removeChild(container);
         }
 

@@ -1,6 +1,5 @@
 import "./SwimLane.css";
 import Utility from "../../Utilities/domUtility";
-import Task from "../../data/Models/TaskModel";
 import TaskCard from "../TaskCard/TaskCard";
 
 export default class SwimLane {
@@ -40,13 +39,12 @@ export default class SwimLane {
         return cardsList;
     }
 
-    addNewTask(data) {
-        const { project, summary, description, priority, date, status } = data;
-        const id = `${project}-${this.#taskService.getIndex()}`;
-        const task = new Task(id, project, summary, description, priority, date, status);
-        this.#taskService.addTask(task);
-        
+    addTask(task) {
         this.#container.querySelector(".card-list").appendChild(this.#createCard(task));
+    }
+
+    removeTask(task) {
+        //To do 
     }
 
     render() {

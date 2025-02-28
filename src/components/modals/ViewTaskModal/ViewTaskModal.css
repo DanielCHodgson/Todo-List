@@ -12,7 +12,7 @@
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
     font-family: "Roboto", serif;
     display: grid;
-    grid-template-rows: auto 1fr 50px;
+    grid-template-rows: auto 1fr auto;
     grid-template-columns: 100%;
     gap: 1rem;
     place-content: center;
@@ -23,17 +23,44 @@
     flex-direction: column;
 }
 
-.view-task-header .upper {
-    display: flex;
-}
-
-.view-task-header .lower {
-    display: flex;
+.view-task-header .slug {
+    font-weight: 600;
+    color: var(--primary-light);
 }
 
 .view-task-header .upper {
     display: flex;
-    justify-content: end;
+    justify-content: space-between;
+    padding: 0.5rem;
+}
+
+.view-task-header .upper select {
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 8px;
+    appearance: none;
+    cursor: pointer;
+}
+
+.view-task-header select:hover {
+
+    background-color: var(--secondary-light);
+}
+
+.view-task-header select:focus {
+    border: 2px solid #4D90FE;
+    outline: none;
+    box-shadow: 0 0 5px rgba(77, 144, 254, 0.5);
+}
+
+.view-task-header select option {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+    border: none;
+    font: inherit;
+    border-radius: 0px;
 }
 
 .view-task-header .lower {
@@ -46,22 +73,16 @@
 .view-task-header #summary {
     border: none;
 }
+
 .view-task-header #summary {
     border: none;
 }
 
 .view-task-body {
+    height: 100%;
     display: grid;
     grid-template-columns: 2fr 1fr;
-}
-
-.modal-left {
-}
-
-.modal-right {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    gap: 0.5rem;
 }
 
 .view-task-body label {
@@ -70,16 +91,25 @@
     color: var(--text);
 }
 
+.modal-left {
+    display: grid;
+}
+
+.modal-left .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
 #view-task-description {
-    height: 400px;
-    width: 80%;
+    flex-grow: 1;
+    width: 100%;
     padding: 0.5rem;
+    color: var(--text);
     resize: none;
-    field-sizing: content;
     outline: none;
     border: none;
     transition: all ease 0.3s;
-    color: var(--text);
+    overflow-y: auto;
 }
 
 #view-task-description:hover {
@@ -87,9 +117,28 @@
 }
 
 #view-task-description:focus {
-    height: 400px;
-    width: 80%;
-    resize: none;
-    field-sizing: content;
-    border: 1px solid black;
+
+    outline: 1px solid black;
+}
+
+.modal-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.view-task-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.view-task-footer button {
+    width: 4rem;
+    height: 2.3rem;
+    border: none;
+    border-radius: 8px;
+    color: #FFFFFF;
+    cursor: pointer;
+    background-color: #0049B0;
 }
