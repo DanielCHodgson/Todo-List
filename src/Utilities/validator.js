@@ -16,8 +16,8 @@ export default function validator() {
                 }
             });
 
-        if (fields.summary.value.length > 35) {
-            errors.push("Summary must be 35 characters or less.");
+        if (fields.summary.value.length > 50) {
+            errors.push("Summary must be 50 characters or less.");
         }
 
         const dateRegex = /^([0-2][0-9]|(3)[0-1])-(0[1-9]|1[0-2])-\d{4}$/;

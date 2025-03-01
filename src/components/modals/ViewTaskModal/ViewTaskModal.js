@@ -66,7 +66,7 @@ export default function ViewTaskModal(events) {
         summary.id = "summary";
         summary.required = true;
         summary.minLength = 1;
-        summary.maxLength = 35;
+        summary.maxLength = 50;
         lower.appendChild(summary);
 
         container.appendChild(upper);

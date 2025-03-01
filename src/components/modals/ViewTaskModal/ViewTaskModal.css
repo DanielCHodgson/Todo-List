@@ -72,11 +72,14 @@
 
 .view-task-header #summary {
     border: none;
+    transition: all ease 0.3s;
 }
 
-.view-task-header #summary {
-    border: none;
+.view-task-header #summary:hover {
+    background-color: #f0f1f4;
+    border: 1px solid black;
 }
+
 
 .view-task-body {
     height: 100%;
@@ -112,11 +115,11 @@
     overflow-y: auto;
 }
 
-#view-task-description:hover {
+.view-task-body #description:hover {
     background-color: #f0f1f4;
 }
 
-#view-task-description:focus {
+.view-task-body #description:focus {
 
     outline: 1px solid black;
 }

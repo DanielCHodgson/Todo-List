@@ -9,12 +9,16 @@ export default function Dashboard(project, events) {
 
     const container = document.querySelector(".content");
     const taskService = project.getTaskService();
-    let lanes = [];
+    const lanes = [];
     const dashboard = createDashboard();
 
-    events.on("createTask", (data) => createTask(data));
-    events.on("UpdateTask", (data) => updateTask(data));
+    events.on("createTask", (data) => {
+        const task = createTask(data);
+        taskService.addTask(task);
+        addTaskToSwimLane(task);
+    });
 
+    events.on("UpdateTask", (data) => updateTask(data));
 
     function createDashboard() {
         const dashboard = Utility.createElement("div", "dashboard");
@@ -37,18 +41,18 @@ export default function Dashboard(project, events) {
     }
 
     function createSwimLanes(lanesContainer) {
-        const statuses = ["ready to start", "in progress", "in review", "closed"];
-    
-        return statuses.map(status => {
-            const tasks = taskService.getTasksByStatus(status);
-            const cards = tasks.map(task => new TaskCard(task, events));
-            return new SwimLane(lanesContainer, cards, status);
+        return ["ready to start", "in progress", "in review", "closed"].map(status => {
+            return new SwimLane(
+                lanesContainer,
+                taskService.getTasksByStatus(status).map(task => new TaskCard(task, events)),
+                status
+            );
         });
     }
 
     function createHeader(title) {
         const header = Utility.createElement("div", "header");
-        const heading = Utility.createElement("h2", "dashboard-title", title)
+        const heading = Utility.createElement("h2", "dashboard-title", title);
         const newTaskBtn = Utility.createElement("button", "new-task", "create");
         newTaskBtn.addEventListener("click", handleNewTaskClick);
         header.appendChild(heading);
@@ -56,22 +60,20 @@ export default function Dashboard(project, events) {
         return header;
     }
 
-    function addTask(task) {
+    function addTaskToSwimLane(task) {
         const lane = lanes.find(lane => task.getStatus() === lane.getStatus());
-        lane.addTaskCard(task);
+        if (lane) lane.addCard(new TaskCard(task, events));
     }
 
-    function removeTask(task) {
+    function removeCard(task) {
         const lane = lanes.find(lane => task.getStatus() === lane.getStatus());
-        lane.removeTask(task);
+        if (lane) lane.removeTask(task);
     }
 
     function createTask(data) {
         const { project, summary, description, priority, date, status } = data;
         const id = `${project}-${taskService.getIndex()}`;
-        const task = new Task(id, project, summary, description, priority, date, status);
-        taskService.addTask(task);
-        addTask(task)
+        return new Task(id, project, summary, description, priority, date, status);
     }
 
     function updateTask(data) {
@@ -85,6 +87,7 @@ export default function Dashboard(project, events) {
     }
 
     function render() {
+        container.innerHTML = "";
         container.appendChild(dashboard);
     }
 
