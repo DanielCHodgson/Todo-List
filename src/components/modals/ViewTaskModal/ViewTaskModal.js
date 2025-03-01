@@ -30,10 +30,9 @@ export default function ViewTaskModal(events) {
         slug.textContent = `${task.getProject()}-${task.getId()}`;
 
         const summary = container.querySelector("#summary");
-        console.log(task.getSummary())
         summary.value = task.getSummary();
 
-        const description = container.querySelector("#view-task-description");
+        const description = container.querySelector("#description");
         description.value = task.getDescription();
 
         const priority = container.querySelector("#priority");
@@ -70,7 +69,6 @@ export default function ViewTaskModal(events) {
         summary.maxLength = 35;
         lower.appendChild(summary);
 
-
         container.appendChild(upper);
         container.appendChild(lower);
         return container;
@@ -80,7 +78,7 @@ export default function ViewTaskModal(events) {
         const container = Utility.createElement("div", "view-task-body");
 
         const left = Utility.createElement("div", "modal-left");
-        left.appendChild(Utility.createTextAreaFormGroup("view-task-description", "Description", false, 0, 1000));
+        left.appendChild(Utility.createTextAreaFormGroup("description", "Description", false, 0, 1000));
 
         const right = Utility.createElement("div", "modal-right");
         right.appendChild(Utility.createSelectFormGroup("project", "Project", ["SAAS"]));
@@ -104,9 +102,11 @@ export default function ViewTaskModal(events) {
             status: container.querySelector("#status")
         };
 
+
         if (validator().isValidTaskData(fields)) {
             const data = Object.fromEntries(Object.entries(fields).map(([key, element]) => [key, element.value.trim()]));
-            events.emit("updateTask", { oldTask: currentTask, data});
+            const tasks = { "prevTask": currentTask, "newTask": data };
+            events.emit("UpdateTask", tasks);
             destroy();
         }
     }

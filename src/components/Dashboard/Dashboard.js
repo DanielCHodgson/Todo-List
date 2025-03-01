@@ -3,26 +3,47 @@ import FilterPane from "../FilterPane/FilterPane";
 import SwimLane from "../SwimLane/SwimLane";
 import Utility from "../../Utilities/domUtility";
 import Task from "../../data/Models/TaskModel";
+import TaskCard from "../TaskCard/TaskCard";
 
 export default function Dashboard(project, events) {
 
     const container = document.querySelector(".content");
-    const filterPane = FilterPane();
     const taskService = project.getTaskService();
-
     let lanes = [];
+    const dashboard = createDashboard();
 
     events.on("createTask", (data) => createTask(data));
     events.on("UpdateTask", (data) => updateTask(data));
 
 
+    function createDashboard() {
+        const dashboard = Utility.createElement("div", "dashboard");
+        dashboard.appendChild(createHeader("Board"));
+
+        const filterPane = FilterPane();
+        filterPane.render(dashboard);
+
+        const lanesContainer = document.createElement("div");
+        lanesContainer.classList.add("swim-lane-list");
+        dashboard.appendChild(lanesContainer)
+
+        lanes.push(...createSwimLanes(lanesContainer));
+
+        lanes.forEach(lane => {
+            lane.render(lanesContainer)
+        });
+
+        return dashboard;
+    }
+
     function createSwimLanes(lanesContainer) {
-        return [
-            new SwimLane(lanesContainer, project.getTaskService(), events, "ready to start"),
-            new SwimLane(lanesContainer, project.getTaskService(), events, "in progress"),
-            new SwimLane(lanesContainer, project.getTaskService(), events, "in review"),
-            new SwimLane(lanesContainer, project.getTaskService(), events, "closed")
-        ];
+        const statuses = ["ready to start", "in progress", "in review", "closed"];
+    
+        return statuses.map(status => {
+            const tasks = taskService.getTasksByStatus(status);
+            const cards = tasks.map(task => new TaskCard(task, events));
+            return new SwimLane(lanesContainer, cards, status);
+        });
     }
 
     function createHeader(title) {
@@ -35,14 +56,12 @@ export default function Dashboard(project, events) {
         return header;
     }
 
-    function addTaskToSwimLane(task) {
+    function addTask(task) {
         const lane = lanes.find(lane => task.getStatus() === lane.getStatus());
-        console.log(task)
-        console.log(lane)
-        lane.addTask(task);
+        lane.addTaskCard(task);
     }
 
-    function removeTaskFromSwimLane(task) {
+    function removeTask(task) {
         const lane = lanes.find(lane => task.getStatus() === lane.getStatus());
         lane.removeTask(task);
     }
@@ -52,7 +71,7 @@ export default function Dashboard(project, events) {
         const id = `${project}-${taskService.getIndex()}`;
         const task = new Task(id, project, summary, description, priority, date, status);
         taskService.addTask(task);
-        addTaskToSwimLane(task)
+        addTask(task)
     }
 
     function updateTask(data) {
@@ -66,20 +85,6 @@ export default function Dashboard(project, events) {
     }
 
     function render() {
-        const dashboard = Utility.createElement("div", "dashboard");
-        dashboard.appendChild(createHeader("Board"));
-        filterPane.render(dashboard);
-
-        const lanesContainer = document.createElement("div");
-        lanesContainer.classList.add("swim-lane-list");
-        dashboard.appendChild(lanesContainer)
-
-        lanes = createSwimLanes(lanesContainer);
-      
-
-        lanes.forEach(lane => {
-            lane.render(lanesContainer)
-        });
         container.appendChild(dashboard);
     }
 

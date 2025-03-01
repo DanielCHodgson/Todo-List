@@ -1,23 +1,30 @@
 import "./SwimLane.css";
 import Utility from "../../Utilities/domUtility";
-import TaskCard from "../TaskCard/TaskCard";
 
 export default class SwimLane {
 
-    #taskService;
-    #events;
-    #container;
-    #status;
     #parent;
+    #cards;
+    #status;
+    #element;
 
-    constructor(parent, taskService, events, status) {
+    constructor(parent, cards, status) {
         this.#parent = parent;
-        this.#taskService = taskService;
-        this.#events = events;
+        this.#cards = cards;
         this.#status = status;
-        this.#container = Utility.createElement("div", "swim-lane");
-        this.#container.dataset.status = this.#status;
+        this.#element = this.#createSwimLane();
         this.render();
+    }
+
+    #createSwimLane() {
+        const swimLane = Utility.createElement("div", "swim-lane");
+        swimLane.dataset.status = this.#status;
+
+        const cardsList = Utility.createElement("div", "card-list");
+
+        swimLane.appendChild(this.#createHeader());
+        swimLane.appendChild(cardsList)
+        return swimLane;
     }
 
     #createHeader() {
@@ -28,53 +35,46 @@ export default class SwimLane {
         return header;
     }
 
-    #createCard(task) {
-        return new TaskCard(task, this.#events).getCard();
-    }
-
     #renderCards() {
-        const cardsList = Utility.createElement("div", "card-list");
-        const tasks = this.#taskService.getTasksByStatus(this.#status);
-        tasks.forEach(task => cardsList.appendChild(this.#createCard(task)));
-        return cardsList;
+        this.#cards.forEach(card => card.render(this.#element.querySelector(".card-list")));
     }
 
-    addTask(task) {
-        this.#container.querySelector(".card-list").appendChild(this.#createCard(task));
+    addCard(card) {
+        this.#cards.push(card)
     }
 
-    removeTask(task) {
-        //To do 
+    removeCard(cardToRemove) {
+        this.#cards = this.#cards.filter(card)
     }
+
 
     render() {
-        this.#container.innerHTML = "";
-        this.#container.appendChild(this.#createHeader());
-        this.#container.appendChild(this.#renderCards());
-        this.#parent.appendChild(this.#container);
+        this.#renderCards();
+        this.#parent.appendChild(this.#element);
     }
 
     destroy() {
-        if (this.#parent && this.#container) {
-            this.#parent.removeChild(this.#container);
+        if (this.#parent && this.#element) {
+            this.#parent.removeChild(this.#element);
             this.#parent = null;
         }
     }
 
-    getTaskService() {
-        return this.#taskService;
-    }
-
-    getStatus() {
-        return this.#status;
-    }
 
     getParent() {
         return this.#parent;
     }
-    
+
     setParent(value) {
         this.#parent = value;
+    }
+
+    getCards() {
+        return this.#cards;
+    }
+    
+    getStatus() {
+        return this.#status;
     }
 
 

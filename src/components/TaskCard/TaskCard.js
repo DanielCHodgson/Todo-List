@@ -14,8 +14,12 @@ export default class TaskCard {
     this.#element.addEventListener("click", () => this.handleCardClick(task));
   }
 
-  handleCardClick(task) {
-    this.#events.emit("viewTask", task)
+  createCardElement() {
+    const card = Utility.createElement("div", "task-card");
+    card.appendChild(this.createHeaderElement());
+    card.appendChild(this.createBodyElement());
+    card.appendChild(this.createFooterElement());
+    return card;
   }
 
   createHeaderElement() {
@@ -34,7 +38,7 @@ export default class TaskCard {
 
   createBodyElement() {
     const body = Utility.createElement("div", "task-body");
-
+    //To do: add stuff
     return body;
   }
 
@@ -46,7 +50,6 @@ export default class TaskCard {
     const id = Utility.createElement("p", "task-id", this.#task.getId());
     const priority = Utility.createElement("p", "task-priority", this.#task.getPriority());
 
-
     footer.appendChild(id);
     footer.appendChild(priority);
     footer.appendChild(dueDate);
@@ -54,17 +57,12 @@ export default class TaskCard {
     return footer;
   }
 
-  createCardElement() {
-    const card = Utility.createElement("div", "task-card");
-    card.appendChild(this.createHeaderElement());
-    card.appendChild(this.createBodyElement());
-    card.appendChild(this.createFooterElement());
-
-    return card;
+  handleCardClick(task) {
+    this.#events.emit("viewTask", task)
   }
 
-  render(container) {
-    container.appendChild(this.element);
+  render(parent) {
+    parent.appendChild(this.#element);
   }
 
   update() {

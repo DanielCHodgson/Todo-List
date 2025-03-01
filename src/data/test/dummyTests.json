@@ -6,7 +6,7 @@
             "summary": "DevOps: Prepare 2.5.6 build",
             "description": "Prepare build, Set up project dependencies, build the application, run tests and fix issues, create deployment package, deploy to staging, verify deployment, push to production, monitor performance, and rollback if needed.",
             "priority": "P2",
-            "dueDate": "20-03-25",
+            "dueDate": "20-03-2025",
             "status": "ready to start"
         },
         {
@@ -15,7 +15,7 @@
             "summary": "Bugs: Warning icons not displaying red",
             "description": "Locate the error in the code, identify the current color setting, update it to red, test the change, verify consistency across the UI, commit the fix, deploy the update, and confirm the issue is resolved.",
             "priority": "P3",
-            "dueDate": "05-03-25",
+            "dueDate": "05-03-2025",
             "status": "ready to start"
         },
         {
@@ -24,7 +24,7 @@
             "summary": "Testing: QA testing for 2.5.6 build",
             "description": "Review requirements, create test cases, set up the test environment, execute tests, log defects, verify fixes, perform regression testing, validate functionality, generate reports, and ensure quality standards.",
             "priority": "P2",
-            "dueDate": "01-03-25",
+            "dueDate": "01-03-2025",
             "status": "in progress"
         }
     ]
