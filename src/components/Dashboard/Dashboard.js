@@ -10,8 +10,20 @@ export default function Dashboard(project, events) {
     const filterPane = FilterPane();
     const taskService = project.getTaskService();
 
+    let lanes = [];
+
     events.on("createTask", (data) => createTask(data));
     events.on("UpdateTask", (data) => updateTask(data));
+
+
+    function createSwimLanes(lanesContainer) {
+        return [
+            new SwimLane(lanesContainer, project.getTaskService(), events, "ready to start"),
+            new SwimLane(lanesContainer, project.getTaskService(), events, "in progress"),
+            new SwimLane(lanesContainer, project.getTaskService(), events, "in review"),
+            new SwimLane(lanesContainer, project.getTaskService(), events, "closed")
+        ];
+    }
 
     function createHeader(title) {
         const header = Utility.createElement("div", "header");
@@ -25,7 +37,9 @@ export default function Dashboard(project, events) {
 
     function addTaskToSwimLane(task) {
         const lane = lanes.find(lane => task.getStatus() === lane.getStatus());
-        lane.addNewTask(task);
+        console.log(task)
+        console.log(lane)
+        lane.addTask(task);
     }
 
     function removeTaskFromSwimLane(task) {
@@ -37,7 +51,7 @@ export default function Dashboard(project, events) {
         const { project, summary, description, priority, date, status } = data;
         const id = `${project}-${taskService.getIndex()}`;
         const task = new Task(id, project, summary, description, priority, date, status);
-        project.getTaskService().addTask(task);
+        taskService.addTask(task);
         addTaskToSwimLane(task)
     }
 
@@ -60,14 +74,8 @@ export default function Dashboard(project, events) {
         lanesContainer.classList.add("swim-lane-list");
         dashboard.appendChild(lanesContainer)
 
-
-        let lanes = [
-            new SwimLane(lanesContainer, project.getTaskService(), events, "ready to start"),
-            new SwimLane(lanesContainer, project.getTaskService(), events, "in progress"),
-            new SwimLane(lanesContainer, project.getTaskService(), events, "in review"),
-            new SwimLane(lanesContainer, project.getTaskService(), events, "closed")
-        ];
-
+        lanes = createSwimLanes(lanesContainer);
+      
 
         lanes.forEach(lane => {
             lane.render(lanesContainer)

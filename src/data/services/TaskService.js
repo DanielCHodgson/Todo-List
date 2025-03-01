@@ -1,4 +1,4 @@
-import Task from "./TaskModel";
+import Task from "../Models/TaskModel";
 import testData from "../test/dummyTests.json" assert { type: 'json' };
 
 export default class TaskService {

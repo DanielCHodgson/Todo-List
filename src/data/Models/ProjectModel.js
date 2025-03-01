@@ -1,4 +1,4 @@
-import TaskService from "./TaskService";
+import TaskService from "../services/TaskService";
 
 export default class ProjectModel {
 
