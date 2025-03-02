@@ -77,6 +77,15 @@ export default function Dashboard(project, events) {
     }
 
     function updateTask(data) {
+        const prevTask = data.prevTask;
+        const updatedData = data.newData;
+
+    
+        if(prevTask.getStatus() !== updatedData.status) {
+            console.log("status changed!")
+        }
+
+        //taskService.getTaskById().
 
     }
 

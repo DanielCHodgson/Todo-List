@@ -3,59 +3,62 @@ import Utility from "../../../Utilities/domUtility";
 import validator from "../../../Utilities/Validator";
 
 export default function ViewTaskModal(events) {
-
     const parent = document.querySelector(".app-wrapper");
     let currentTask = null;
+    let fields = null;
+    let element = null;
+    let slug = null;
 
     const icons = {
-        close: `<svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 384 512"><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5C45.3 29.9 25.1 28.1 11.5 39.4S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306 327.4 468.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z"/></svg>`,
+        close: `<svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 384 512"><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5C45.3 29.9 25.1 28.1 11.5 39.4S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306 327.4 468.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z"/></svg>`
     };
 
-    const container = createElement();
-    events.on("viewTask", (task) => {
-        showModal(task)
-        currentTask = task;
-    });
+    events.on("viewTask", (task) => launchModal(task));
 
-    function showModal(task) {
-        destroy();
-        createElement();
+    function launchModal(task) {
+        if (!element) element = createElement();
+        currentTask = task;
+        cacheFields();
         setData(task);
         render();
     }
 
+    function cacheFields() {
+        fields = {
+            "summary": element.querySelector("#summary"),
+            "description": element.querySelector("#description"),
+            "project": element.querySelector("#project"),
+            "priority": element.querySelector("#priority"),
+            "status": element.querySelector("#status"),
+            "date": element.querySelector("#date")
+        };
+
+        slug = element.querySelector(".slug");
+    }
+
     function setData(task) {
-
-        const slug = container.querySelector(".slug");
+        if (!task) return;
         slug.textContent = `${task.getProject()}-${task.getId()}`;
-
-        const summary = container.querySelector("#summary");
-        summary.value = task.getSummary();
-
-        const description = container.querySelector("#description");
-        description.value = task.getDescription();
-
-        const priority = container.querySelector("#priority");
-        priority.value = task.getPriority();
-
-        const date = container.querySelector("#date");
-        date.value = task.getDueDate();
+        fields.summary.value = task.getSummary();
+        fields.description.value = task.getDescription();
+        fields.project.value = task.getProject();
+        fields.priority.value = task.getPriority();
+        fields.status.value = task.getStatus();
+        fields.date.value = task.getDueDate();
     }
 
     function createElement() {
-        const container = Utility.createElement("div", "view-task-modal");
-
-        container.appendChild(createHeader());
-        container.appendChild(createBody());
-        container.appendChild(createFooter());
-        return container;
+        const modal = Utility.createElement("div", "view-task-modal");
+        modal.appendChild(createHeader());
+        modal.appendChild(createBody());
+        modal.appendChild(createFooter());
+        return modal;
     }
 
     function createHeader() {
         const container = Utility.createElement("div", "view-task-header");
-
         const upper = Utility.createElement("div", "upper");
-        upper.appendChild(Utility.createElement("p", "slug"))
+        upper.appendChild(Utility.createElement("p", "slug"));
 
         const iconRow = Utility.createElement("div", "icon-row");
         iconRow.appendChild(Utility.createIconButton("close", icons.close, destroy));
@@ -91,24 +94,22 @@ export default function ViewTaskModal(events) {
         return container;
     }
 
-
     function updateTask() {
-        const fields = {
-            project: container.querySelector("#project"),
-            summary: container.querySelector("#summary"),
-            description: container.querySelector("#description"),
-            priority: container.querySelector("#priority"),
-            date: container.querySelector("#date"),
-            status: container.querySelector("#status")
-        };
-
 
         if (validator().isValidTaskData(fields)) {
-            const data = Object.fromEntries(Object.entries(fields).map(([key, element]) => [key, element.value.trim()]));
-            const tasks = { "prevTask": currentTask, "newTask": data };
-            events.emit("UpdateTask", tasks);
+            const data = trimFields(fields);
+            data.id = slug.textContent.split("-")[1];
+            events.emit("UpdateTask", { "prevTask": currentTask, "newData": data });
             destroy();
         }
+    }
+
+    function trimFields(fields) {
+        return Object.fromEntries(
+            Object.entries(fields).map(([key, element]) => {
+                return [key, element.value.trim()];
+            })
+        );
     }
 
     function createFooter() {
@@ -121,22 +122,22 @@ export default function ViewTaskModal(events) {
 
         footer.appendChild(updateBtn);
         footer.appendChild(cancelBtn);
-
         return footer;
     }
 
-
     function render() {
-        parent.appendChild(container);
+        if (!parent.contains(element)) {
+            parent.appendChild(element);
+        }
     }
 
     function destroy() {
-        if (parent.querySelector(".view-task-modal")) {
+        if (element && parent.contains(element)) {
+            parent.removeChild(element);
+            element = null;
+            fields = null;
+            slug = null;
             currentTask = null;
-            parent.removeChild(container);
         }
-
     }
-
-
 }
