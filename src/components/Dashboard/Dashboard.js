@@ -32,7 +32,6 @@ export default function Dashboard(project, events) {
         dashboard.appendChild(lanesContainer)
 
         createSwimLanes(lanesContainer, ["ready to start", "in progress", "in review", "closed"]);
-        console.log(lanes)
         
         Object.values(lanes).forEach(lane => {
             lane.render(lanesContainer)
