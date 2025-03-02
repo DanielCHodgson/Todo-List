@@ -80,17 +80,17 @@ export default function Dashboard(project, events) {
     function updateTask(data) {
         const task = data.task;
         const newData = data.newData;
+        const newtask = new Task(task.getId(), newData.project, newData.summary, newData.description, newData.priority, newData.date, newData.status);
 
         if(task.getStatus() !== data.status) {
-            const prevLane = lanes[task.getStatus()];
+            const currentLane = lanes[task.getStatus()];
             const newLane = lanes[newData.status]
-
-            prevLane.removeCard(task.getId());
-            newLane.addCard(new TaskCard(new Task(newData.id, newData.project, newData.summary, newData.description, newData.priority, newData.date, newData.status), events));
-
-            prevLane.renderCards();
-            newLane.renderCards();
-
+          
+            currentLane.removeCard(task.getId());
+            newLane.addCard(new TaskCard(newtask, events));
+        } else {
+            const currentLane = lanes[task.getStatus()];
+            currentLane.UpdateCard(newtask);
         }
     }
 

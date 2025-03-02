@@ -46,6 +46,11 @@ export default class SwimLane {
         card.render(this.#cardsContainer);
     }
 
+    updatecard(id, task) {
+        const card = this.#cards.find(card => card.getTask().getId() !== id);
+        card.setData(task);
+    }
+
     removeCard(id) {
         this.#cards = this.#cards.filter(card => card.getTask().getId() !== id);
         this.#cardsContainer.innerHTML = "";
