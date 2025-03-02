@@ -73,6 +73,10 @@ export default class TaskCard {
     this.#element.remove();
   }
 
+  getTask() {
+      return this.#task;
+  }
+  
 
   getCard() {
     return this.#element;

@@ -22,7 +22,7 @@ export default class SwimLane {
         swimLane.dataset.status = this.#status;
 
         this.#cardsContainer = Utility.createElement("div", "card-list");
-        
+
         swimLane.appendChild(this.#createHeader());
         swimLane.appendChild(this.#cardsContainer);
         return swimLane;
@@ -36,24 +36,24 @@ export default class SwimLane {
         return header;
     }
 
-    #renderCards() {
+    renderCards() {
+        this.#cardsContainer.innerHTML = "";
         this.#cards.forEach(card => card.render(this.#cardsContainer));
     }
 
     addCard(card) {
         this.#cards.push(card);
-        console.log(card)
         card.render(this.#cardsContainer);
     }
 
-    removeCard(cardToRemove) {
-        this.#cards = this.#cards.filter(card => card !== cardToRemove);
+    removeCard(id) {
+        this.#cards = this.#cards.filter(card => card.getTask().getId() !== id);
         this.#cardsContainer.innerHTML = "";
-        this.#renderCards();
+        this.renderCards();
     }
 
     render() {
-        this.#renderCards();
+        this.renderCards();
         if (!this.#parent.contains(this.#element)) {
             this.#parent.appendChild(this.#element);
         }
@@ -79,7 +79,7 @@ export default class SwimLane {
     getCards() {
         return this.#cards;
     }
-    
+
     getStatus() {
         return this.#status;
     }

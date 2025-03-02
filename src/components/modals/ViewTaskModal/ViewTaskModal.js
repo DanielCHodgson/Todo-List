@@ -99,7 +99,7 @@ export default function ViewTaskModal(events) {
         if (validator().isValidTaskData(fields)) {
             const data = trimFields(fields);
             data.id = slug.textContent.split("-")[1];
-            events.emit("UpdateTask", { "prevTask": currentTask, "newData": data });
+            events.emit("UpdateTask", { "task": currentTask, "newData": data });
             destroy();
         }
     }

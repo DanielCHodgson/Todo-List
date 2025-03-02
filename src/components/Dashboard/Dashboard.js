@@ -9,7 +9,7 @@ export default function Dashboard(project, events) {
 
     const container = document.querySelector(".content");
     const taskService = project.getTaskService();
-    const lanes = [];
+    const lanes = {};
     const dashboard = createDashboard();
 
     events.on("createTask", (data) => {
@@ -31,18 +31,19 @@ export default function Dashboard(project, events) {
         lanesContainer.classList.add("swim-lane-list");
         dashboard.appendChild(lanesContainer)
 
-        lanes.push(...createSwimLanes(lanesContainer));
-
-        lanes.forEach(lane => {
+        createSwimLanes(lanesContainer, ["ready to start", "in progress", "in review", "closed"]);
+        console.log(lanes)
+        
+        Object.values(lanes).forEach(lane => {
             lane.render(lanesContainer)
         });
 
         return dashboard;
     }
 
-    function createSwimLanes(lanesContainer) {
-        return ["ready to start", "in progress", "in review", "closed"].map(status => {
-            return new SwimLane(
+    function createSwimLanes(lanesContainer, statuses) {
+        statuses.forEach(status => {
+            lanes[status] = new SwimLane(
                 lanesContainer,
                 taskService.getTasksByStatus(status).map(task => new TaskCard(task, events)),
                 status
@@ -61,12 +62,12 @@ export default function Dashboard(project, events) {
     }
 
     function addTaskToSwimLane(task) {
-        const lane = lanes.find(lane => task.getStatus() === lane.getStatus());
+        const lane = lanes[task.getStatus()];
         if (lane) lane.addCard(new TaskCard(task, events));
     }
 
     function removeCard(task) {
-        const lane = lanes.find(lane => task.getStatus() === lane.getStatus());
+        const lane = lanes[task.getStatus()];
         if (lane) lane.removeTask(task);
     }
 
@@ -77,16 +78,20 @@ export default function Dashboard(project, events) {
     }
 
     function updateTask(data) {
-        const prevTask = data.prevTask;
-        const updatedData = data.newData;
+        const task = data.task;
+        const newData = data.newData;
 
-    
-        if(prevTask.getStatus() !== updatedData.status) {
-            console.log("status changed!")
+        if(task.getStatus() !== data.status) {
+            const prevLane = lanes[task.getStatus()];
+            const newLane = lanes[newData.status]
+
+            prevLane.removeCard(task.getId());
+            newLane.addCard(new TaskCard(new Task(newData.id, newData.project, newData.summary, newData.description, newData.priority, newData.date, newData.status), events));
+
+            prevLane.renderCards();
+            newLane.renderCards();
+
         }
-
-        //taskService.getTaskById().
-
     }
 
     function handleNewTaskClick() {
