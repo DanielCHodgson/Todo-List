@@ -32,6 +32,12 @@ export default class TaskService {
         });
     }
 
+    updateTask(id, updatedFields) { 
+        this.#tasks = this.#tasks.map(task => 
+            task.getId() === id ? { ...task, ...updatedFields } : task
+        );
+    }
+
     removeTask(id) {
         this.#tasks = this.#tasks.filter(task => task.getId() !== id);
     }

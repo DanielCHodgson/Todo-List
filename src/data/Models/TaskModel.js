@@ -20,7 +20,6 @@ export default class Task {
         this.#status = status;
     }
 
-
     getId() {
         return this.#id;
     }
@@ -54,11 +53,11 @@ export default class Task {
     }
 
     setDueDate(value) {
-       //To do
+       this.#dueDate = value;
     }
 
     setStatus(value) {
-        this.#status = value.trim();
+        this.#status = value;
     }
 
     toJSON() {
