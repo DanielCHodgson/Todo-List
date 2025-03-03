@@ -26,7 +26,6 @@ export default class TaskCard {
     };
   }
 
-
   setData(task) {
     if (!task) return;
     this.#fields.slug.textContent = `${task.getProject()}-${task.getId()}`;
@@ -37,6 +36,12 @@ export default class TaskCard {
 
   createCardElement() {
     const card = Utility.createElement("div", "task-card");
+    card.draggable = true;
+    card.dataset.taskId = this.#task.getId();
+
+    card.addEventListener("dragstart", this.#handleDragStart.bind(this));
+    card.addEventListener("dragend", this.#handleDragEnd.bind(this));
+
     card.appendChild(this.createHeaderElement());
     card.appendChild(this.createBodyElement());
     card.appendChild(this.createFooterElement());
@@ -72,6 +77,15 @@ export default class TaskCard {
 
   handleCardClick(task) {
     this.#events.emit("viewTask", task)
+  }
+
+  #handleDragStart(event) {
+    event.dataTransfer.setData("text/plain", this.#task.getId());
+    event.target.classList.add("dragging");
+  }
+
+  #handleDragEnd(event) {
+    event.target.classList.remove("dragging");
   }
 
   render(parent) {

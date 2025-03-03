@@ -22,3 +22,12 @@
 .task-header {
     font-weight: bold;
 }
+
+.task-card.dragging {
+    background-color: #f0f0f0;
+}
+
+.swim-lane .drag-over {
+    border: 2px dashed #4caf50;
+    background-color: rgba(76, 175, 80, 0.1);
+}

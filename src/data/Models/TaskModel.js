@@ -41,25 +41,7 @@ export default class Task {
     getStatus() {
         return this.#status;
     }
-
-    setProject(value) {
-        this.#project = value.trim();
-    }
-    setSummary(value) {
-        this.#summary = value.trim();
-    }
-    setDescription(value) {
-        this.#description = value.trim();
-    }
-
-    setDueDate(value) {
-       this.#dueDate = value;
-    }
-
-    setStatus(value) {
-        this.#status = value;
-    }
-
+    
     toJSON() {
         return {
             id: this.#id,

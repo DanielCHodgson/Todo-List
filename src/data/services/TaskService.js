@@ -32,10 +32,11 @@ export default class TaskService {
         });
     }
 
-    updateTask(updatedTask) { 
-        this.#tasks = this.#tasks.map(task => 
-            task.getId() === updatedTask.getId ? { ...task, ...updatedTask } : task
-        );
+    updateTask(updatedTask) {
+        const index = this.#tasks.findIndex(task => task.getId() === updatedTask.getId());
+        if (index !== -1) {
+            this.#tasks[index] = updatedTask;
+        }
     }
 
     removeTask(id) {

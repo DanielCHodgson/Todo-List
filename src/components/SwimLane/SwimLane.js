@@ -2,20 +2,22 @@ import "./SwimLane.css";
 import Utility from "../../Utilities/domUtility";
 
 export default class SwimLane {
-
     #parent;
     #cards;
     #status;
     #element;
     #cardsContainer;
+    #events;
 
-    constructor(parent, cards, status) {
+    constructor(parent, cards, status, events) {
         this.#parent = parent;
         this.#cards = cards;
         this.#status = status;
+        this.#events = events;
+        this.#cardsContainer = null;
         this.#element = this.#createSwimLane();
-        this.#cardsContainer = this.#element.querySelector(".card-list");
     }
+
 
     #createSwimLane() {
         const swimLane = Utility.createElement("div", "swim-lane");
@@ -23,8 +25,14 @@ export default class SwimLane {
 
         this.#cardsContainer = Utility.createElement("div", "card-list");
 
+        console.assert(this.#cardsContainer !== null, 'cardsContainer is null or undefined');
+
         swimLane.appendChild(this.#createHeader());
         swimLane.appendChild(this.#cardsContainer);
+
+        this.#cardsContainer.addEventListener("dragover", (event) => this.#handleDragOver(event));
+        this.#cardsContainer.addEventListener("dragleave", (event) => this.#handleDragLeave(event));
+        this.#cardsContainer.addEventListener("drop", (event) => this.#handleDrop(event));
         return swimLane;
     }
 
@@ -34,6 +42,30 @@ export default class SwimLane {
         const title = Utility.createElement("h3", "", titleStr.toUpperCase());
         header.appendChild(title);
         return header;
+    }
+
+    #handleDragOver(event) {
+        event.preventDefault();
+        if (event.target === this.#cardsContainer || this.#cardsContainer.contains(event.target)) {
+            this.#cardsContainer.classList.add("drag-over");
+        }
+    }
+    
+    #handleDragLeave(event) {
+        if (event.target === this.#cardsContainer || this.#cardsContainer.contains(event.target)) {
+            this.#cardsContainer.classList.remove("drag-over");
+        }
+    }
+    
+    #handleDrop(event) {
+        event.preventDefault();
+        if (event.target === this.#cardsContainer || this.#cardsContainer.contains(event.target)) {
+            const taskId = event.dataTransfer.getData("text/plain");
+            if (!taskId) return;
+    
+            this.#events.emit("moveTask", { taskId, newStatus: this.#status });
+            this.#cardsContainer.classList.remove("drag-over");
+        }
     }
 
     renderCards() {
@@ -48,13 +80,14 @@ export default class SwimLane {
 
     updateCard(id, newCard) {
         const index = this.#cards.findIndex(card => card.getTask().getId() === id);
-        this.#cards[index] = newCard;
-        this.renderCards();
+        if (index !== -1) {
+            this.#cards[index] = newCard;
+            this.renderCards();
+        }
     }
 
     removeCard(id) {
         this.#cards = this.#cards.filter(card => card.getTask().getId() !== id);
-        this.#cardsContainer.innerHTML = "";
         this.renderCards();
     }
 
@@ -74,21 +107,7 @@ export default class SwimLane {
         this.#cardsContainer = null;
     }
 
-    getParent() {
-        return this.#parent;
-    }
-
-    setParent(value) {
-        this.#parent = value;
-    }
-
-    getCards() {
-        return this.#cards;
-    }
-
     getStatus() {
         return this.#status;
     }
-
-
 }
