@@ -32,9 +32,9 @@ export default class TaskService {
         });
     }
 
-    updateTask(id, updatedFields) { 
+    updateTask(updatedTask) { 
         this.#tasks = this.#tasks.map(task => 
-            task.getId() === id ? { ...task, ...updatedFields } : task
+            task.getId() === updatedTask.getId ? { ...task, ...updatedTask } : task
         );
     }
 

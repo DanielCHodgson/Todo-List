@@ -20,6 +20,13 @@ export default function Dashboard(project, events) {
         const lanesContainer = Utility.createElement("div", "swim-lane-list");
         dashboard.appendChild(lanesContainer);
 
+        createSwimLanes(lanesContainer)
+    
+        return dashboard;
+    }
+
+
+    function createSwimLanes(lanesContainer) {
         ["ready to start", "in progress", "in review", "closed"].forEach(status => {
             lanes[status] = new SwimLane(
                 lanesContainer,
@@ -28,8 +35,6 @@ export default function Dashboard(project, events) {
             );
             lanes[status].render(lanesContainer);
         });
-
-        return dashboard;
     }
 
     function createHeader(title) {
@@ -42,15 +47,21 @@ export default function Dashboard(project, events) {
         return header;
     }
 
-    function addTaskToSwimLane(task) {
+    function addCard(task) {
         if (lanes[task.getStatus()]) {
             lanes[task.getStatus()].addCard(new TaskCard(task, events));
         }
     }
 
-    function removeCard(task) {
+    function removeFromSwimLane(task) {
         if (lanes[task.getStatus()]) {
             lanes[task.getStatus()].removeCard(task.getId());
+        }
+    }
+
+    function updateSwimLane(task) {
+        if (lanes[task.getStatus()]) {
+            lanes[task.getStatus()].updateCard(task.getId(), new TaskCard(task, events));
         }
     }
 
@@ -60,16 +71,17 @@ export default function Dashboard(project, events) {
     }
 
     function updateTask(data) {
+
         const { task, newData } = data;
         const updatedTask = new Task(task.getId(), newData.project, newData.summary, newData.description, newData.priority, newData.date, newData.status);
 
         taskService.updateTask(task.getId(), updatedTask);
 
         if (task.getStatus() !== newData.status) {
-            removeCard(task);
-            addTaskToSwimLane(updatedTask);
+            removeFromSwimLane(task);
+            addCard(updatedTask);
         } else {
-            lanes[task.getStatus()].updateCard(task.getId(), updatedTask);
+            updateSwimLane(updatedTask);
         }
     }
 
@@ -87,10 +99,12 @@ export default function Dashboard(project, events) {
     events.on("createTask", (data) => {
         const task = createTask(data);
         taskService.addTask(task);
-        addTaskToSwimLane(task);
+        addCard(task);
     });
 
-    events.on("updateTask", (data) => updateTask(data));
+    events.on("updateTask", (data) => {
+        updateTask(data)}
+    );
 
     return {
         render
