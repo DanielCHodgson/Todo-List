@@ -69,11 +69,11 @@ export default class SwimLane {
     }
 
     #handleDrop(event) {
+
         event.preventDefault();
         if (event.target === this.#cardsContainer || this.#cardsContainer.contains(event.target)) {
             const taskId = event.dataTransfer.getData("text/plain");
             if (!taskId) return;
-
             this.#events.emit("moveTask", { taskId, newStatus: this.#status });
             this.#cardsContainer.classList.remove("drag-over");
         }

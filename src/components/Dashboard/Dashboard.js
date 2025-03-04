@@ -52,7 +52,9 @@ export default function Dashboard(project, events) {
 
     function createTask(data) {
         const task = new Task(taskService.getIndex(), data.project, data.summary, data.description, data.priority, data.date, data.status);
+    
         taskService.addTask(task);
+
         addTaskCard(task);
         DataUtility.saveProject(project);
     }
@@ -73,11 +75,14 @@ export default function Dashboard(project, events) {
     }
 
     function moveTask(taskId, newStatus) {
-        const task = taskService.getTaskById(taskId);
-        if (task && task.getStatus() !== newStatus) {
-            const updatedTask = new Task(task.getId(), task.getProject(), task.getSummary(), task.getDescription(), task.getPriority(), task.getDueDate(), newStatus);
+        
+        const movedTask = taskService.getTaskById(Number(taskId));
+
+        if (movedTask && movedTask.getStatus() !== newStatus) {
+          
+            const updatedTask = new Task(movedTask.getId(), movedTask.getProject(), movedTask.getSummary(), movedTask.getDescription(), movedTask.getPriority(), movedTask.getDueDate(), newStatus);
             taskService.updateTask(updatedTask);
-            moveTaskCard(task, updatedTask);
+            moveTaskCard(movedTask, updatedTask);
             DataUtility.saveProject(project);
         }
     }
