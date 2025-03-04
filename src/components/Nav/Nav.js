@@ -1,6 +1,6 @@
 import "./Nav.css";
 import logoIcon from "../../res/icons/giro-logo-white.svg";
-import Utility from "../../Utilities/domUtility";
+import Utility from "../../utilities/DomUtility";
 
 export default function nav(project) {
     const nav = document.querySelector(".nav");

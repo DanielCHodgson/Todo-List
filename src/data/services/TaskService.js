@@ -1,17 +1,13 @@
 import Task from "../Models/TaskModel";
-import testData from "../test/dummyTests.json" assert { type: 'json' };
 
 export default class TaskService {
 
     #tasks;
     #index;
 
-    constructor() {
-        this.#tasks = [];
-        this.#index = 1;
-        testData.tests.forEach(test => {
-            this.addTask(Task.fromJSON(test));
-        })
+    constructor(tasks, index) {
+        this.#tasks = tasks;
+        this.#index = index;
     }
 
     addTask(newTask) {
@@ -57,5 +53,16 @@ export default class TaskService {
 
     getIndex() {
         return this.#index;
+    }
+
+    toJSON() {
+        return {
+            tasks: this.#tasks.map(task => task.toJSON()),
+            index: this.#index,
+        };
+    }
+
+    static fromJSON(data) {
+        return new TaskService(data.tasks.map(task => Task.fromJSON(task)), data.index);
     }
 }

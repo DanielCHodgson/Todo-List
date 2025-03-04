@@ -54,15 +54,15 @@ export default class Task {
         };
     }
 
-    static fromJSON(json) {
+    static fromJSON(data) {
         return new Task(
-            json.id,
-            json.project,
-            json.summary,
-            json.description,
-            json.priority,
-            json.dueDate,
-            json.status
+            data.id,
+            data.project,
+            data.summary,
+            data.description,
+            data.priority,
+            data.dueDate,
+            data.status
         );
     }
 }

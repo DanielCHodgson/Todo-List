@@ -17,14 +17,6 @@ module.exports = merge(common, {
         test: /\.html$/i,
         loader: "html-loader",
       },
-      {
-        test: /\.(png|jpg|jpeg|gif)$/i,
-        type: "asset/resource",
-      },
-      {
-        test: /\.svg$/i,
-        use: ["svg-url-loader"],
-      },
-    ],
+    ]
   },
 });

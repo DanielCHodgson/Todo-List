@@ -1,6 +1,6 @@
-import Utility from "../../../Utilities/domUtility.js";
+import Utility from "../../../utilities/DomUtility.js";
 import "./CreateTaskModal.css";
-import validator from "../../../Utilities/Validator.js";
+import validator from "../../../utilities/Validator.js";
 
 export default function NewTaskModal(events) {
     const parent = document.querySelector(".app-wrapper");

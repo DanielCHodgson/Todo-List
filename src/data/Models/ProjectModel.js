@@ -1,5 +1,3 @@
-import TaskService from "../services/TaskService";
-
 export default class ProjectModel {
 
     #name
@@ -7,11 +5,11 @@ export default class ProjectModel {
     #icon
     #taskService
 
-    constructor(name, type, icon) {
+    constructor(name, type, icon, taskService) {
         this.#name = name;
         this.#type = type;
         this.#icon = icon;
-        this.#taskService = new TaskService();
+        this.#taskService = taskService;
     }
 
     getName() {
@@ -28,5 +26,18 @@ export default class ProjectModel {
 
     getTaskService() {
         return this.#taskService;
+    }
+
+    toJSON() {
+        return {
+            name: this.#name,
+            type: this.#type,
+            icon: this.#icon,
+            taskService: this.#taskService
+        };
+    }
+
+    static fromJSON(data) {
+        return new ProjectModel(data.name, data.type, data.icon, data.taskService);
     }
 }

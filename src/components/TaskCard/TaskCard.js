@@ -1,5 +1,5 @@
 import "./TaskCard.css"
-import Utility from "../../Utilities/domUtility";
+import Utility from "../../utilities/DomUtility";
 
 export default class TaskCard {
 
@@ -8,7 +8,6 @@ export default class TaskCard {
   #element
   #events;
   #fields = null;
-
 
   constructor(task, events) {
     this.#task = task;
@@ -105,7 +104,6 @@ export default class TaskCard {
   getTask() {
     return this.#task;
   }
-
 
   getCard() {
     return this.#element;

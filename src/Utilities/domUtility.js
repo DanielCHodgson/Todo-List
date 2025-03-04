@@ -1,4 +1,4 @@
-export default class Utility {
+export default class DomUtility {
 
 
     static createElement(tag, className, textContent = "", attributes = {}) {

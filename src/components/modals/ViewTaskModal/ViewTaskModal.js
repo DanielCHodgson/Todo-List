@@ -1,6 +1,6 @@
 import "./ViewTaskModal.css";
-import Utility from "../../../Utilities/domUtility";
-import validator from "../../../Utilities/Validator";
+import Utility from "../../../utilities/DomUtility";
+import validator from "../../../utilities/Validator";
 
 export default function ViewTaskModal(events) {
     const parent = document.querySelector(".app-wrapper");

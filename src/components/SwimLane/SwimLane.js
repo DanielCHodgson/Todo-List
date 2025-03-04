@@ -1,5 +1,5 @@
 import "./SwimLane.css";
-import Utility from "../../Utilities/domUtility";
+import Utility from "../../utilities/DomUtility";
 
 export default class SwimLane {
     #parent;

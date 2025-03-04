@@ -1,7 +1,7 @@
 import "./Dashboard.css";
 import FilterPane from "../FilterPane/FilterPane";
 import SwimLane from "../SwimLane/SwimLane";
-import Utility from "../../Utilities/domUtility";
+import Utility from "../../utilities/DomUtility";
 import Task from "../../data/Models/TaskModel";
 import TaskCard from "../TaskCard/TaskCard";
 
@@ -27,6 +27,8 @@ export default function Dashboard(project, events) {
 
     function createSwimLanes(lanesContainer) {
         ["ready to start", "in progress", "in review", "closed"].forEach(status => {
+
+            console.log(taskService)
 
             const lane = new SwimLane(
                 lanesContainer,
