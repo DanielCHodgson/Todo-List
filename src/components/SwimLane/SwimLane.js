@@ -16,8 +16,19 @@ export default class SwimLane {
         this.#events = events;
         this.#cardsContainer = null;
         this.#element = this.#createSwimLane();
+        this.bindEvents();
     }
 
+    bindEvents() {
+        this.#events.on("cardDragStart", (status) => {
+            this.toggleDroppableStyles(status, true);
+        });
+
+        this.#events.on("cardDragEnd", (status) => {
+            this.toggleDroppableStyles(status, false);
+        });
+
+    }
 
     #createSwimLane() {
         const swimLane = Utility.createElement("div", "swim-lane");
@@ -50,19 +61,19 @@ export default class SwimLane {
             this.#cardsContainer.classList.add("drag-over");
         }
     }
-    
+
     #handleDragLeave(event) {
         if (event.target === this.#cardsContainer || this.#cardsContainer.contains(event.target)) {
             this.#cardsContainer.classList.remove("drag-over");
         }
     }
-    
+
     #handleDrop(event) {
         event.preventDefault();
         if (event.target === this.#cardsContainer || this.#cardsContainer.contains(event.target)) {
             const taskId = event.dataTransfer.getData("text/plain");
             if (!taskId) return;
-    
+
             this.#events.emit("moveTask", { taskId, newStatus: this.#status });
             this.#cardsContainer.classList.remove("drag-over");
         }
@@ -98,6 +109,12 @@ export default class SwimLane {
         }
     }
 
+    toggleDroppableStyles(status, shouldAdd) {
+        if (this.#status !== status) {
+            shouldAdd ? this.#cardsContainer.classList.add("droppable") : this.#cardsContainer.classList.remove("droppable");
+        }
+    }
+
     destroy() {
         if (this.#parent && this.#element && this.#parent.contains(this.#element)) {
             this.#parent.removeChild(this.#element);
@@ -109,5 +126,9 @@ export default class SwimLane {
 
     getStatus() {
         return this.#status;
+    }
+
+    getElement() {
+        return this.#element;
     }
 }

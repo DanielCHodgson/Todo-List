@@ -4,12 +4,15 @@ import Utility from "../../Utilities/domUtility";
 export default class TaskCard {
 
   #task
+  #id = null;
   #element
   #events;
   #fields = null;
 
+
   constructor(task, events) {
     this.#task = task;
+    this.#id = this.#task.getId();
     this.#events = events;
     this.#element = this.createCardElement();
     this.cacheFields();
@@ -37,7 +40,7 @@ export default class TaskCard {
   createCardElement() {
     const card = Utility.createElement("div", "task-card");
     card.draggable = true;
-    card.dataset.taskId = this.#task.getId();
+    card.dataset.taskId = this.#id;
 
     card.addEventListener("dragstart", this.#handleDragStart.bind(this));
     card.addEventListener("dragend", this.#handleDragEnd.bind(this));
@@ -80,12 +83,14 @@ export default class TaskCard {
   }
 
   #handleDragStart(event) {
-    event.dataTransfer.setData("text/plain", this.#task.getId());
+    event.dataTransfer.setData("text/plain", this.#id);
     event.target.classList.add("dragging");
+    this.#events.emit("cardDragStart", this.#task.getStatus());
   }
 
   #handleDragEnd(event) {
     event.target.classList.remove("dragging");
+    this.#events.emit("cardDragEnd", this.#task.getStatus());
   }
 
   render(parent) {

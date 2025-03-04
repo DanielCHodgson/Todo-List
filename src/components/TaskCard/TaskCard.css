@@ -3,7 +3,7 @@
     height: auto;
     background-color: var(--tertiary-light);
     border-left: 1rem solid #33dd11;
-    border-radius: 4px;
+    border-radius: 5px;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
     padding: 1rem;
     font-family: "Roboto", serif;
@@ -17,17 +17,9 @@
     display: flex;
     justify-content: space-between;
     gap: 0.5rem;
+    border-radius: 5px;
 }
-
+ 
 .task-header {
     font-weight: bold;
-}
-
-.task-card.dragging {
-    background-color: #f0f0f0;
-}
-
-.swim-lane .drag-over {
-    border: 2px dashed #4caf50;
-    background-color: rgba(76, 175, 80, 0.1);
 }

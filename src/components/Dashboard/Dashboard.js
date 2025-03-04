@@ -8,7 +8,7 @@ import TaskCard from "../TaskCard/TaskCard";
 export default function Dashboard(project, events) {
     const container = document.querySelector(".content");
     const taskService = project.getTaskService();
-    const lanes = {};
+    const lanes = [];
 
     function createDashboard() {
         const dashboard = Utility.createElement("div", "dashboard");
@@ -27,13 +27,15 @@ export default function Dashboard(project, events) {
 
     function createSwimLanes(lanesContainer) {
         ["ready to start", "in progress", "in review", "closed"].forEach(status => {
-            lanes[status] = new SwimLane(
+
+            const lane = new SwimLane(
                 lanesContainer,
                 taskService.getTasksByStatus(status).map(task => new TaskCard(task, events)),
                 status,
-                events
-            );
-            lanes[status].render(lanesContainer);
+                events);
+
+            lanes.push(lane);
+            lane.render(lanesContainer);
         });
     }
 
@@ -48,22 +50,19 @@ export default function Dashboard(project, events) {
     }
 
     function addTaskCard(task) {
-        if (lanes[task.getStatus()]) {
-            lanes[task.getStatus()].addCard(new TaskCard(task, events));
-        }
+
+        lanes.find(lane => lane.getStatus() === task.getStatus()).addCard(new TaskCard(task, events));
     }
 
     function removeTaskCard(task) {
-        if (lanes[task.getStatus()]) {
-            lanes[task.getStatus()].removeCard(task.getId());
-        }
+        lanes.find(lane => lane.getStatus() === task.getStatus()).removeCard(task.getId());
     }
 
     function updateTaskCard(updatedTask) {
         taskService.updateTask(updatedTask);
-        if (lanes[updatedTask.getStatus()]) {
-            lanes[updatedTask.getStatus()].updateCard(updatedTask.getId(), new TaskCard(updatedTask, events));
-        }
+
+        lanes.find(lane => lane.getStatus() === updatedTask.getStatus())
+            .updateCard(updatedTask.getId(), new TaskCard(updatedTask, events));
     }
 
     function createTask(data) {
