@@ -4,15 +4,15 @@ import Utility from "../../utilities/DomUtility";
 export default class TaskCard {
 
   #task
+  #events;
   #id = null;
   #element
-  #events;
   #fields = null;
 
   constructor(task, events) {
     this.#task = task;
-    this.#id = this.#task.getId();
     this.#events = events;
+    this.#id = this.#task.getId();
     this.#element = this.createCardElement();
     this.cacheFields();
     this.setData(task);
@@ -57,6 +57,7 @@ export default class TaskCard {
 
     const del = Utility.createElement("div", "delete-icon");
     del.appendChild(Utility.renderSvg(deleteIcon));
+    del.addEventListener("click", (event) => this.#handleDelete(event));
 
     header.appendChild(Utility.createElement("p", "summary"));
     header.appendChild(del);
@@ -92,13 +93,20 @@ export default class TaskCard {
     this.#events.emit("cardDragEnd", this.#task.getStatus());
   }
 
+  #handleDelete(event) {
+    this.destroy();
+    event.stopPropagation();
+  }
+
   render(parent) {
     parent.appendChild(this.#element);
   }
 
   destroy() {
-    this.#fields = null;
-    this.#element.remove();
+    this.#events.emit("deleteTask", this.#task);
+    if (this.#element) {
+      this.#element.remove();
+    }
   }
 
   getTask() {

@@ -14,14 +14,12 @@ import testData from "./data/test/dummyTests.json"
 
 const events = new EventBus();
 
-let dummyTasks = testData.tests.map(Task.fromJSON);
-
-DataUtility.saveProject(new ProjectModel("SAAS", "software", teamIcon, new TaskService(dummyTasks, 1)));
+if(DataUtility.loadProject("projectData") === null) {
+    let dummyTasks = testData.tests.map(Task.fromJSON);
+    DataUtility.saveProject(new ProjectModel("SAAS", "software", teamIcon, new TaskService(dummyTasks, 1)));
+}
 
 const project = DataUtility.loadProject("projectData");
-
-console.log("project")
-console.log(project)
 
 const navModule = nav(project);
 navModule.render();

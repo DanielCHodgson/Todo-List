@@ -7,11 +7,16 @@ export default class DataUtility {
 
     static saveProject(project) {
         localStorage.setItem(DataUtility.PROJECT_STORAGE_KEY, JSON.stringify(project.toJSON()));
+        console.log("project saved!")
+        console.log(localStorage.projectData)
     }
     
     static loadProject() {
         const storedProject = localStorage.getItem(DataUtility.PROJECT_STORAGE_KEY);
-        if (!storedProject) throw new Error("Project not found!");
+        if (!storedProject) {
+            console.log("No project data")
+            return null;
+        }
     
         const projectData = JSON.parse(storedProject);
 
@@ -22,5 +27,4 @@ export default class DataUtility {
             TaskService.fromJSON(projectData.taskService) 
         );
     }
-    
 }
