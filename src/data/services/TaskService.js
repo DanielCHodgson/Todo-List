@@ -5,9 +5,9 @@ export default class TaskService {
     #tasks;
     #index;
 
-    constructor(tasks, index) {
+    constructor(tasks) {
         this.#tasks = tasks;
-        this.#index = index;
+        this.#index = 0;
     }
 
     addTask(newTask) {

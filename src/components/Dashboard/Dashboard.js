@@ -55,7 +55,7 @@ export default function Dashboard(project) {
     }
 
     function createTask(data) {
-        const task = new Task(`${taskService.getIndex()}-${data.project}`, data.project, data.summary, data.description, data.priority, data.date, data.status);
+        const task = new Task(`${data.project}-${taskService.getIndex()}`, data.project, data.summary, data.description, data.priority, data.date, data.status);
 
         taskService.addTask(task);
 
@@ -83,14 +83,42 @@ export default function Dashboard(project) {
     }
 
 
-    function changeTaskProject() {
+    function changeTaskProject(originalTask, newProjectName) {
+        const currentProject = project;
+        const newProject = DataUtility.loadProject(newProjectName);
+    
+        if (!currentProject || !newProject) {
+            console.error("One of the projects does not exist.");
+            return;
+        }
+    
+        taskService.removeTask(originalTask.getId());
+        DataUtility.saveProject(currentProject);
+    
+        const updatedTask = new Task(
+            originalTask.getId(),
+            newProjectName,
+            originalTask.getSummary(),
+            originalTask.getDescription(),
+            originalTask.getPriority(),
+            originalTask.getDueDate(),
+            originalTask.getStatus()
+        );
+    
+        newProject.getTaskService().addTask(updatedTask);
+        DataUtility.saveProject(newProject);
 
+        console.log("Removed From")
+        console.log(DataUtility.loadProject(project.getName()));
+        console.log("Adfded To")
+        console.log(DataUtility.loadProject(newProjectName));
+
+        removeTaskCard(originalTask);
     }
-
 
     function moveTask(taskId, newStatus) {
 
-        const movedTask = taskService.getTaskById(Number(taskId));
+        const movedTask = taskService.getTaskById(taskId);
 
         if (movedTask && movedTask.getStatus() !== newStatus) {
 

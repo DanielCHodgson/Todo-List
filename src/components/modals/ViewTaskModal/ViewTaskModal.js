@@ -82,7 +82,7 @@ export default function ViewTaskModal(events) {
         left.appendChild(Utility.createTextAreaFormGroup("description", "Description", false, 0, 1000));
 
         const right = Utility.createElement("div", "modal-right");
-        right.appendChild(Utility.createSelectFormGroup("project", "Project", ["SAAS"]));
+        right.appendChild(Utility.createSelectFormGroup("project", "Project", ["SAAS", "DOCS"]));
         right.appendChild(Utility.createSelectFormGroup("priority", "Priority", ["P1", "P2", "P3", "P4", "P5"]));
         right.appendChild(Utility.createSelectFormGroup("status", "Status", ["ready to start", "in progress", "in review", "closed"]));
         right.appendChild(Utility.createInputFormGroup("date", "Due date", true, "8", "10"));
