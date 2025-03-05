@@ -56,7 +56,7 @@ export default class Task {
 
     static fromJSON(data) {
         return new Task(
-            Number(data.id),
+            data.id,
             data.project,
             data.summary,
             data.description,

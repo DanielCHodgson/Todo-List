@@ -23,7 +23,7 @@
     flex-direction: column;
 }
 
-.view-task-header .slug {
+.view-task-header .id {
     font-weight: 600;
     color: var(--primary-light);
 }

@@ -30,7 +30,7 @@ export default class TaskCard {
 
   setData(task) {
     if (!task) return;
-    this.#fields.slug.textContent = `${task.getProject()}-${task.getId()}`;
+    this.#fields.slug.textContent = task.getId();
     this.#fields.summary.textContent = task.getSummary();
     this.#fields.priority.textContent = task.getPriority();
     this.#fields.date.textContent = task.getDueDate();

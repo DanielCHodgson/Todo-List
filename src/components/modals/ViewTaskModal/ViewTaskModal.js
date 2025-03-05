@@ -7,7 +7,6 @@ export default function ViewTaskModal(events) {
     let currentTask = null;
     let fields = null;
     let element = null;
-    let slug = null;
 
     const icons = {
         close: `<svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 384 512"><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5C45.3 29.9 25.1 28.1 11.5 39.4S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306 327.4 468.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z"/></svg>`
@@ -25,6 +24,7 @@ export default function ViewTaskModal(events) {
 
     function cacheFields() {
         fields = {
+            "id": element.querySelector(".id"),
             "summary": element.querySelector("#summary"),
             "description": element.querySelector("#description"),
             "project": element.querySelector("#project"),
@@ -32,13 +32,11 @@ export default function ViewTaskModal(events) {
             "status": element.querySelector("#status"),
             "date": element.querySelector("#date")
         };
-
-        slug = element.querySelector(".slug");
     }
 
     function setData(task) {
         if (!task) return;
-        slug.textContent = `${task.getProject()}-${task.getId()}`;
+        fields.id.textContent = task.getId();
         fields.summary.value = task.getSummary();
         fields.description.value = task.getDescription();
         fields.project.value = task.getProject();
@@ -58,8 +56,8 @@ export default function ViewTaskModal(events) {
     function createHeader() {
         const container = Utility.createElement("div", "view-task-header");
         const upper = Utility.createElement("div", "upper");
-        upper.appendChild(Utility.createElement("p", "slug"));
-
+        upper.appendChild(Utility.createElement("p", "id"));
+        
         const iconRow = Utility.createElement("div", "icon-row");
         iconRow.appendChild(Utility.createIconButton("close", icons.close, destroy));
         upper.appendChild(iconRow);
@@ -98,7 +96,6 @@ export default function ViewTaskModal(events) {
 
         if (validator().isValidTaskData(fields)) {
             const data = trimFields(fields);
-            data.id = slug.textContent.split("-")[1];
             events.emit("updateTask", { "task": currentTask, "newData": data });
             destroy();
         }
@@ -136,7 +133,6 @@ export default function ViewTaskModal(events) {
             parent.removeChild(element);
             element = null;
             fields = null;
-            slug = null;
             currentTask = null;
         }
     }
