@@ -40,9 +40,6 @@ export default class TaskService {
     }
 
     getTaskById(id) {
-        console.log(typeof id)
-        console.log(typeof this.#tasks[0].getId())
-
         return this.#tasks.find(task => task.getId() === id);
     }
 

@@ -8,12 +8,19 @@ import DataUtility from "./utilities/DataUtility.js";
 import Task from "./data/models/TaskModel.js";
 import testData from "./data/test/dummyTests.json"
 
-if (DataUtility.loadProject("projectData") === null) {
+
+const storedProjects = JSON.parse(localStorage.getItem(DataUtility.PROJECT_STORAGE_KEY))
+
+
+if (!storedProjects) {
+    localStorage.setItem("currentProject", "SAAS");
     let dummyTasks = testData.tests.map(Task.fromJSON);
     DataUtility.saveProject(new ProjectModel("SAAS", "software", teamIcon, new TaskService(dummyTasks, 1)));
+    DataUtility.saveProject(new ProjectModel("DOCS", "documentation", teamIcon, new TaskService([], 1)));
 }
 
-const project = DataUtility.loadProject("projectData");
+
+const project = DataUtility.loadProject(localStorage.getItem("currentProject"));
 
 const navModule = nav(project);
 navModule.render();

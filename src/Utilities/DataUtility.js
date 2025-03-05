@@ -5,26 +5,45 @@ export default class DataUtility {
 
     static PROJECT_STORAGE_KEY = "projectData";
 
-    static saveProject(project) {
-        localStorage.setItem(DataUtility.PROJECT_STORAGE_KEY, JSON.stringify(project.toJSON()));
-        console.log("project saved!")
-        console.log(localStorage.projectData)
-    }
+    static saveProject(savedProject) {
+        let projects = JSON.parse(localStorage.getItem(this.PROJECT_STORAGE_KEY)) || [];
+        let projectExists = false;
     
-    static loadProject() {
-        const storedProject = localStorage.getItem(DataUtility.PROJECT_STORAGE_KEY);
-        if (!storedProject) {
-            console.log("No project data")
-            return null;
+        projects = projects.map(project => {
+            if (project.name === savedProject.getName()) {
+                projectExists = true;
+                console.log("Updated project:");
+                console.log(savedProject.toJSON());
+                return savedProject.toJSON();
+            }
+            return project;
+        });
+    
+        if (!projectExists) {
+            projects.push(savedProject.toJSON());
         }
     
-        const projectData = JSON.parse(storedProject);
+        localStorage.setItem(this.PROJECT_STORAGE_KEY, JSON.stringify(projects));
+    }
+    
 
+
+    static loadProject(projectName) {
+        const storedProjects = JSON.parse(localStorage.getItem(DataUtility.PROJECT_STORAGE_KEY)) || [];
+
+        if (storedProjects.length === 0) {
+            console.log("No project data");
+            return null;
+        }
+
+        const projectData = storedProjects.find(project => project.name === projectName);
+
+        console.log(projectData)
         return new ProjectModel(
             projectData.name,
             projectData.type,
             projectData.icon,
-            TaskService.fromJSON(projectData.taskService) 
+            TaskService.fromJSON(projectData.taskService)
         );
     }
 }
