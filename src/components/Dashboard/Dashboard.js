@@ -2,14 +2,21 @@ import "./Dashboard.css";
 import FilterPane from "../FilterPane/FilterPane";
 import SwimLane from "../SwimLane/SwimLane";
 import Utility from "../../utilities/DomUtility";
-import Task from "../../data/Models/TaskModel";
+import Task from "../../data/models/TaskModel";
 import TaskCard from "../TaskCard/TaskCard";
+import EventBus from "../../utilities/EventBus";
 import DataUtility from "../../utilities/DataUtility";
+import CreateTaskModal from "../modals/CreateTaskModal/CreateTaskModal";
+import ViewTaskModal from "../modals/ViewTaskModal/ViewTaskModal";
 
-export default function Dashboard(project, events) {
+export default function Dashboard(project) {
     const container = document.querySelector(".content");
     const taskService = project.getTaskService();
     const lanes = [];
+    const events = new EventBus();
+
+    CreateTaskModal(events);
+    ViewTaskModal(events);
 
     function createDashboard() {
         const dashboard = Utility.createElement("div", "dashboard");
@@ -21,23 +28,20 @@ export default function Dashboard(project, events) {
         const lanesContainer = Utility.createElement("div", "swim-lane-list");
         dashboard.appendChild(lanesContainer);
 
-        createSwimLanes(lanesContainer);
+        ["ready to start", "in progress", "in review", "closed"]
+            .forEach(status => addSwimLane(status, lanesContainer));
 
         return dashboard;
     }
 
-    function createSwimLanes(lanesContainer) {
-        ["ready to start", "in progress", "in review", "closed"].forEach(status => {
-
-            const lane = new SwimLane(
-                lanesContainer,
-                taskService.getTasksByStatus(status).map(task => new TaskCard(task, events)),
-                status,
-                events);
-
-            lanes.push(lane);
-            lane.render(lanesContainer);
-        });
+    function addSwimLane(status, lanesContainer) {
+        const lane = new SwimLane(
+            lanesContainer,
+            taskService.getTasksByStatus(status).map(task => new TaskCard(task, events)),
+            status,
+            events);
+        lanes.push(lane);
+        lane.render(lanesContainer);
     }
 
     function createHeader(title) {
@@ -52,7 +56,7 @@ export default function Dashboard(project, events) {
 
     function createTask(data) {
         const task = new Task(taskService.getIndex(), data.project, data.summary, data.description, data.priority, data.date, data.status);
-    
+
         taskService.addTask(task);
 
         addTaskCard(task);
@@ -75,11 +79,11 @@ export default function Dashboard(project, events) {
     }
 
     function moveTask(taskId, newStatus) {
-        
+
         const movedTask = taskService.getTaskById(Number(taskId));
 
         if (movedTask && movedTask.getStatus() !== newStatus) {
-          
+
             const updatedTask = new Task(movedTask.getId(), movedTask.getProject(), movedTask.getSummary(), movedTask.getDescription(), movedTask.getPriority(), movedTask.getDueDate(), newStatus);
             taskService.updateTask(updatedTask);
             moveTaskCard(movedTask, updatedTask);
@@ -123,12 +127,17 @@ export default function Dashboard(project, events) {
         container.appendChild(createDashboard());
     }
 
+    function getEvents() {
+        return events;
+    }
+
     events.on("createTask", (data) => createTask(data));
     events.on("updateTask", (data) => updateTask(data));
     events.on("moveTask", ({ taskId, newStatus }) => moveTask(taskId, newStatus));
     events.on("deleteTask", (task) => deleteTask(task));
 
     return {
-        render
+        render,
+        getEvents
     };
 }

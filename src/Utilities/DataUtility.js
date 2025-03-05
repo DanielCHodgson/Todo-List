@@ -1,4 +1,4 @@
-import ProjectModel from "../data/Models/ProjectModel";
+import ProjectModel from "../data/models/ProjectModel";
 import TaskService from "../data/services/TaskService";
 
 export default class DataUtility {
