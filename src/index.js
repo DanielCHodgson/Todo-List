@@ -16,7 +16,6 @@ if (!storedProjects) {
     testData.projects.forEach(project => DataUtility.saveProject(ProjectModel.fromJSON(project)));
 }
 
-
 const project = DataUtility.loadProject(localStorage.getItem("currentProject"));
 
 const navModule = nav(project);

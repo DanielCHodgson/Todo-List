@@ -6,7 +6,7 @@ export default function validator() {
         const errors = [];
 
         Object.entries(fields)
-            .filter(([key]) => key !== "description" && key !== "date")
+            .filter(([key]) => key !== "id" && key !== "description" && key !== "date")
             .forEach(([key, element]) => {
                 if (!element.value) {
                     element.classList.add("invalid-field");

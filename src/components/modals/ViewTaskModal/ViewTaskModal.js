@@ -24,7 +24,6 @@ export default function ViewTaskModal(events) {
 
     function cacheFields() {
         fields = {
-            "id": element.querySelector(".id"),
             "summary": element.querySelector("#summary"),
             "description": element.querySelector("#description"),
             "project": element.querySelector("#project"),
@@ -36,7 +35,6 @@ export default function ViewTaskModal(events) {
 
     function setData(task) {
         if (!task) return;
-        fields.id.textContent = task.getId();
         fields.summary.value = task.getSummary();
         fields.description.value = task.getDescription();
         fields.project.value = task.getProject();
@@ -57,7 +55,7 @@ export default function ViewTaskModal(events) {
         const container = Utility.createElement("div", "view-task-header");
         const upper = Utility.createElement("div", "upper");
         upper.appendChild(Utility.createElement("p", "id"));
-        
+
         const iconRow = Utility.createElement("div", "icon-row");
         iconRow.appendChild(Utility.createIconButton("close", icons.close, destroy));
         upper.appendChild(iconRow);
@@ -93,9 +91,10 @@ export default function ViewTaskModal(events) {
     }
 
     function updateTask() {
-
+        console.log(fields)
         if (validator().isValidTaskData(fields)) {
             const data = trimFields(fields);
+            data.id = currentTask.getId();
             events.emit("updateTask", { "task": currentTask, "newData": data });
             destroy();
         }
