@@ -12,8 +12,6 @@ export default class DataUtility {
         projects = projects.map(project => {
             if (project.name === savedProject.getName()) {
                 projectExists = true;
-                console.log("Updated project:");
-                console.log(savedProject.toJSON());
                 return savedProject.toJSON();
             }
             return project;
@@ -26,8 +24,6 @@ export default class DataUtility {
         localStorage.setItem(this.PROJECT_STORAGE_KEY, JSON.stringify(projects));
     }
     
-
-
     static loadProject(projectName) {
         const storedProjects = JSON.parse(localStorage.getItem(DataUtility.PROJECT_STORAGE_KEY)) || [];
 
