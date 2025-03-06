@@ -1,11 +1,32 @@
 .filter-pane {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 2rem;
+}
 
+.addSwimlane {
+    align-self: flex-end;
+    width: 2rem;
+    height: 2rem;
+    background-color: var(--primary-light);
+    border: none;
+    border-radius: 8px;
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+}
+
+.addSwimlane:hover {
+    opacity: 0.8;
+}
+
+.addSwimlane svg {
+    fill: #FFFFFF;
 }
 
 .search-container {
     display: flex;
     height: 3rem;
-    padding: 0 2rem;
     align-items: center;
 }
 

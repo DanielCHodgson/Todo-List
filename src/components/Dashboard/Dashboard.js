@@ -8,6 +8,7 @@ import EventBus from "../../utilities/EventBus";
 import DataUtility from "../../utilities/DataUtility";
 import CreateTaskModal from "../modals/CreateTaskModal/CreateTaskModal";
 import ViewTaskModal from "../modals/ViewTaskModal/ViewTaskModal";
+import CreateSwimLaneModal from "../modals/CreateSwimLaneModal/CreateSwimLaneModal";
 
 export default function Dashboard(project) {
     const container = document.querySelector(".content");
@@ -17,12 +18,14 @@ export default function Dashboard(project) {
 
     CreateTaskModal(events);
     ViewTaskModal(events);
+    CreateSwimLaneModal();
+
 
     function createDashboard() {
         const dashboard = Utility.createElement("div", "dashboard");
         dashboard.appendChild(createHeader("Board"));
 
-        const filterPane = FilterPane();
+        const filterPane = FilterPane(events);
         filterPane.render(dashboard);
 
         const lanesContainer = Utility.createElement("div", "swim-lane-list");
