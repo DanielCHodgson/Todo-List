@@ -44,32 +44,44 @@ export default function nav(project, events) {
         const type = Utility.createElement("p", "project-type", `${project.getType()} project`);
         navHeader.append(icon, name, type);
 
+        navHeader.append(icon, name, type);
+
         const dropdownButton = Utility.createElement("button", "dropdown-button");
-        navHeader.appendChild(dropdownButton);
         const toggleIcon = DomUtility.renderSvg(icons.chevronDown);
         dropdownButton.appendChild(toggleIcon);
-
-
+        navHeader.appendChild(dropdownButton);
 
         const dropdownContent = Utility.createElement("div", "dropdown-content");
-        JSON.parse(localStorage.getItem(DataUtility.PROJECT_STORAGE_KEY))
-            .map(project => Utility.createElement("p", "option", project.name))
-            .forEach(option => {
-                dropdownContent.appendChild(option)
-                option.addEventListener("click", () => {
-                    events.emit("switchDashboard", option.textContent);
-                });
-            });
+        dropdownContent.classList.add("hidden");
 
-        dropdownButton.addEventListener("click", () => {
-            dropdownButton.innerHTML = "";
-            dropdownContent.classList.toggle("show");
-            dropdownContent.classList.contains("show") ?
-                dropdownButton.appendChild(Utility.renderSvg(icons.chevronUp)) :
-                dropdownButton.appendChild(Utility.renderSvg(icons.chevronDown));
+        const projects = JSON.parse(localStorage.getItem(DataUtility.PROJECT_STORAGE_KEY)) || [];
+        projects.forEach((project) => {
+            const option = Utility.createElement("p", "option", project.name);
+            option.addEventListener("click", () => {
+                events.emit("switchDashboard", option.textContent);
+            });
+            dropdownContent.appendChild(option);
         });
 
+        dropdownButton.addEventListener("click", (event) => {
+            event.stopPropagation();
+            dropdownContent.classList.toggle("hidden");
+            dropdownContent.classList.toggle("visible");
+    
+            const icon = dropdownContent.classList.contains("visible") 
+                ? icons.chevronUp 
+                : icons.chevronDown;
+            dropdownButton.firstChild.replaceWith(Utility.renderSvg(icon));
+        });
 
+        window.addEventListener("click", (event) => {
+            if (nav && !nav.contains(event.target) && dropdownContent.classList.contains("visible")) {
+                dropdownContent.classList.remove("visible");
+                dropdownContent.classList.add("hidden");
+                dropdownButton.firstChild.replaceWith(Utility.renderSvg(icons.chevronDown));
+            }
+        });
+    
         navHeader.appendChild(dropdownContent);
         return navHeader;
     }
