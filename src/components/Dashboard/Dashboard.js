@@ -27,11 +27,12 @@ export default class Dashboard {
         this.#lanes = [];
         this.#events = new EventBus();
         this.#element = this.createDashboard();
-        this.#container.appendChild(this.#element);
 
         const lanesContainer = this.#element.querySelector(".swim-lane-list")
+
         const statuses = ["ready to start", "in progress", "in review", "closed"];
-        statuses.forEach(status => this.addSwimLane(status, lanesContainer));
+        this.#lanes = statuses.map(status => this.createSwimLane(status, lanesContainer));
+        this.#lanes.forEach(lane => lane.render());
 
         this.initModals();
 
@@ -39,6 +40,8 @@ export default class Dashboard {
         this.#events.on("updateTask", (id, data) => this.updateTask(id, data));
         this.#events.on("moveTask", ({ taskId, newStatus }) => this.moveTask(taskId, newStatus));
         this.#events.on("deleteTask", (task) => this.deleteTask(task));
+
+        this.render()
     }
 
     initModals() {
@@ -62,14 +65,12 @@ export default class Dashboard {
         return dashboard;
     }
 
-    addSwimLane(status, lanesContainer) {
+    createSwimLane(status, parent) {
         const taskCards = this.#taskService
             .getTasksByStatus(status)
             .map(task => new TaskCard(task, this.#events));
 
-        const lane = new SwimLane(lanesContainer, new CardService(taskCards), status, this.#events);
-        this.#lanes.push(lane);
-        lane.render();
+        return new SwimLane(parent, new CardService(taskCards), status, this.#events);
     }
 
     createHeader(title) {
@@ -172,7 +173,8 @@ export default class Dashboard {
 
     render() {
         this.#container.innerHTML = "";
-        this.#container.appendChild(this.createDashboard());
+        if (this.#element)
+            this.#container.appendChild(this.#element);
     }
 
     getEvents() {

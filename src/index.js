@@ -27,7 +27,7 @@ function openNav(project) {
 }
 
 function openDashboard(project) {
-    project.getDashboard().render();
+    project.getDashboard();
 }
 
 function switchDashboard(projectName) {

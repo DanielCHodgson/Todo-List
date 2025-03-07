@@ -11,6 +11,7 @@ export default class SwimLane {
 
     constructor(parent, cardService, status, events) {
         this.#parent = parent;
+        console.log(parent)
         this.#cardService = cardService;
         this.#status = status;
         this.#events = events;
@@ -90,6 +91,7 @@ export default class SwimLane {
 
     render() {
         this.#parent.appendChild(this.#element);
+        console.log(this.#parent)
         this.renderCards();
     }
 
