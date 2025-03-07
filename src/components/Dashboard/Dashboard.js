@@ -30,9 +30,11 @@ export default class Dashboard {
         this.initModals();
 
         this.#events.on("createTask", (data) => this.createTask(data));
-        this.#events.on("updateTask", (data) => this.updateTask(data));
+        this.#events.on("updateTask", (id, data) => this.updateTask(id, data));
         this.#events.on("moveTask", ({ taskId, newStatus }) => this.moveTask(taskId, newStatus));
         this.#events.on("deleteTask", (task) => this.deleteTask(task));
+
+        console.log(`${this.#lanes}, ${this.#project.getName()}`)
     }
 
     initModals() {
@@ -86,71 +88,76 @@ export default class Dashboard {
             data.status
         );
         this.#taskService.addTask(task);
-        this.addTaskCard(task);
+
+        const lane = this.#lanes.find(lane => lane.getStatus() === task.getStatus());
+        lane.getCardService().addCard(new TaskCard(task, this.#events));
+        lane.renderCards();
+
         ProjectService.saveProject(this.#project);
     }
 
-    updateTask(data) {
-        const { task: originalTask, newData } = data;
+    updateTask(id, data) {
 
         const updatedTask = new Task(
-            originalTask.getId(),
-            newData.project,
-            newData.summary,
-            newData.description,
-            newData.priority,
-            newData.date,
-            newData.status
+            id,
+            data.newData.project,
+            data.newData.summary,
+            data.newData.description,
+            data.newData.priority,
+            data.newData.date,
+            data.newData.status
         );
-
+    
         this.#taskService.updateTask(updatedTask);
-        this.moveTaskCard(originalTask, updatedTask);
+    
+        const lane = this.#lanes.find(lane => lane.getStatus() === data.newData.status);
+        const oldLane = this.#lanes.find(lane => lane.getStatus() === data.task.getStatus());
+    
+        if (lane !== oldLane) {
+            oldLane.removeCard(data.task);
+            lane.getCardService().addCard(new TaskCard(updatedTask, this.#events));
+        } else {
+            lane.getCardService().updateCard(data.task, new TaskCard(updatedTask, this.#events));
+
+        }
+    
+        lane.renderCards();
+        if (oldLane !== lane) oldLane.renderCards();
+   
         ProjectService.saveProject(this.#project);
     }
+    
 
     moveTask(taskId, newStatus) {
-        const movedTask = this.#taskService.getTaskById(taskId);
+        const task = this.#taskService.getTaskById(taskId);
 
-        if (movedTask && movedTask.getStatus() !== newStatus) {
-            const updatedTask = new Task(
-                movedTask.getId(),
-                movedTask.getProject(),
-                movedTask.getSummary(),
-                movedTask.getDescription(),
-                movedTask.getPriority(),
-                movedTask.getDueDate(),
+        if (task && task.getStatus() !== newStatus) {
+            const movedTask = new Task(
+                task.getId(),
+                task.getProject(),
+                task.getSummary(),
+                task.getDescription(),
+                task.getPriority(),
+                task.getDueDate(),
                 newStatus
             );
-            
-            this.#taskService.updateTask(updatedTask);
-            this.moveTaskCard(movedTask, updatedTask);
+
+            this.#taskService.updateTask(movedTask);
+
+            const originalLane = this.#lanes.find(lane => lane.getStatus() === task.getStatus());
+            const newLane = this.#lanes.find(lane => lane.getStatus() === movedTask.getStatus());
+            originalLane.getCardService().moveCard(task, newLane.getCardService());
+
             ProjectService.saveProject(this.#project);
         }
     }
 
     deleteTask(task) {
         this.#taskService.removeTask(task.getId());
-        this.removeTaskCard(task);
-        ProjectService.saveProject(this.#project);
-    }
-
-    addTaskCard(task) {
-        this.#lanes.find(lane => lane.getStatus() === task.getStatus())
-            .getCardService()
-            .addCard(new TaskCard(task, this.#events));
-    }
-
-    moveTaskCard(originalTask, updatedTask) {
-        const originalLane = this.#lanes.find(lane => lane.getStatus() === originalTask.getStatus());
-        const newLane = this.#lanes.find(lane => lane.getStatus() === updatedTask.getStatus());
-        originalLane.getCardService()
-            .moveCard(originalTask, newLane.getCardService());
-    }
-
-    removeTaskCard(task) {
         this.#lanes.find(lane => lane.getStatus() === task.getStatus())
             .getCardService()
             .removeCard(task);
+        ProjectService.saveProject(this.#project);
     }
 
     handleNewTaskClick() {

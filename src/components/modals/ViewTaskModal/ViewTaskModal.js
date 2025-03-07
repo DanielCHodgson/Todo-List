@@ -91,11 +91,10 @@ export default function ViewTaskModal(events) {
     }
 
     function updateTask() {
-        console.log(fields)
         if (validator().isValidTaskData(fields)) {
             const data = trimFields(fields);
             data.id = currentTask.getId();
-            events.emit("updateTask", { "task": currentTask, "newData": data });
+            events.emit("updateTask", { "id": currentTask.getId(), "newData": data });
             destroy();
         }
     }

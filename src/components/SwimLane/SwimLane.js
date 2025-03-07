@@ -1,6 +1,5 @@
 import "./SwimLane.css";
 import Utility from "../../utilities/DomUtility";
-import CardService from "../../services/CardService";
 
 export default class SwimLane {
     #parent;
@@ -15,8 +14,8 @@ export default class SwimLane {
         this.#cardService = cardService;
         this.#status = status;
         this.#events = events;
-        this.#cardsContainer = null;
         this.#element = this.#createSwimLane();
+        this.#cardsContainer = this.#element.querySelector(".card-list");
         this.bindEvents();
     }
 
@@ -34,16 +33,16 @@ export default class SwimLane {
         const swimLane = Utility.createElement("div", "swim-lane");
         swimLane.dataset.status = this.#status;
 
-        this.#cardsContainer = Utility.createElement("div", "card-list");
+        const cardsContainer = Utility.createElement("div", "card-list");
 
         console.assert(this.#cardsContainer !== null, 'cardsContainer is null or undefined');
 
         swimLane.appendChild(this.#createHeader());
-        swimLane.appendChild(this.#cardsContainer);
+        swimLane.appendChild(cardsContainer);
 
-        this.#cardsContainer.addEventListener("dragover", (event) => this.#handleDragOver(event));
-        this.#cardsContainer.addEventListener("dragleave", (event) => this.#handleDragLeave(event));
-        this.#cardsContainer.addEventListener("drop", (event) => this.#handleDrop(event));
+        cardsContainer.addEventListener("dragover", (event) => this.#handleDragOver(event));
+        cardsContainer.addEventListener("dragleave", (event) => this.#handleDragLeave(event));
+        cardsContainer.addEventListener("drop", (event) => this.#handleDrop(event));
         return swimLane;
     }
 
@@ -79,34 +78,13 @@ export default class SwimLane {
         }
     }
 
- 
-    addCard(card) {
-        this.#cardService.addCard(card);
-        this.renderCards(this.#cardsContainer);
-    }
-
-    updateCard(id, newCard) {
-        const index = this.#cardService.findIndex(card => card.getTask().getId() === id);
-        if (index !== -1) {
-            this.#cardService[index] = newCard;
-            this.renderCards();
-        }
-    }
-
-    removeCard(card) {
-        this.#cardService.removeCard(card);
-        this.renderCards();
-    }
-
-    moveCard(card, newSwimlane) {
-        this.#cardService.moveCard(card, newSwimlane.getCardService())
-        this.renderCards();
-        newSwimlane.renderCards();
-    }
-
     renderCards() {
-        this.#cardsContainer.innerHTML = "";
-        this.#cardService.getCards().forEach(card => card.render(this.#cardsContainer));
+        if (this.#cardsContainer) {
+            this.#cardsContainer.innerHTML = "";
+        }
+        this.#cardService.getCards().forEach(card => {
+            card.render(this.#cardsContainer);
+        });
     }
 
     render() {

@@ -2,7 +2,6 @@ import "./styles/reset-modern.css";
 import "./styles/styles.css";
 import nav from "./components/Nav/Nav.js";
 import ProjectModel from "./data/models/ProjectModel.js";
-import teamIcon from './res/images/team-icon.png';
 import ProjectService from "./services/ProjectService.js";
 import testData from "./data/test/dummyProjects.json"
 import EventBus from "./utilities/EventBus.js";
