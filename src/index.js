@@ -10,25 +10,25 @@ import EventBus from "./utilities/EventBus.js";
 const navEvents = new EventBus();
 const storedProjects = JSON.parse(localStorage.getItem(ProjectService.PROJECT_STORAGE_KEY));
 
-if (!storedProjects) {
+if (storedProjects === null) {
     localStorage.setItem("currentProject", "SAAS");
     testData.projects.forEach(project => ProjectService.saveProject(ProjectModel.fromJSON(project)));
 }
 
+const project = ProjectService.loadProject(localStorage.getItem("currentProject"));
 
-openNav(ProjectService.loadProject(localStorage.getItem("currentProject")))
-openDashboard(ProjectService.loadProject(localStorage.getItem("currentProject")));
+openDashboard(project);
+openNav(project)
+
 
 function openNav(project) {
     const navModule = nav(project, navEvents);
     navModule.render();
 }
 
-
 function openDashboard(project) {
     project.getDashboard().render();
 }
-
 
 function switchDashboard(projectName) {
    

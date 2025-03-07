@@ -15,6 +15,7 @@ export default class Dashboard {
 
     #project;
     #container;
+    #element;
     #taskService;
     #lanes;
     #events;
@@ -25,8 +26,13 @@ export default class Dashboard {
         this.#taskService = project.getTaskService();
         this.#lanes = [];
         this.#events = new EventBus();
+        this.#element = this.createDashboard();
+        this.#container.appendChild(this.#element);
 
-        this.#container.appendChild(this.createDashboard());
+        const lanesContainer = this.#element.querySelector(".swim-lane-list")
+        const statuses = ["ready to start", "in progress", "in review", "closed"];
+        statuses.forEach(status => this.addSwimLane(status, lanesContainer));
+
         this.initModals();
 
         this.#events.on("createTask", (data) => this.createTask(data));
@@ -34,7 +40,7 @@ export default class Dashboard {
         this.#events.on("moveTask", ({ taskId, newStatus }) => this.moveTask(taskId, newStatus));
         this.#events.on("deleteTask", (task) => this.deleteTask(task));
 
-        console.log(`${this.#lanes}, ${this.#project.getName()}`)
+        console.log(this.#lanes)
     }
 
     initModals() {
@@ -44,6 +50,7 @@ export default class Dashboard {
     }
 
     createDashboard() {
+
         const dashboard = Utility.createElement("div", "dashboard");
         dashboard.appendChild(this.createHeader("Board"));
 
@@ -53,8 +60,6 @@ export default class Dashboard {
         const lanesContainer = Utility.createElement("div", "swim-lane-list");
         dashboard.appendChild(lanesContainer);
 
-        ["ready to start", "in progress", "in review", "closed"]
-            .forEach(status => this.addSwimLane(status, lanesContainer));
 
         return dashboard;
     }
