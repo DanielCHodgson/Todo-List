@@ -9,14 +9,15 @@ import ProjectService from "../../services/ProjectService";
 import CreateTaskModal from "../modals/CreateTaskModal/CreateTaskModal";
 import ViewTaskModal from "../modals/ViewTaskModal/ViewTaskModal";
 import CreateSwimLaneModal from "../modals/CreateSwimLaneModal/CreateSwimLaneModal";
+import CardService from "../../services/CardService";
 
 export default class Dashboard {
 
     #project;
-    #container
-    #taskService
-    #lanes
-    #events
+    #container;
+    #taskService;
+    #lanes;
+    #events;
 
     constructor(project) {
         this.#project = project;
@@ -57,13 +58,12 @@ export default class Dashboard {
     }
 
     addSwimLane(status, lanesContainer) {
-        const lane = new SwimLane(
-            lanesContainer,
-            this.#taskService.getTasksByStatus(status).map(task => new TaskCard(task, this.#events)),
-            status,
-            this.#events);
+        const taskCards = this.#taskService
+            .getTasksByStatus(status)
+            .map(task => new TaskCard(task, this.#events));
+        const lane = new SwimLane(lanesContainer, new CardService(taskCards), status, this.#events);
         this.#lanes.push(lane);
-        lane.render(lanesContainer);
+        lane.render();
     }
 
     createHeader(title) {
@@ -77,7 +77,14 @@ export default class Dashboard {
     }
 
     createTask(data) {
-        const task = new Task(`${data.project}-${this.#taskService.getIndex()}`, data.project, data.summary, data.description, data.priority, data.date, data.status);
+        const task = new Task(`${data.project}-${this.#taskService.getIndex()}`,
+            data.project,
+            data.summary,
+            data.description,
+            data.priority,
+            data.date,
+            data.status
+        );
         this.#taskService.addTask(task);
         this.addTaskCard(task);
         ProjectService.saveProject(this.#project);
@@ -85,59 +92,36 @@ export default class Dashboard {
 
     updateTask(data) {
         const { task: originalTask, newData } = data;
-        const updatedTask = new Task(originalTask.getId(), newData.project, newData.summary, newData.description, newData.priority, newData.date, newData.status);
-
-        this.#taskService.updateTask(updatedTask);
-
-        if (originalTask.getProject() !== newData.project) {
-
-            this.changeTaskProject(originalTask, newData.project);
-
-        } else if (originalTask.getStatus() !== newData.status) {
-            this.moveTaskCard(originalTask, updatedTask);
-        } else {
-            this.updateTaskCard(updatedTask);
-        }
-
-        ProjectService.saveProject(this.#project);
-    }
-
-
-    changeTaskProject(originalTask, newProjectName) {
-        const currentProject = this.#project;
-        const newProject = ProjectService.loadProject(newProjectName);
-
-        if (!currentProject || !newProject) {
-            console.error("One of the projects does not exist.");
-            return;
-        }
-
-        this.#taskService.removeTask(originalTask.getId());
-        ProjectService.saveProject(currentProject);
 
         const updatedTask = new Task(
             originalTask.getId(),
-            newProjectName,
-            originalTask.getSummary(),
-            originalTask.getDescription(),
-            originalTask.getPriority(),
-            originalTask.getDueDate(),
-            originalTask.getStatus()
+            newData.project,
+            newData.summary,
+            newData.description,
+            newData.priority,
+            newData.date,
+            newData.status
         );
 
-        newProject.getTaskService().addTask(updatedTask);
-        ProjectService.saveProject(newProject);
-
-        this.removeTaskCard(originalTask);
+        this.#taskService.updateTask(updatedTask);
+        this.moveTaskCard(originalTask, updatedTask);
+        ProjectService.saveProject(this.#project);
     }
 
     moveTask(taskId, newStatus) {
-
         const movedTask = this.#taskService.getTaskById(taskId);
 
         if (movedTask && movedTask.getStatus() !== newStatus) {
-
-            const updatedTask = new Task(movedTask.getId(), movedTask.getProject(), movedTask.getSummary(), movedTask.getDescription(), movedTask.getPriority(), movedTask.getDueDate(), newStatus);
+            const updatedTask = new Task(
+                movedTask.getId(),
+                movedTask.getProject(),
+                movedTask.getSummary(),
+                movedTask.getDescription(),
+                movedTask.getPriority(),
+                movedTask.getDueDate(),
+                newStatus
+            );
+            
             this.#taskService.updateTask(updatedTask);
             this.moveTaskCard(movedTask, updatedTask);
             ProjectService.saveProject(this.#project);
@@ -151,21 +135,22 @@ export default class Dashboard {
     }
 
     addTaskCard(task) {
-        this.#lanes.find(lane => lane.getStatus() === task.getStatus()).addCard(new TaskCard(task, this.#events));
-    }
-
-    updateTaskCard(updatedTask) {
-        this.#lanes.find(lane => lane.getStatus() === updatedTask.getStatus())
-            .updateCard(updatedTask.getId(), new TaskCard(updatedTask, this.#events));
+        this.#lanes.find(lane => lane.getStatus() === task.getStatus())
+            .getCardService()
+            .addCard(new TaskCard(task, this.#events));
     }
 
     moveTaskCard(originalTask, updatedTask) {
-        this.removeTaskCard(originalTask);
-        this.addTaskCard(updatedTask);
+        const originalLane = this.#lanes.find(lane => lane.getStatus() === originalTask.getStatus());
+        const newLane = this.#lanes.find(lane => lane.getStatus() === updatedTask.getStatus());
+        originalLane.getCardService()
+            .moveCard(originalTask, newLane.getCardService());
     }
 
     removeTaskCard(task) {
-        this.#lanes.find(lane => lane.getStatus() === task.getStatus()).removeCard(task.getId());
+        this.#lanes.find(lane => lane.getStatus() === task.getStatus())
+            .getCardService()
+            .removeCard(task);
     }
 
     handleNewTaskClick() {
@@ -182,5 +167,4 @@ export default class Dashboard {
     getEvents() {
         return this.#events;
     }
-
 }

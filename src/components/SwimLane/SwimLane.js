@@ -1,17 +1,18 @@
 import "./SwimLane.css";
 import Utility from "../../utilities/DomUtility";
+import CardService from "../../services/CardService";
 
 export default class SwimLane {
     #parent;
-    #cards;
+    #cardService;
     #status;
     #element;
     #cardsContainer;
     #events;
 
-    constructor(parent, cards, status, events) {
+    constructor(parent, cardService, status, events) {
         this.#parent = parent;
-        this.#cards = cards;
+        this.#cardService = cardService;
         this.#status = status;
         this.#events = events;
         this.#cardsContainer = null;
@@ -27,7 +28,6 @@ export default class SwimLane {
         this.#events.on("cardDragEnd", (status) => {
             this.toggleDroppableStyles(status, false);
         });
-
     }
 
     #createSwimLane() {
@@ -79,34 +79,41 @@ export default class SwimLane {
         }
     }
 
-    renderCards() {
-        this.#cardsContainer.innerHTML = "";
-        this.#cards.forEach(card => card.render(this.#cardsContainer));
-    }
-
+ 
     addCard(card) {
-        this.#cards.push(card);
-        card.render(this.#cardsContainer);
+        this.#cardService.addCard(card);
+        this.renderCards(this.#cardsContainer);
     }
 
     updateCard(id, newCard) {
-        const index = this.#cards.findIndex(card => card.getTask().getId() === id);
+        const index = this.#cardService.findIndex(card => card.getTask().getId() === id);
         if (index !== -1) {
-            this.#cards[index] = newCard;
+            this.#cardService[index] = newCard;
             this.renderCards();
         }
     }
 
-    removeCard(id) {
-        this.#cards = this.#cards.filter(card => card.getTask().getId() !== id);
+    removeCard(card) {
+        this.#cardService.removeCard(card);
         this.renderCards();
     }
 
-    render() {
+    moveCard(card, newSwimlane) {
+        this.#cardService.moveCard(card, newSwimlane.getCardService())
         this.renderCards();
+        newSwimlane.renderCards();
+    }
+
+    renderCards() {
+        this.#cardsContainer.innerHTML = "";
+        this.#cardService.getCards().forEach(card => card.render(this.#cardsContainer));
+    }
+
+    render() {
         if (!this.#parent.contains(this.#element)) {
             this.#parent.appendChild(this.#element);
         }
+        this.renderCards();
     }
 
     toggleDroppableStyles(status, shouldAdd) {
@@ -130,5 +137,9 @@ export default class SwimLane {
 
     getElement() {
         return this.#element;
+    }
+
+    getCardService() {
+        return this.#cardService;
     }
 }

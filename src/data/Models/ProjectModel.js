@@ -14,7 +14,6 @@ export default class ProjectModel {
         this.#icon = icon;
         this.#taskService = taskService;
         dashboard ? this.#dashboard = dashboard : this.#dashboard = new Dashboard(this);
-        console.log(this.#dashboard)
     }
 
     getName() {

@@ -109,6 +109,10 @@ export default class TaskCard {
     }
   }
 
+  getId() {
+    return this.#id;
+  }
+
   getTask() {
     return this.#task;
   }
