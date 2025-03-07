@@ -5,99 +5,116 @@ import Utility from "../../utilities/DomUtility";
 import Task from "../../data/models/TaskModel";
 import TaskCard from "../TaskCard/TaskCard";
 import EventBus from "../../utilities/EventBus";
-import DataUtility from "../../utilities/DataUtility";
+import ProjectService from "../../services/ProjectService";
 import CreateTaskModal from "../modals/CreateTaskModal/CreateTaskModal";
 import ViewTaskModal from "../modals/ViewTaskModal/ViewTaskModal";
 import CreateSwimLaneModal from "../modals/CreateSwimLaneModal/CreateSwimLaneModal";
 
-export default function Dashboard(project) {
-    const container = document.querySelector(".content");
-    const taskService = project.getTaskService();
-    const lanes = [];
-    const events = new EventBus();
+export default class Dashboard {
 
-    CreateTaskModal(events);
-    ViewTaskModal(events);
-    CreateSwimLaneModal();
+    #project;
+    #container
+    #taskService
+    #lanes
+    #events
 
+    constructor(project) {
+        this.#project = project;
+        this.#container = document.querySelector(".content");
+        this.#taskService = project.getTaskService();
+        this.#lanes = [];
+        this.#events = new EventBus();
 
-    function createDashboard() {
+        this.#container.appendChild(this.createDashboard());
+        this.initModals();
+
+        this.#events.on("createTask", (data) => this.createTask(data));
+        this.#events.on("updateTask", (data) => this.updateTask(data));
+        this.#events.on("moveTask", ({ taskId, newStatus }) => this.moveTask(taskId, newStatus));
+        this.#events.on("deleteTask", (task) => this.deleteTask(task));
+    }
+
+    initModals() {
+        CreateTaskModal(this.#events);
+        ViewTaskModal(this.#events);
+        CreateSwimLaneModal(this.#events);
+    }
+
+    createDashboard() {
         const dashboard = Utility.createElement("div", "dashboard");
-        dashboard.appendChild(createHeader("Board"));
+        dashboard.appendChild(this.createHeader("Board"));
 
-        const filterPane = FilterPane(events);
+        const filterPane = FilterPane(this.#events);
         filterPane.render(dashboard);
 
         const lanesContainer = Utility.createElement("div", "swim-lane-list");
         dashboard.appendChild(lanesContainer);
 
         ["ready to start", "in progress", "in review", "closed"]
-            .forEach(status => addSwimLane(status, lanesContainer));
+            .forEach(status => this.addSwimLane(status, lanesContainer));
 
         return dashboard;
     }
 
-    function addSwimLane(status, lanesContainer) {
+    addSwimLane(status, lanesContainer) {
         const lane = new SwimLane(
             lanesContainer,
-            taskService.getTasksByStatus(status).map(task => new TaskCard(task, events)),
+            this.#taskService.getTasksByStatus(status).map(task => new TaskCard(task, this.#events)),
             status,
-            events);
-        lanes.push(lane);
+            this.#events);
+        this.#lanes.push(lane);
         lane.render(lanesContainer);
     }
 
-    function createHeader(title) {
+    createHeader(title) {
         const header = Utility.createElement("div", "header");
         const heading = Utility.createElement("h2", "dashboard-title", title);
         const newTaskBtn = Utility.createElement("button", "new-task", "Create");
-        newTaskBtn.addEventListener("click", handleNewTaskClick);
+        newTaskBtn.addEventListener("click", () => this.handleNewTaskClick());
         header.appendChild(heading);
         header.appendChild(newTaskBtn);
         return header;
     }
 
-    function createTask(data) {
-        const task = new Task(`${data.project}-${taskService.getIndex()}`, data.project, data.summary, data.description, data.priority, data.date, data.status);
-
-        taskService.addTask(task);
-
-        addTaskCard(task);
-        DataUtility.saveProject(project);
+    createTask(data) {
+        const task = new Task(`${data.project}-${this.#taskService.getIndex()}`, data.project, data.summary, data.description, data.priority, data.date, data.status);
+        this.#taskService.addTask(task);
+        this.addTaskCard(task);
+        ProjectService.saveProject(this.#project);
     }
 
-    function updateTask(data) {
+    updateTask(data) {
         const { task: originalTask, newData } = data;
         const updatedTask = new Task(originalTask.getId(), newData.project, newData.summary, newData.description, newData.priority, newData.date, newData.status);
 
-        taskService.updateTask(updatedTask);
+        this.#taskService.updateTask(updatedTask);
 
         if (originalTask.getProject() !== newData.project) {
 
-            changeTaskProject(originalTask, newData.project);
+            this.changeTaskProject(originalTask, newData.project);
 
         } else if (originalTask.getStatus() !== newData.status) {
-            moveTaskCard(originalTask, updatedTask);
+            this.moveTaskCard(originalTask, updatedTask);
         } else {
-            updateTaskCard(updatedTask);
+            this.updateTaskCard(updatedTask);
         }
 
-        DataUtility.saveProject(project);
+        ProjectService.saveProject(this.#project);
     }
 
 
-    function changeTaskProject(originalTask, newProjectName) {
-        const currentProject = project;
-        const newProject = DataUtility.loadProject(newProjectName);
-    
+    changeTaskProject(originalTask, newProjectName) {
+        const currentProject = this.#project;
+        const newProject = ProjectService.loadProject(newProjectName);
+
         if (!currentProject || !newProject) {
             console.error("One of the projects does not exist.");
             return;
         }
-    
-        taskService.removeTask(originalTask.getId());
-        DataUtility.saveProject(currentProject);
-    
+
+        this.#taskService.removeTask(originalTask.getId());
+        ProjectService.saveProject(currentProject);
+
         const updatedTask = new Task(
             originalTask.getId(),
             newProjectName,
@@ -107,78 +124,63 @@ export default function Dashboard(project) {
             originalTask.getDueDate(),
             originalTask.getStatus()
         );
-    
+
         newProject.getTaskService().addTask(updatedTask);
-        DataUtility.saveProject(newProject);
+        ProjectService.saveProject(newProject);
 
-        console.log("Removed From")
-        console.log(DataUtility.loadProject(project.getName()));
-        console.log("Adfded To")
-        console.log(DataUtility.loadProject(newProjectName));
-
-        removeTaskCard(originalTask);
+        this.removeTaskCard(originalTask);
     }
 
-    function moveTask(taskId, newStatus) {
+    moveTask(taskId, newStatus) {
 
-        const movedTask = taskService.getTaskById(taskId);
+        const movedTask = this.#taskService.getTaskById(taskId);
 
         if (movedTask && movedTask.getStatus() !== newStatus) {
 
             const updatedTask = new Task(movedTask.getId(), movedTask.getProject(), movedTask.getSummary(), movedTask.getDescription(), movedTask.getPriority(), movedTask.getDueDate(), newStatus);
-            taskService.updateTask(updatedTask);
-            moveTaskCard(movedTask, updatedTask);
-            DataUtility.saveProject(project);
+            this.#taskService.updateTask(updatedTask);
+            this.moveTaskCard(movedTask, updatedTask);
+            ProjectService.saveProject(this.#project);
         }
     }
 
-    function deleteTask(task) {
-        taskService.removeTask(task.getId());
-        console.log(taskService.getTasks());
-        removeTaskCard(task);
-        DataUtility.saveProject(project);
+    deleteTask(task) {
+        this.#taskService.removeTask(task.getId());
+        this.removeTaskCard(task);
+        ProjectService.saveProject(this.#project);
     }
 
-    function addTaskCard(task) {
-        lanes.find(lane => lane.getStatus() === task.getStatus()).addCard(new TaskCard(task, events));
+    addTaskCard(task) {
+        this.#lanes.find(lane => lane.getStatus() === task.getStatus()).addCard(new TaskCard(task, this.#events));
     }
 
-    function updateTaskCard(updatedTask) {
-        lanes.find(lane => lane.getStatus() === updatedTask.getStatus())
-            .updateCard(updatedTask.getId(), new TaskCard(updatedTask, events));
+    updateTaskCard(updatedTask) {
+        this.#lanes.find(lane => lane.getStatus() === updatedTask.getStatus())
+            .updateCard(updatedTask.getId(), new TaskCard(updatedTask, this.#events));
     }
 
-    function moveTaskCard(originalTask, updatedTask) {
-        removeTaskCard(originalTask);
-        addTaskCard(updatedTask);
+    moveTaskCard(originalTask, updatedTask) {
+        this.removeTaskCard(originalTask);
+        this.addTaskCard(updatedTask);
     }
 
-    function removeTaskCard(task) {
-        lanes.find(lane => lane.getStatus() === task.getStatus()).removeCard(task.getId());
+    removeTaskCard(task) {
+        this.#lanes.find(lane => lane.getStatus() === task.getStatus()).removeCard(task.getId());
     }
 
-    function handleNewTaskClick() {
+    handleNewTaskClick() {
         if (!document.querySelector(".create-task-modal")) {
-            events.emit("openNewTaskModal", {});
+            this.#events.emit("openNewTaskModal", {});
         }
     }
 
-    function render() {
-        container.innerHTML = "";
-        container.appendChild(createDashboard());
+    render() {
+        this.#container.innerHTML = "";
+        this.#container.appendChild(this.createDashboard());
     }
 
-    function getEvents() {
-        return events;
+    getEvents() {
+        return this.#events;
     }
 
-    events.on("createTask", (data) => createTask(data));
-    events.on("updateTask", (data) => updateTask(data));
-    events.on("moveTask", ({ taskId, newStatus }) => moveTask(taskId, newStatus));
-    events.on("deleteTask", (task) => deleteTask(task));
-
-    return {
-        render,
-        getEvents
-    };
 }

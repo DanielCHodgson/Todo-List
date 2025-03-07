@@ -1,4 +1,4 @@
-import Task from "../models/TaskModel";
+import Task from "../data/models/TaskModel";
 
 export default class TaskService {
 

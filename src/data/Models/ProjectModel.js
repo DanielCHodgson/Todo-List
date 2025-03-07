@@ -1,4 +1,4 @@
-import dashboardModule from "../../components/Dashboard/Dashboard";
+import Dashboard from "../../components/Dashboard/Dashboard";
 
 export default class ProjectModel {
 
@@ -13,7 +13,8 @@ export default class ProjectModel {
         this.#type = type;
         this.#icon = icon;
         this.#taskService = taskService;
-        dashboard ? this.#dashboard = dashboard : this.#dashboard = dashboardModule(this);
+        dashboard ? this.#dashboard = dashboard : this.#dashboard = new Dashboard(this);
+        console.log(this.#dashboard)
     }
 
     getName() {

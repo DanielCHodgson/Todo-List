@@ -1,7 +1,7 @@
 import "./Nav.css";
 import logoIcon from "../../res/icons/giro-logo-white.svg";
 import Utility from "../../utilities/DomUtility";
-import DataUtility from "../../utilities/DataUtility";
+import ProjectService from "../../services/ProjectService";
 import DomUtility from "../../utilities/DomUtility";
 
 export default function nav(project, events) {
@@ -54,7 +54,7 @@ export default function nav(project, events) {
         const dropdownContent = Utility.createElement("div", "dropdown-content");
         dropdownContent.classList.add("hidden");
 
-        const projects = JSON.parse(localStorage.getItem(DataUtility.PROJECT_STORAGE_KEY)) || [];
+        const projects = JSON.parse(localStorage.getItem(ProjectService.PROJECT_STORAGE_KEY)) || [];
         projects.forEach((project) => {
             const option = Utility.createElement("p", "option", project.name);
             option.addEventListener("click", () => {
