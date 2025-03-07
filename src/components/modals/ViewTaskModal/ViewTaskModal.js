@@ -94,7 +94,7 @@ export default function ViewTaskModal(events) {
         if (validator().isValidTaskData(fields)) {
             const data = trimFields(fields);
             data.id = currentTask.getId();
-            events.emit("updateTask", { "id": currentTask.getId(), "newData": data });
+            events.emit("updateTask", { "task": currentTask, "newData": data });
             destroy();
         }
     }

@@ -10,19 +10,19 @@ export default class CardService {
         this.#cards.push(card);
     }
 
-    updateCard(currentCard, newCard) {
+    updateCard(id, newCard) {
         this.#cards = this.#cards.map(card => 
-            card.getId() === currentCard.getId() ? newCard : card
+            id === currentCard.getId() ? newCard : card
         );
     }
     
     moveCard(card, newCardService) {
-        this.removeCard(card);
+        this.removeCard(card.getId());
         newCardService.addCard(card);
     }
 
-    removeCard(cardToRemove) {
-        this.#cards = this.#cards.filter(card => card.getId() !== cardToRemove.getId());
+    removeCard(id) {
+        this.#cards = this.#cards.filter(card => card.getId() !== id);
     }
 
     getCards() {

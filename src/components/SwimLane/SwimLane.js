@@ -6,17 +6,16 @@ export default class SwimLane {
     #cardService;
     #status;
     #element;
-    #cardsList;
+    #cardsContainer;
     #events;
 
     constructor(parent, cardService, status, events) {
         this.#parent = parent;
-        console.log(parent)
         this.#cardService = cardService;
         this.#status = status;
         this.#events = events;
         this.#element = this.#createElement();
-        this.#cardsList = this.#element.querySelector(".card-list");
+        this.#cardsContainer = this.#element.querySelector(".card-list");
         this.bindEvents();
     }
 
@@ -35,17 +34,17 @@ export default class SwimLane {
         swimLane.dataset.status = this.#status;
 
         swimLane.appendChild(this.#createHeader());
-        swimLane.appendChild(this.#createCardsList());
+        swimLane.appendChild(this.#createCardsContainer());
 
         return swimLane;
     }
 
-    #createCardsList() {
-        const cardsList = Utility.createElement("div", "card-list");
-        cardsList.addEventListener("dragover", (event) => this.#handleDragOver(event));
-        cardsList.addEventListener("dragleave", (event) => this.#handleDragLeave(event));
-        cardsList.addEventListener("drop", (event) => this.#handleDrop(event));
-        return cardsList;
+    #createCardsContainer() {
+        const cardsContainer = Utility.createElement("div", "card-list");
+        cardsContainer.addEventListener("dragover", (event) => this.#handleDragOver(event));
+        cardsContainer.addEventListener("dragleave", (event) => this.#handleDragLeave(event));
+        cardsContainer.addEventListener("drop", (event) => this.#handleDrop(event));
+        return cardsContainer;
     }
 
     #createHeader() {
@@ -58,46 +57,42 @@ export default class SwimLane {
 
     #handleDragOver(event) {
         event.preventDefault();
-        if (event.target === this.#cardsList || this.#cardsList.contains(event.target)) {
-            this.#cardsList.classList.add("drag-over");
+        if (event.target === this.#cardsContainer || this.#cardsContainer.contains(event.target)) {
+            this.#cardsContainer.classList.add("drag-over");
         }
     }
 
     #handleDragLeave(event) {
-        if (event.target === this.#cardsList || this.#cardsList.contains(event.target)) {
-            this.#cardsList.classList.remove("drag-over");
+        if (event.target === this.#cardsContainer || this.#cardsContainer.contains(event.target)) {
+            this.#cardsContainer.classList.remove("drag-over");
         }
     }
 
     #handleDrop(event) {
 
         event.preventDefault();
-        if (event.target === this.#cardsList || this.#cardsList.contains(event.target)) {
+        if (event.target === this.#cardsContainer || this.#cardsContainer.contains(event.target)) {
             const taskId = event.dataTransfer.getData("text/plain");
             if (!taskId) return;
             this.#events.emit("moveTask", { taskId, newStatus: this.#status });
-            this.#cardsList.classList.remove("drag-over");
+            this.#cardsContainer.classList.remove("drag-over");
         }
     }
 
     renderCards() {
-        if (this.#cardsList) {
-            this.#cardsList.innerHTML = "";
-        }
-        this.#cardService.getCards().forEach(card => {
-            card.render(this.#cardsList);
-        });
+        if (this.#cardsContainer) 
+            this.#cardsContainer.innerHTML = "";
+        this.#cardService.getCards().forEach(card => card.render(this.#cardsContainer));
     }
 
     render() {
         this.#parent.appendChild(this.#element);
-        console.log(this.#parent)
         this.renderCards();
     }
 
     toggleDroppableStyles(status, shouldAdd) {
         if (this.#status !== status) {
-            shouldAdd ? this.#cardsList.classList.add("droppable") : this.#cardsList.classList.remove("droppable");
+            shouldAdd ? this.#cardsContainer.classList.add("droppable") : this.#cardsContainer.classList.remove("droppable");
         }
     }
 
@@ -107,7 +102,7 @@ export default class SwimLane {
         }
         this.#parent = null;
         this.#element = null;
-        this.#cardsList = null;
+        this.#cardsContainer = null;
     }
 
     getStatus() {

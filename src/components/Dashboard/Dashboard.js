@@ -61,7 +61,6 @@ export default class Dashboard {
         const lanesContainer = Utility.createElement("div", "swim-lane-list");
         dashboard.appendChild(lanesContainer);
 
-
         return dashboard;
     }
 
@@ -101,10 +100,10 @@ export default class Dashboard {
         ProjectService.saveProject(this.#project);
     }
 
-    updateTask(id, data) {
+    updateTask(data) {
 
         const updatedTask = new Task(
-            id,
+            data.task.getId(),
             data.newData.project,
             data.newData.summary,
             data.newData.description,
@@ -119,10 +118,10 @@ export default class Dashboard {
         const oldLane = this.#lanes.find(lane => lane.getStatus() === data.task.getStatus());
 
         if (lane !== oldLane) {
-            oldLane.removeCard(data.task);
+            oldLane.getCardService().removeCard(data.task.getId());
             lane.getCardService().addCard(new TaskCard(updatedTask, this.#events));
         } else {
-            lane.getCardService().updateCard(data.task, new TaskCard(updatedTask, this.#events));
+            lane.getCardService().updateCard(data.task.getId(), new TaskCard(updatedTask, this.#events));
 
         }
 
@@ -151,7 +150,10 @@ export default class Dashboard {
 
             const originalLane = this.#lanes.find(lane => lane.getStatus() === task.getStatus());
             const newLane = this.#lanes.find(lane => lane.getStatus() === movedTask.getStatus());
-            originalLane.getCardService().moveCard(task, newLane.getCardService());
+            originalLane.getCardService().moveCard(new TaskCard(movedTask, this.#events), newLane.getCardService());
+            
+            originalLane.renderCards();
+            newLane.renderCards();
 
             ProjectService.saveProject(this.#project);
         }
