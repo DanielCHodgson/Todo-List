@@ -6,7 +6,7 @@ export default class SwimLane {
     #cardService;
     #status;
     #element;
-    #cardsContainer;
+    #cardsList;
     #events;
 
     constructor(parent, cardService, status, events) {
@@ -14,8 +14,8 @@ export default class SwimLane {
         this.#cardService = cardService;
         this.#status = status;
         this.#events = events;
-        this.#element = this.#createSwimLane();
-        this.#cardsContainer = this.#element.querySelector(".card-list");
+        this.#element = this.#createElement();
+        this.#cardsList = this.#element.querySelector(".card-list");
         this.bindEvents();
     }
 
@@ -29,21 +29,22 @@ export default class SwimLane {
         });
     }
 
-    #createSwimLane() {
+    #createElement() {
         const swimLane = Utility.createElement("div", "swim-lane");
         swimLane.dataset.status = this.#status;
 
-        const cardsContainer = Utility.createElement("div", "card-list");
-
-        console.assert(this.#cardsContainer !== null, 'cardsContainer is null or undefined');
-
         swimLane.appendChild(this.#createHeader());
-        swimLane.appendChild(cardsContainer);
+        swimLane.appendChild(this.#createCardsList());
 
-        cardsContainer.addEventListener("dragover", (event) => this.#handleDragOver(event));
-        cardsContainer.addEventListener("dragleave", (event) => this.#handleDragLeave(event));
-        cardsContainer.addEventListener("drop", (event) => this.#handleDrop(event));
         return swimLane;
+    }
+
+    #createCardsList() {
+        const cardsList = Utility.createElement("div", "card-list");
+        cardsList.addEventListener("dragover", (event) => this.#handleDragOver(event));
+        cardsList.addEventListener("dragleave", (event) => this.#handleDragLeave(event));
+        cardsList.addEventListener("drop", (event) => this.#handleDrop(event));
+        return cardsList;
     }
 
     #createHeader() {
@@ -56,47 +57,45 @@ export default class SwimLane {
 
     #handleDragOver(event) {
         event.preventDefault();
-        if (event.target === this.#cardsContainer || this.#cardsContainer.contains(event.target)) {
-            this.#cardsContainer.classList.add("drag-over");
+        if (event.target === this.#cardsList || this.#cardsList.contains(event.target)) {
+            this.#cardsList.classList.add("drag-over");
         }
     }
 
     #handleDragLeave(event) {
-        if (event.target === this.#cardsContainer || this.#cardsContainer.contains(event.target)) {
-            this.#cardsContainer.classList.remove("drag-over");
+        if (event.target === this.#cardsList || this.#cardsList.contains(event.target)) {
+            this.#cardsList.classList.remove("drag-over");
         }
     }
 
     #handleDrop(event) {
 
         event.preventDefault();
-        if (event.target === this.#cardsContainer || this.#cardsContainer.contains(event.target)) {
+        if (event.target === this.#cardsList || this.#cardsList.contains(event.target)) {
             const taskId = event.dataTransfer.getData("text/plain");
             if (!taskId) return;
             this.#events.emit("moveTask", { taskId, newStatus: this.#status });
-            this.#cardsContainer.classList.remove("drag-over");
+            this.#cardsList.classList.remove("drag-over");
         }
     }
 
     renderCards() {
-        if (this.#cardsContainer) {
-            this.#cardsContainer.innerHTML = "";
+        if (this.#cardsList) {
+            this.#cardsList.innerHTML = "";
         }
         this.#cardService.getCards().forEach(card => {
-            card.render(this.#cardsContainer);
+            card.render(this.#cardsList);
         });
     }
 
     render() {
-        if (!this.#parent.contains(this.#element)) {
-            this.#parent.appendChild(this.#element);
-        }
+        this.#parent.appendChild(this.#element);
         this.renderCards();
     }
 
     toggleDroppableStyles(status, shouldAdd) {
         if (this.#status !== status) {
-            shouldAdd ? this.#cardsContainer.classList.add("droppable") : this.#cardsContainer.classList.remove("droppable");
+            shouldAdd ? this.#cardsList.classList.add("droppable") : this.#cardsList.classList.remove("droppable");
         }
     }
 
@@ -106,7 +105,7 @@ export default class SwimLane {
         }
         this.#parent = null;
         this.#element = null;
-        this.#cardsContainer = null;
+        this.#cardsList = null;
     }
 
     getStatus() {

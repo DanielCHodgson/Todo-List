@@ -39,8 +39,6 @@ export default class Dashboard {
         this.#events.on("updateTask", (id, data) => this.updateTask(id, data));
         this.#events.on("moveTask", ({ taskId, newStatus }) => this.moveTask(taskId, newStatus));
         this.#events.on("deleteTask", (task) => this.deleteTask(task));
-
-        console.log(this.#lanes)
     }
 
     initModals() {
@@ -68,6 +66,7 @@ export default class Dashboard {
         const taskCards = this.#taskService
             .getTasksByStatus(status)
             .map(task => new TaskCard(task, this.#events));
+
         const lane = new SwimLane(lanesContainer, new CardService(taskCards), status, this.#events);
         this.#lanes.push(lane);
         lane.render();
@@ -112,12 +111,12 @@ export default class Dashboard {
             data.newData.date,
             data.newData.status
         );
-    
+
         this.#taskService.updateTask(updatedTask);
-    
+
         const lane = this.#lanes.find(lane => lane.getStatus() === data.newData.status);
         const oldLane = this.#lanes.find(lane => lane.getStatus() === data.task.getStatus());
-    
+
         if (lane !== oldLane) {
             oldLane.removeCard(data.task);
             lane.getCardService().addCard(new TaskCard(updatedTask, this.#events));
@@ -125,13 +124,13 @@ export default class Dashboard {
             lane.getCardService().updateCard(data.task, new TaskCard(updatedTask, this.#events));
 
         }
-    
+
         lane.renderCards();
         if (oldLane !== lane) oldLane.renderCards();
-   
+
         ProjectService.saveProject(this.#project);
     }
-    
+
 
     moveTask(taskId, newStatus) {
         const task = this.#taskService.getTaskById(taskId);
