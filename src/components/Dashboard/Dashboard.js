@@ -49,7 +49,8 @@ export default class Dashboard {
     }
 
     renderSwimLanes() {
-        this.#laneService.forEach(lane => lane.render());
+        console.log(this.#laneService);
+        this.#laneService.getLanes().forEach(lane => lane.render());
     }
 
     createDashboard() {

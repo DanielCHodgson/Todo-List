@@ -1,0 +1,51 @@
+.create-project-modal {
+    width: 320px;
+    height: auto;
+    padding: 0.5rem 2rem;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    background-color: var(--secondary-light);
+    border-radius: 8px;
+    box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.create-project-modal .header {
+    padding: 0.5rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+
+
+.header svg {
+    cursor: pointer;
+}
+
+.header svg:hover {
+    opacity: 0.5;
+}
+
+.create-project-modal form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    font-family: "Robot", Arial, Helvetica, sans-serif;
+}
+
+.create-project-modal .submit {
+    width: 3rem;
+    height: 2rem;
+    align-self: flex-end;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--primary-light);
+    color: #FFFFFF;
+    cursor: pointer;
+}

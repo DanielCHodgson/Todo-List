@@ -17,7 +17,6 @@ export default function nav(events) {
         backlog: `<svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 512 512"><path d="M0 96C0 60.7 28.7 32 64 32l384 0c35.3 0 64 28.7 64 64l0 320c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 96zm64 0l0 64 64 0 0-64L64 96zm384 0L192 96l0 64 256 0 0-64zM64 224l0 64 64 0 0-64-64 0zm384 0l-256 0 0 64 256 0 0-64zM64 352l0 64 64 0 0-64-64 0zm384 0l-256 0 0 64 256 0 0-64z"/></svg>`,
         chevronUp: `<svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 512 512"><path d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z"/></svg>`,
         chevronDown: `<svg xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 512 512"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>`,
-
     };
 
     function createLeftNav() {
@@ -41,50 +40,53 @@ export default function nav(events) {
 
     function createHeader() {
         const navHeader = Utility.createElement("div", "nav-header");
-        const icon = Utility.createImg(project.getIcon(), "team-icon", "3rem", "3rem");
-        const name = Utility.createElement("p", "project-name", project.getName());
-        const type = Utility.createElement("p", "project-type", `${project.getType()} project`);
-        navHeader.append(icon, name, type);
 
-        navHeader.append(icon, name, type);
+        if (project !== null) {
+            const icon = Utility.createImg(project.getIcon(), "team-icon", "3rem", "3rem");
+            const name = Utility.createElement("p", "project-name", project.getName());
+            const type = Utility.createElement("p", "project-type", `${project.getType()} project`);
+            navHeader.append(icon, name, type);
 
-        const dropdownButton = Utility.createElement("button", "dropdown-button");
-        const toggleIcon = DomUtility.renderSvg(icons.chevronDown);
-        dropdownButton.appendChild(toggleIcon);
-        navHeader.appendChild(dropdownButton);
+            navHeader.append(icon, name, type);
 
-        const dropdownContent = Utility.createElement("div", "dropdown-content");
-        dropdownContent.classList.add("hidden");
+            const dropdownButton = Utility.createElement("button", "dropdown-button");
+            const toggleIcon = DomUtility.renderSvg(icons.chevronDown);
+            dropdownButton.appendChild(toggleIcon);
+            navHeader.appendChild(dropdownButton);
 
-        const projects = JSON.parse(localStorage.getItem(ProjectService.PROJECT_STORAGE_KEY)) || [];
-        projects.forEach((project) => {
-            const option = Utility.createElement("p", "option", project.name);
-            option.addEventListener("click", () => {
-                events.emit("switchDashboard", option.textContent);
+            const dropdownContent = Utility.createElement("div", "dropdown-content");
+            dropdownContent.classList.add("hidden");
+
+            const projects = JSON.parse(localStorage.getItem(ProjectService.PROJECT_STORAGE_KEY)) || [];
+            projects.forEach((project) => {
+                const option = Utility.createElement("p", "option", project.name);
+                option.addEventListener("click", () => {
+                    events.emit("switchDashboard", option.textContent);
+                });
+                dropdownContent.appendChild(option);
             });
-            dropdownContent.appendChild(option);
-        });
 
-        dropdownButton.addEventListener("click", (event) => {
-            event.stopPropagation();
-            dropdownContent.classList.toggle("hidden");
-            dropdownContent.classList.toggle("visible");
-    
-            const icon = dropdownContent.classList.contains("visible") 
-                ? icons.chevronUp 
-                : icons.chevronDown;
-            dropdownButton.firstChild.replaceWith(Utility.renderSvg(icon));
-        });
+            dropdownButton.addEventListener("click", (event) => {
+                event.stopPropagation();
+                dropdownContent.classList.toggle("hidden");
+                dropdownContent.classList.toggle("visible");
 
-        window.addEventListener("click", (event) => {
-            if (nav && !nav.contains(event.target) && dropdownContent.classList.contains("visible")) {
-                dropdownContent.classList.remove("visible");
-                dropdownContent.classList.add("hidden");
-                dropdownButton.firstChild.replaceWith(Utility.renderSvg(icons.chevronDown));
-            }
-        });
-    
-        navHeader.appendChild(dropdownContent);
+                const icon = dropdownContent.classList.contains("visible")
+                    ? icons.chevronUp
+                    : icons.chevronDown;
+                dropdownButton.firstChild.replaceWith(Utility.renderSvg(icon));
+            });
+
+            window.addEventListener("click", (event) => {
+                if (nav && !nav.contains(event.target) && dropdownContent.classList.contains("visible")) {
+                    dropdownContent.classList.remove("visible");
+                    dropdownContent.classList.add("hidden");
+                    dropdownButton.firstChild.replaceWith(Utility.renderSvg(icons.chevronDown));
+                }
+            });
+
+            navHeader.appendChild(dropdownContent);
+        }
         return navHeader;
     }
 

@@ -1,6 +1,6 @@
 import Utility from "../../../utilities/DomUtility.js";
 import "./CreateTaskModal.css";
-import validator from "../../../utilities/Validator.js";
+import Validator from "../../../utilities/Validator.js";
 
 export default function NewTaskModal(events) {
     const parent = document.querySelector(".app-wrapper");
@@ -19,8 +19,8 @@ export default function NewTaskModal(events) {
         if (!element) {
             element = createElement();
             render();
+            cacheFields();
         }
-        cacheFields();
     }
 
     function cacheFields() {
@@ -83,7 +83,7 @@ export default function NewTaskModal(events) {
     function createTask(event) {
         event.preventDefault();
 
-        if (validator().isValidTaskData(fields)) {
+        if (Validator.isValidTaskData(fields)) {
             const data = Object.fromEntries(
                 Object.entries(fields).map(([key, element]) => [key, element.value.trim()])
             );

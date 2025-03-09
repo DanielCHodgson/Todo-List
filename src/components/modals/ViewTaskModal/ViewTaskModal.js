@@ -1,6 +1,6 @@
 import "./ViewTaskModal.css";
 import Utility from "../../../utilities/DomUtility";
-import validator from "../../../utilities/Validator";
+import Validator from "../../../utilities/Validator";
 
 export default function ViewTaskModal(events) {
     const parent = document.querySelector(".app-wrapper");
@@ -91,7 +91,7 @@ export default function ViewTaskModal(events) {
     }
 
     function updateTask() {
-        if (validator().isValidTaskData(fields)) {
+        if (Validator.isValidTaskData(fields)) {
             const data = trimFields(fields);
             data.id = currentTask.getId();
             events.emit("updateTask", { "task": currentTask, "newData": data });

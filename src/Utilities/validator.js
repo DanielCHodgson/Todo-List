@@ -1,7 +1,7 @@
-export default function validator() {
+export default class Validator {
 
 
-    function isValidTaskData(fields) {
+    static isValidTaskData(fields) {
 
         const errors = [];
 
@@ -26,21 +26,36 @@ export default function validator() {
         }
 
         if (errors.length > 0) {
-            displayErrorMessages(errors);
+            this.displayErrorMessages(errors);
             return false;
         }
 
         return true;
     }
 
+    static isValidProjectData(data) {
 
-    function displayErrorMessages(errors) {
+        let errors = [];
+
+        if (data.name.length > 5 || data.name.length < 1) {
+            errors.push("Name must be between1 and 5 characters.");
+        }
+
+        if (data.type.length > 15 || data.type.length < 1) {
+            errors.push("Must be between 1 and 15 characters.");
+        }
+
+        if (errors.length > 0) {
+            this.displayErrorMessages(errors);
+            return false;
+        }
+
+        return true;
+    }
+
+    static displayErrorMessages(errors) {
         // To DO - print to UI
         alert(errors.join("\n"));
     }
 
-
-    return {
-        isValidTaskData
-    }
 }

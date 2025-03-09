@@ -34,12 +34,11 @@ export default class LaneService {
 
     toJSON() {
         return {
-            tasks: this.#lanes.map(lane => lane.toJSON()),
+            lanes: this.#lanes.map(lane => lane.toJSON()),
         };
     }
 
     static fromJSON(data) {
-        console.log(data)
         return new LaneService(data.lanes.map(lane => lane.fromJSON(lane)));
     }
 }
