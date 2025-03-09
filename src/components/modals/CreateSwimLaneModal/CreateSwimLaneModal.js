@@ -1,6 +1,7 @@
 import "./CreateSwimlaneModal.css";
 import Utility from "../../../utilities/DomUtility";
 import EventBus from "../../../utilities/EventBus";
+import Validator from "../../../utilities/Validator";
 
 export default function CreateSwimLaneModal() {
 
@@ -29,7 +30,8 @@ export default function CreateSwimLaneModal() {
 
         const body = Utility.createElement("div", "body");
         const form = Utility.createElement("form", "form");
-        const status = Utility.createInputFormGroup("status", "Status", true, 1, 20)
+        const status = Utility.createInputFormGroup("status", "Status", true, 1, 20);
+        status.value = "";
         form.appendChild(status);
 
         const submit = Utility.createElement("button", "submit", "Add");
@@ -45,9 +47,12 @@ export default function CreateSwimLaneModal() {
 
     function handleSubmit(event, fieldGroup) {
         event.preventDefault();
-        const status = fieldGroup.querySelector("#status").value;
-        EventBus.emit("createSwimLane", status)
-        destroy();
+
+        const status = fieldGroup.querySelector("#status").value.toLowerCase();
+        if (Validator.isValidSwimLaneStatus(status)) {
+            EventBus.emit("createSwimLane", status);
+            destroy();
+        }
     }
 
     function destroy() {

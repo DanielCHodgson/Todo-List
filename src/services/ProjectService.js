@@ -1,11 +1,11 @@
 import ProjectModel from "../data/models/ProjectModel";
 import TaskService from "./TaskService";
 import LaneService from "./LaneService";
-import CardService from "./CardService";
 
 export default class ProjectService {
 
     static PROJECT_STORAGE_KEY = "projectData";
+    static CURRENT_PROJECT = this.loadCurrentProject();
 
     static saveProject(savedProject) {
         let projects = JSON.parse(localStorage.getItem(this.PROJECT_STORAGE_KEY)) || [];
@@ -55,6 +55,7 @@ export default class ProjectService {
 
     static setCurrentProject(projectName) {
         localStorage.setItem("currentProject", projectName);
+        this.CURRENT_PROJECT = this.loadCurrentProject();
     }
 
 }

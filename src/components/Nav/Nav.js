@@ -3,10 +3,11 @@ import logoIcon from "../../res/icons/giro-logo-white.svg";
 import Utility from "../../utilities/DomUtility";
 import ProjectService from "../../services/ProjectService";
 import DomUtility from "../../utilities/DomUtility";
+import EventBus from "../../utilities/EventBus";
 
-export default function nav(events) {
+export default function nav() {
 
-    const project = ProjectService.loadCurrentProject();
+    const project = ProjectService.CURRENT_PROJECT;
     const nav = document.querySelector(".nav");
 
     const icons = {
@@ -61,7 +62,7 @@ export default function nav(events) {
             projects.forEach((project) => {
                 const option = Utility.createElement("p", "option", project.name);
                 option.addEventListener("click", () => {
-                    events.emit("switchDashboard", option.textContent);
+                    EventBus.emit("switchDashboard", option.textContent);
                 });
                 dropdownContent.appendChild(option);
             });

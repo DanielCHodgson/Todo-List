@@ -29,7 +29,6 @@ export default class LaneService {
         return this.#lanes.find(lane => lane.getStatus() === status);
     }
 
-
     getLanes() {
         return this.#lanes;
     }

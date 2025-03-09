@@ -9,7 +9,6 @@ export default class SwimLane {
     #status;
     #element;
     #cardsContainer;
-    #events;
 
     constructor(cardService, status) {
         this.#cardService = cardService;

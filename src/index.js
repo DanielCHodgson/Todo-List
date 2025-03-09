@@ -16,7 +16,10 @@ const storedProjects = JSON.parse(localStorage.getItem(ProjectService.PROJECT_ST
 let nav = null;
 let currentDashboard = null;
 
-if (storedProjects === null) {
+
+console.log(ProjectService.CURRENT_PROJECT)
+
+if (ProjectService.CURRENT_PROJECT === null) {
     //testData.projects.forEach(project => ProjectService.saveProject(ProjectModel.fromJSON(project)));
     //ProjectService.setCurrentProject("SAAS");
     CreateProjectModal().launchModal();
@@ -25,11 +28,10 @@ if (storedProjects === null) {
     openDashboard();
 }
 
-
 function createProject(data) {
     ProjectService.saveProject(new ProjectModel(data.name, data.type, logoIcon, new TaskService([]), new LaneService([])));
     if (JSON.parse(localStorage.getItem("projectData")).length === 1) {
-        localStorage.setItem("currentProject", data.name);
+        ProjectService.setCurrentProject(data.name);
         openDashboard();
         openNav();
     }
@@ -55,7 +57,3 @@ function switchDashboard(projectName) {
 
 EventBus.on("createProject", (data) => createProject(data));
 EventBus.on("switchDashboard", (projectName) => switchDashboard(projectName));
-
-
-
-

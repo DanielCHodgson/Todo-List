@@ -53,6 +53,24 @@ export default class Validator {
         return true;
     }
 
+    static isValidSwimLaneStatus(status) {
+        let errors = [];
+        if (status.length <= 0) {
+            errors.push("Status cannot be empty.");
+        }
+
+        if (status.length > 20) {
+            errors.push("Status must be 20 characters or less.");
+        }
+
+        if (errors.length > 0) {
+            this.displayErrorMessages(errors);
+            return false;
+        }
+
+        return true;
+    }
+
     static displayErrorMessages(errors) {
         // To DO - print to UI
         alert(errors.join("\n"));

@@ -14,7 +14,7 @@ export default class CardService {
 
     updateCard(id, newCard) {
         this.#cards = this.#cards.map(card =>
-            id === currentCard.getId() ? newCard : card
+            card.getId() === id ? newCard : card
         );
     }
 
