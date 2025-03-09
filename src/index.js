@@ -9,7 +9,6 @@ import Dashboard from "./components/Dashboard/Dashboard.js";
 import CreateProjectModal from "./components/modals/CreateProjectModal/CreateProjectModal.js";
 import TaskService from "./services/TaskService.js";
 import LaneService from "./services/LaneService.js";
-
 import logoIcon from "./res/images/team-icon.jpg";
 
 const navEvents = new EventBus();
@@ -23,11 +22,10 @@ if (storedProjects === null) {
     //ProjectService.setCurrentProject("SAAS");
     CreateProjectModal(navEvents).launchModal();
 } else {
-    //do stuff
+    openNav()
+    openDashboard();
 }
 
-//openDashboard();
-//openNav()
 
 function createProject(data) {
     ProjectService.saveProject(new ProjectModel(data.name, data.type, logoIcon, new TaskService([]), new LaneService([])));

@@ -1,5 +1,7 @@
 import "./SwimLane.css";
 import Utility from "../../utilities/DomUtility";
+import EventBus from "../../utilities/EventBus";
+import CardService from "../../services/CardService";
 
 export default class SwimLane {
     #parent;
@@ -19,6 +21,7 @@ export default class SwimLane {
     }
 
     bindEvents() {
+
         this.#events.on("cardDragStart", (status) => {
             this.toggleDroppableStyles(status, true);
         });
@@ -26,6 +29,7 @@ export default class SwimLane {
         this.#events.on("cardDragEnd", (status) => {
             this.toggleDroppableStyles(status, false);
         });
+
     }
 
     #createElement() {
@@ -79,8 +83,9 @@ export default class SwimLane {
     }
 
     renderCards() {
-        if (this.#cardsContainer) 
+        if (this.#cardsContainer)
             this.#cardsContainer.innerHTML = "";
+
         this.#cardService.getCards().forEach(card => card.render(this.#cardsContainer));
     }
 
@@ -120,17 +125,18 @@ export default class SwimLane {
 
     toJSON() {
         return {
-           cardService: this.#cardService,
-           status: this.#status,
-           events: this.#events,
+            cardService: this.#cardService.toJSON(),
+            status: this.#status,
+            events: this.#events.toJSON(),
         };
     }
 
     static fromJSON(data) {
-        return new SwimLane(
-            data.cardService,
+        const swimLane = new SwimLane(
+            CardService.fromJSON(data.cardService),
             data.status,
-            data.events,
+            EventBus.fromJSON(data.events),
         );
+        return swimLane;
     }
 }

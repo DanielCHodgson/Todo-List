@@ -12,10 +12,18 @@ export default function NewTaskModal(events) {
     let element = null;
     let form = null;
     let fields = {};
+    let statuses = null;
 
-    events.on("openNewTaskModal", launchModal);
+    events.on("openNewTaskModal", (laneService) => launchModal(laneService));
 
-    function launchModal() {
+    function launchModal(laneService) {
+
+        statuses = laneService
+            .getLanes()
+            .map(lane => {
+                return lane.getStatus();
+            })
+
         if (!element) {
             element = createElement();
             render();
@@ -60,7 +68,7 @@ export default function NewTaskModal(events) {
             Utility.createInputFormGroup("summary", "Summary", true, 1, 35),
             Utility.createTextAreaFormGroup("description", "Description", false, 0, 500),
             Utility.createSelectFormGroup("priority", "Priority", ["P1", "P2", "P3", "P4", "P5"]),
-            Utility.createSelectFormGroup("status", "Status", ["ready to start", "in progress", "in review", "closed"]),
+            Utility.createSelectFormGroup("status", "Status", statuses),
             Utility.createInputFormGroup("date", "Due date", true, 10, 10)
         );
 

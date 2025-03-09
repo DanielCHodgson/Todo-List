@@ -24,4 +24,24 @@ export default class EventBus {
         if (!this.events[event]) return;
         this.events[event].forEach(listener => listener(data));
     }
+
+
+    toJSON() {
+        const json = JSON.stringify({
+            events: Object.keys(this.events)
+        });
+        return json;
+    }
+
+    static fromJSON(json) {
+        const data = JSON.parse(json);
+        const eventBus = new EventBus();
+
+        
+        data.events.forEach(event => {
+            eventBus.events[event] = [];
+        });
+
+        return eventBus;
+    }
 }

@@ -1,3 +1,5 @@
+import SwimLane from "../components/SwimLane/SwimLane";
+
 export default class LaneService {
 
     #lanes
@@ -8,7 +10,7 @@ export default class LaneService {
 
     addLane(newLane) {
         if (!this.#lanes.some(lane => lane.getStatus() === newLane.getStatus))
-            this.#lanes.push(lane);
+            this.#lanes.push(newLane);
     }
 
     removeLane(laneToRemove) {
@@ -39,7 +41,9 @@ export default class LaneService {
     }
 
     static fromJSON(data) {
-        return new LaneService(data.lanes.map(lane => lane.fromJSON(lane)));
+        return new LaneService(data.lanes.map(lane => {
+           return SwimLane.fromJSON(lane);
+        }));
     }
 }
 

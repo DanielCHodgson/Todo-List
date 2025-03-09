@@ -1,6 +1,7 @@
 import ProjectModel from "../data/models/ProjectModel";
 import TaskService from "./TaskService";
 import LaneService from "./LaneService";
+import CardService from "./CardService";
 
 export default class ProjectService {
 
@@ -35,7 +36,6 @@ export default class ProjectService {
 
         const projectData = storedProjects.find(project => project.name === projectName);
 
-        
         return new ProjectModel(
             projectData.name,
             projectData.type,

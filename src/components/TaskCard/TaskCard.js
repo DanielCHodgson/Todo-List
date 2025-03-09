@@ -1,5 +1,7 @@
 import "./TaskCard.css"
 import Utility from "../../utilities/DomUtility";
+import EventBus from "../../utilities/EventBus";
+import TaskModel from "../../data/models/TaskModel";
 
 export default class TaskCard {
 
@@ -10,6 +12,7 @@ export default class TaskCard {
   #fields = null;
 
   constructor(task, events) {
+    console.log(task)
     this.#task = task;
     this.#events = events;
     this.#id = this.#task.getId();
@@ -120,4 +123,16 @@ export default class TaskCard {
   getCard() {
     return this.#element;
   }
+
+  toJSON() {
+    return {
+      task: this.#task,
+      events: this.#events,
+    };
+  }
+
+  static fromJSON(data) {
+    return new TaskCard(TaskModel.fromJSON(data.task), EventBus.fromJSON(data.events));
+  }
+
 }

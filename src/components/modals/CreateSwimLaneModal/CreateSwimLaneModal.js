@@ -28,10 +28,11 @@ export default function CreateSwimLaneModal(events) {
 
         const body = Utility.createElement("div", "body");
         const form = Utility.createElement("form", "form");
-        form.appendChild(Utility.createInputFormGroup("status", "Status", true, 1, 20));
+        const status = Utility.createInputFormGroup("status", "Status", true, 1, 20)
+        form.appendChild(status);
 
         const submit = Utility.createElement("button", "submit", "Add");
-        submit.addEventListener("click", (event) => handleSubmit)
+        submit.addEventListener("click", (event) => handleSubmit(event, status))
         form.appendChild(submit);
 
         body.appendChild(form);
@@ -41,12 +42,15 @@ export default function CreateSwimLaneModal(events) {
         return modal;
     }
 
-    function handleSubmit(event) {
+    function handleSubmit(event, fieldGroup) {
         event.preventDefault();
-
+        const status = fieldGroup.querySelector("#status").value;
+        events.emit("createSwimLane", status)
+        destroy();
     }
 
     function destroy() {
+        if (element);
         element.remove();
     }
 
