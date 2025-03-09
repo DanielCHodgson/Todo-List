@@ -29,7 +29,7 @@ if (ProjectService.CURRENT_PROJECT === null) {
 }
 
 function createProject(data) {
-    ProjectService.saveProject(new ProjectModel(data.name, data.type, logoIcon, new TaskService([]), new LaneService([])));
+    ProjectService.saveProject(new ProjectModel(data.name, data.type, logoIcon, new TaskService([], 1), new LaneService([])));
     if (JSON.parse(localStorage.getItem("projectData")).length === 1) {
         ProjectService.setCurrentProject(data.name);
         openDashboard();
