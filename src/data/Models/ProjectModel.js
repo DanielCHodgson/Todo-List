@@ -1,4 +1,3 @@
-import Dashboard from "../../components/Dashboard/Dashboard";
 
 export default class ProjectModel {
 
@@ -6,14 +5,14 @@ export default class ProjectModel {
     #type
     #icon
     #taskService
-    #dashboard;
+    #laneService
 
-    constructor(name, type, icon, taskService, dashboard) {
+    constructor(name, type, icon, taskService, laneService) {
         this.#name = name;
         this.#type = type;
         this.#icon = icon;
         this.#taskService = taskService;
-        dashboard ? this.#dashboard = dashboard : this.#dashboard = new Dashboard(this);
+        this.#laneService = laneService;
     }
 
     getName() {
@@ -32,8 +31,8 @@ export default class ProjectModel {
         return this.#taskService;
     }
 
-    getDashboard() {
-        return this.#dashboard;
+    getLaneService() {
+        return this.#laneService;
     }
 
     toJSON() {
@@ -42,11 +41,11 @@ export default class ProjectModel {
             type: this.#type,
             icon: this.#icon,
             taskService: this.#taskService,
-            dashboard: this.#dashboard
+            laneService: this.#laneService,
         };
     }
 
     static fromJSON(data) {
-        return new ProjectModel(data.name, data.type, data.icon, data.taskService, data.dashboard);
+        return new ProjectModel(data.name, data.type, data.icon, data.taskService, data.laneService);
     }
 }

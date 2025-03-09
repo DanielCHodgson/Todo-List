@@ -4,7 +4,9 @@ import Utility from "../../utilities/DomUtility";
 import ProjectService from "../../services/ProjectService";
 import DomUtility from "../../utilities/DomUtility";
 
-export default function nav(project, events) {
+export default function nav(events) {
+
+    const project = ProjectService.loadCurrentProject();
     const nav = document.querySelector(".nav");
 
     const icons = {

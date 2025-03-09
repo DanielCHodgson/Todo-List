@@ -1,44 +1,41 @@
 import "./styles/reset-modern.css";
 import "./styles/styles.css";
-import nav from "./components/Nav/Nav.js";
+import navModule from "./components/Nav/Nav.js";
 import ProjectModel from "./data/models/ProjectModel.js";
 import ProjectService from "./services/ProjectService.js";
 import testData from "./data/test/dummyProjects.json"
 import EventBus from "./utilities/EventBus.js";
-
+import Dashboard from "./components/Dashboard/Dashboard.js";
 
 const navEvents = new EventBus();
 const storedProjects = JSON.parse(localStorage.getItem(ProjectService.PROJECT_STORAGE_KEY));
 
+let nav = null;
+let currentDashboard = null;
+
 if (storedProjects === null) {
-    localStorage.setItem("currentProject", "SAAS");
     testData.projects.forEach(project => ProjectService.saveProject(ProjectModel.fromJSON(project)));
+    ProjectService.setCurrentProject("SAAS");
 }
 
-const project = ProjectService.loadProject(localStorage.getItem("currentProject"));
+//openDashboard();
+//openNav()
 
-openDashboard(project);
-openNav(project)
-
-
-function openNav(project) {
-    const navModule = nav(project, navEvents);
-    navModule.render();
+function openNav() {
+    nav = navModule(navEvents);
+    nav.render();
 }
 
-function openDashboard(project) {
-    project.getDashboard();
+function openDashboard() {
+    currentDashboard = new Dashboard();
 }
 
 function switchDashboard(projectName) {
-   
-    const currentProjectName = localStorage.getItem("currentProject");
 
-    if (projectName !== currentProjectName) {
-        localStorage.setItem("currentProject", projectName);
-        const project = ProjectService.loadProject(localStorage.getItem("currentProject"));
-        openDashboard(project);
-        openNav(project);
+    if (projectName !== ProjectService.getCurrentProjectName()) {
+        ProjectService.setCurrentProject(projectName)
+        openDashboard();
+        openNav();
     }
 }
 

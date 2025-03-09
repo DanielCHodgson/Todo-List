@@ -9,8 +9,7 @@ export default class SwimLane {
     #cardsContainer;
     #events;
 
-    constructor(parent, cardService, status, events) {
-        this.#parent = parent;
+    constructor(cardService, status, events) {
         this.#cardService = cardService;
         this.#status = status;
         this.#events = events;
@@ -85,7 +84,8 @@ export default class SwimLane {
         this.#cardService.getCards().forEach(card => card.render(this.#cardsContainer));
     }
 
-    render() {
+    render(parent) {
+        this.#parent = parent;
         this.#parent.appendChild(this.#element);
         this.renderCards();
     }
@@ -115,5 +115,22 @@ export default class SwimLane {
 
     getCardService() {
         return this.#cardService;
+    }
+
+
+    toJSON() {
+        return {
+           cardService: this.#cardService,
+           status: this.#status,
+           events: this.#events,
+        };
+    }
+
+    static fromJSON(data) {
+        return new SwimLane(
+            data.cardService,
+            data.status,
+            data.events,
+        );
     }
 }

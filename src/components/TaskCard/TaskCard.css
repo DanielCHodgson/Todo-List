@@ -27,3 +27,8 @@
 .task-card .delete-icon:hover {
     opacity: 0.5;
 }
+
+
+.task-card.dragging:active {
+    opacity: 1;
+}

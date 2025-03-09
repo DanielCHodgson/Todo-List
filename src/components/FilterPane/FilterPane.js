@@ -16,7 +16,7 @@ export default function FilterPane(events) {
         filterPane.appendChild(createSearch());
 
         const addSwimlane = Utility.createElement("button", "addSwimlane");
-        addSwimlane.addEventListener("click", events.emit("addSwimlane"));
+        addSwimlane.addEventListener("click", () => events.emit("addSwimlane"));
         addSwimlane.appendChild(Utility.renderSvg(icons.add));
 
         filterPane.appendChild(addSwimlane);

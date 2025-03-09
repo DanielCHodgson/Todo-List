@@ -1,7 +1,8 @@
 import ProjectModel from "../data/models/ProjectModel";
 import TaskService from "./TaskService";
+import LaneService from "./LaneService";
 
-export default class DataUtility {
+export default class ProjectService {
 
     static PROJECT_STORAGE_KEY = "projectData";
 
@@ -25,7 +26,7 @@ export default class DataUtility {
     }
     
     static loadProject(projectName) {
-        const storedProjects = JSON.parse(localStorage.getItem(DataUtility.PROJECT_STORAGE_KEY)) || [];
+        const storedProjects = JSON.parse(localStorage.getItem(ProjectService.PROJECT_STORAGE_KEY)) || [];
 
         if (storedProjects.length === 0) {
             console.log("No project data");
@@ -34,11 +35,26 @@ export default class DataUtility {
 
         const projectData = storedProjects.find(project => project.name === projectName);
 
+        
         return new ProjectModel(
             projectData.name,
             projectData.type,
             projectData.icon,
-            TaskService.fromJSON(projectData.taskService)
+            TaskService.fromJSON(projectData.taskService),
+            LaneService.fromJSON(projectData.laneService),
         );
     }
+
+    static loadCurrentProject() {
+        return this.loadProject(localStorage.getItem("currentProject"));
+    }
+
+    static getCurrentProjectName() {
+        localStorage.getItem("currentProject");
+    }
+
+    static setCurrentProject(projectName) {
+        localStorage.setItem("currentProject", projectName);
+    }
+
 }
