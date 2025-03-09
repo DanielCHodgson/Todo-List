@@ -19,7 +19,6 @@ export default class Dashboard {
     #taskService;
     #laneService;
     #lanesContainer;
-    #events;
 
     constructor() {
         this.#project = ProjectService.loadCurrentProject();
@@ -27,7 +26,6 @@ export default class Dashboard {
 
         this.#taskService = this.#project.getTaskService();
         this.#laneService = this.#project.getLaneService();
-        this.#events = new EventBus();
 
         this.#container = document.querySelector(".content");
         this.#element = this.createDashboard();
@@ -35,20 +33,20 @@ export default class Dashboard {
        
         this.initModals();
 
-        this.#events.on("createTask", (data) => this.createTask(data));
-        this.#events.on("updateTask", (id, data) => this.updateTask(id, data));
-        this.#events.on("moveTask", ({ taskId, newStatus }) => this.moveTask(taskId, newStatus));
-        this.#events.on("deleteTask", (task) => this.deleteTask(task));
-        this.#events.on("createSwimLane", (status) => this.addSwimLane(status));
+        EventBus.on("createTask", (data) => this.createTask(data));
+        EventBus.on("updateTask", (id, data) => this.updateTask(id, data));
+        EventBus.on("moveTask", ({ taskId, newStatus }) => this.moveTask(taskId, newStatus));
+        EventBus.on("deleteTask", (task) => this.deleteTask(task));
+        EventBus.on("createSwimLane", (status) => this.addSwimLane(status));
 
         this.renderSwimLanes();
         this.render()
     }
 
     initModals() {
-        CreateTaskModal(this.#events);
-        ViewTaskModal(this.#events);
-        CreateSwimLaneModal(this.#events);
+        CreateTaskModal(EventBus);
+        ViewTaskModal(EventBus);
+        CreateSwimLaneModal(EventBus);
     }
 
 
@@ -56,11 +54,11 @@ export default class Dashboard {
         const cards = this.#taskService
             .getTasksByStatus(status)
             .map(task => {
-                return new TaskCard(task, this.#events);
+                return new TaskCard(task, EventBus);
             });
 
       
-        const lane = new SwimLane(new CardService(cards), status, this.#events);
+        const lane = new SwimLane(new CardService(cards), status, EventBus);
         this.#laneService.addLane(lane);
         lane.render(this.#lanesContainer);
         ProjectService.saveProject(this.#project);
@@ -75,7 +73,7 @@ export default class Dashboard {
         const dashboard = Utility.createElement("div", "dashboard");
         dashboard.appendChild(this.createHeader("Board"));
 
-        const filterPane = FilterPane(this.#events);
+        const filterPane = FilterPane(EventBus);
         filterPane.render(dashboard);
 
         const lanesContainer = Utility.createElement("div", "swim-lane-list");
@@ -87,9 +85,9 @@ export default class Dashboard {
     createSwimLane(status, parent) {
         const taskCards = this.#taskService
             .getTasksByStatus(status)
-            .map(task => new TaskCard(task, this.#events));
+            .map(task => new TaskCard(task, EventBus));
 
-        this.#laneService.addLane(new SwimLane(parent, new CardService(taskCards), status, this.#events));
+        this.#laneService.addLane(new SwimLane(parent, new CardService(taskCards), status, EventBus));
     }
 
     createHeader(title) {
@@ -114,7 +112,7 @@ export default class Dashboard {
         this.#taskService.addTask(task);
 
         const lane = this.#laneService.getLaneByStatus(task.getStatus());
-        lane.getCardService().addCard(new TaskCard(task, this.#events));
+        lane.getCardService().addCard(new TaskCard(task, EventBus));
         lane.renderCards();
 
         ProjectService.saveProject(this.#project);
@@ -139,9 +137,9 @@ export default class Dashboard {
 
         if (lane !== oldLane) {
             oldLane.getCardService().removeCard(data.task.getId());
-            lane.getCardService().addCard(new TaskCard(updatedTask, this.#events));
+            lane.getCardService().addCard(new TaskCard(updatedTask, EventBus));
         } else {
-            lane.getCardService().updateCard(data.task.getId(), new TaskCard(updatedTask, this.#events));
+            lane.getCardService().updateCard(data.task.getId(), new TaskCard(updatedTask, EventBus));
         }
 
         lane.renderCards();
@@ -170,7 +168,7 @@ export default class Dashboard {
             const originalLane = this.#laneService.getLaneByStatus(task.getStatus());
             const newLane = this.#laneService.getLaneByStatus(movedTask.getStatus());
 
-            originalLane.getCardService().moveCard(new TaskCard(movedTask, this.#events), newLane.getCardService());
+            originalLane.getCardService().moveCard(new TaskCard(movedTask, EventBus), newLane.getCardService());
 
             originalLane.renderCards();
             newLane.renderCards();
@@ -189,7 +187,7 @@ export default class Dashboard {
 
     handleNewTaskClick() {
         if (!document.querySelector(".create-task-modal")) {
-            this.#events.emit("openNewTaskModal", this.#laneService);
+            EventBus.emit("openNewTaskModal", this.#laneService);
         }
     }
 
@@ -200,7 +198,7 @@ export default class Dashboard {
     }
 
     getEvents() {
-        return this.#events;
+        return EventBus;
     }
 
 }

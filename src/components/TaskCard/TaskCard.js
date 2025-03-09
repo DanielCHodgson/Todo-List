@@ -6,15 +6,12 @@ import TaskModel from "../../data/models/TaskModel";
 export default class TaskCard {
 
   #task
-  #events;
   #id = null;
   #element
   #fields = null;
 
-  constructor(task, events) {
-    console.log(task)
+  constructor(task) {
     this.#task = task;
-    this.#events = events;
     this.#id = this.#task.getId();
     this.#element = this.createCardElement();
     this.cacheFields();
@@ -82,18 +79,18 @@ export default class TaskCard {
   }
 
   handleCardClick(task) {
-    this.#events.emit("viewTask", task)
+    EventBus.emit("viewTask", task)
   }
 
   #handleDragStart(event) {
     event.dataTransfer.setData("text/plain", this.#id);
     event.target.classList.add("dragging");
-    this.#events.emit("cardDragStart", this.#task.getStatus());
+    EventBus.emit("cardDragStart", this.#task.getStatus());
   }
 
   #handleDragEnd(event) {
     event.target.classList.remove("dragging");
-    this.#events.emit("cardDragEnd", this.#task.getStatus());
+    EventBus.emit("cardDragEnd", this.#task.getStatus());
   }
 
   #handleDelete(event) {
@@ -106,7 +103,7 @@ export default class TaskCard {
   }
 
   destroy() {
-    this.#events.emit("deleteTask", this.#task);
+    EventBus.emit("deleteTask", this.#task);
     if (this.#element) {
       this.#element.remove();
     }
@@ -127,12 +124,11 @@ export default class TaskCard {
   toJSON() {
     return {
       task: this.#task,
-      events: this.#events,
     };
   }
 
   static fromJSON(data) {
-    return new TaskCard(TaskModel.fromJSON(data.task), EventBus.fromJSON(data.events));
+    return new TaskCard(TaskModel.fromJSON(data.task));
   }
 
 }

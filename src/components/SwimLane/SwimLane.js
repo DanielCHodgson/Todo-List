@@ -11,10 +11,9 @@ export default class SwimLane {
     #cardsContainer;
     #events;
 
-    constructor(cardService, status, events) {
+    constructor(cardService, status) {
         this.#cardService = cardService;
         this.#status = status;
-        this.#events = events;
         this.#element = this.#createElement();
         this.#cardsContainer = this.#element.querySelector(".card-list");
         this.bindEvents();
@@ -22,11 +21,11 @@ export default class SwimLane {
 
     bindEvents() {
 
-        this.#events.on("cardDragStart", (status) => {
+        EventBus.on("cardDragStart", (status) => {
             this.toggleDroppableStyles(status, true);
         });
 
-        this.#events.on("cardDragEnd", (status) => {
+        EventBus.on("cardDragEnd", (status) => {
             this.toggleDroppableStyles(status, false);
         });
 
@@ -77,7 +76,7 @@ export default class SwimLane {
         if (event.target === this.#cardsContainer || this.#cardsContainer.contains(event.target)) {
             const taskId = event.dataTransfer.getData("text/plain");
             if (!taskId) return;
-            this.#events.emit("moveTask", { taskId, newStatus: this.#status });
+            EventBus.emit("moveTask", { taskId, newStatus: this.#status });
             this.#cardsContainer.classList.remove("drag-over");
         }
     }
@@ -127,7 +126,6 @@ export default class SwimLane {
         return {
             cardService: this.#cardService.toJSON(),
             status: this.#status,
-            events: this.#events.toJSON(),
         };
     }
 
@@ -135,7 +133,6 @@ export default class SwimLane {
         const swimLane = new SwimLane(
             CardService.fromJSON(data.cardService),
             data.status,
-            EventBus.fromJSON(data.events),
         );
         return swimLane;
     }

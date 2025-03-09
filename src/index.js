@@ -11,7 +11,6 @@ import TaskService from "./services/TaskService.js";
 import LaneService from "./services/LaneService.js";
 import logoIcon from "./res/images/team-icon.jpg";
 
-const navEvents = new EventBus();
 const storedProjects = JSON.parse(localStorage.getItem(ProjectService.PROJECT_STORAGE_KEY));
 
 let nav = null;
@@ -20,7 +19,7 @@ let currentDashboard = null;
 if (storedProjects === null) {
     //testData.projects.forEach(project => ProjectService.saveProject(ProjectModel.fromJSON(project)));
     //ProjectService.setCurrentProject("SAAS");
-    CreateProjectModal(navEvents).launchModal();
+    CreateProjectModal().launchModal();
 } else {
     openNav()
     openDashboard();
@@ -37,7 +36,7 @@ function createProject(data) {
 }
 
 function openNav() {
-    nav = navModule(navEvents);
+    nav = navModule();
     nav.render();
 }
 
@@ -54,8 +53,8 @@ function switchDashboard(projectName) {
     }
 }
 
-navEvents.on("createProject", (data) => createProject(data));
-navEvents.on("switchDashboard", (projectName) => switchDashboard(projectName));
+EventBus.on("createProject", (data) => createProject(data));
+EventBus.on("switchDashboard", (projectName) => switchDashboard(projectName));
 
 
 
