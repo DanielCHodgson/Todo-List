@@ -192,6 +192,10 @@ export default class Dashboard {
         }
     }
 
+    destroy() {
+        this.#element.remove();
+    }
+
     render() {
         this.#container.innerHTML = "";
         if (this.#element)

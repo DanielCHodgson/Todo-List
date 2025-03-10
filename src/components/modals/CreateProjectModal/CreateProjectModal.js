@@ -71,6 +71,4 @@ export default function CreateProjectModal() {
     return {
         launchModal
     }
-
-
 }

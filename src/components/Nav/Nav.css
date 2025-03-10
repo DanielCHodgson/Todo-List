@@ -18,7 +18,11 @@
 .left-nav-icons {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 2rem;
+}
+.left-nav-icons svg {
+    width: 2rem !important;
+    height: 2rem !important;
 }
 
 .logo {

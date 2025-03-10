@@ -20,11 +20,15 @@ export default function nav() {
 
         const iconsContainer = Utility.createElement("div", "left-nav-icons");
 
-        ["search", "add"].forEach(iconType => {
-            const iconDiv = Utility.createElement("div", iconType);
-            iconDiv.appendChild(Utility.renderSvg(getIcons()[iconType]));
-            iconsContainer.appendChild(iconDiv);
-        });
+        const search = Utility.createElement("div", "search");
+        search.appendChild(Utility.renderSvg(getIcons().search))
+
+        const addProject = Utility.createElement("div", "add-project");
+        addProject.appendChild(Utility.renderSvg(getIcons().add));
+        addProject.addEventListener("click", () => EventBus.emit("addProject"));
+
+        iconsContainer.appendChild(search);
+        iconsContainer.appendChild(addProject);
 
         leftNav.appendChild(logo);
         leftNav.appendChild(iconsContainer);
@@ -54,7 +58,7 @@ export default function nav() {
             projects.forEach((project) => {
                 const option = Utility.createElement("p", "option", project.name);
                 option.addEventListener("click", () => {
-                    EventBus.emit("switchDashboard", option.textContent);
+                    EventBus.emit("switchProject", option.textContent);
                 });
                 dropdownContent.appendChild(option);
             });

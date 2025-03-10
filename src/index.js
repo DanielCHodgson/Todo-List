@@ -12,13 +12,8 @@ import LaneService from "./services/LaneService.js";
 import logoIcon from "./res/images/team-icon.jpg";
 import ProjectsPage from "./LaunchPage/ProjectsPage.js";
 
-const storedProjects = JSON.parse(localStorage.getItem(ProjectService.PROJECT_STORAGE_KEY));
-
 let nav = null;
-let currentDashboard = null;
-
-
-console.log(ProjectService.CURRENT_PROJECT)
+let currentPage = null;
 
 if (ProjectService.CURRENT_PROJECT === null) {
     //testData.projects.forEach(project => ProjectService.saveProject(ProjectModel.fromJSON(project)));
@@ -35,8 +30,8 @@ function createProject(data) {
     if (JSON.parse(localStorage.getItem("projectData")).length === 1) {
         ProjectService.setCurrentProject(data.name);
         openDashboard();
-        openNav();
     }
+    openNav();
 }
 
 function openNav() {
@@ -45,17 +40,21 @@ function openNav() {
 }
 
 function openDashboard() {
-    currentDashboard = new Dashboard();
+    currentPage = new Dashboard();
 }
 
-function switchDashboard(projectName) {
-
+function switchProject(projectName) {
     if (projectName !== ProjectService.getCurrentProjectName()) {
-        ProjectService.setCurrentProject(projectName)
+        ProjectService.setCurrentProject(projectName);
+
+        currentPage = new Dashboard();
+
         openDashboard();
         openNav();
     }
 }
 
+EventBus.on("addProject", () => CreateProjectModal().launchModal());
 EventBus.on("createProject", (data) => createProject(data));
-EventBus.on("switchDashboard", (projectName) => switchDashboard(projectName));
+EventBus.on("switchProject", (projectName) => switchProject(projectName));
+

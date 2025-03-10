@@ -50,7 +50,7 @@ export default class ProjectService {
     }
 
     static getCurrentProjectName() {
-        localStorage.getItem("currentProject");
+        return localStorage.getItem("currentProject");
     }
 
     static setCurrentProject(projectName) {
