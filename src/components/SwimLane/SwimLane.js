@@ -9,7 +9,7 @@ export default class SwimLane {
     #status;
     #element;
     #cardsContainer;
-
+    
     constructor(cardService, status) {
         this.#cardService = cardService;
         this.#status = status;
@@ -52,6 +52,8 @@ export default class SwimLane {
         const header = Utility.createElement("div", "lane-header");
         const titleStr = this.#status.replace(/-/g, " ");
         const title = Utility.createElement("h3", "", titleStr.toUpperCase());
+
+
         header.appendChild(title);
         return header;
     }

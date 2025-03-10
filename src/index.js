@@ -10,6 +10,7 @@ import CreateProjectModal from "./components/modals/CreateProjectModal/CreatePro
 import TaskService from "./services/TaskService.js";
 import LaneService from "./services/LaneService.js";
 import logoIcon from "./res/images/team-icon.jpg";
+import ProjectsPage from "./LaunchPage/ProjectsPage.js";
 
 const storedProjects = JSON.parse(localStorage.getItem(ProjectService.PROJECT_STORAGE_KEY));
 
@@ -22,7 +23,8 @@ console.log(ProjectService.CURRENT_PROJECT)
 if (ProjectService.CURRENT_PROJECT === null) {
     //testData.projects.forEach(project => ProjectService.saveProject(ProjectModel.fromJSON(project)));
     //ProjectService.setCurrentProject("SAAS");
-    CreateProjectModal().launchModal();
+    //CreateProjectModal().launchModal();
+    ProjectsPage().render();
 } else {
     openNav()
     openDashboard();
