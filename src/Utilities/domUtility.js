@@ -5,13 +5,13 @@ export default class DomUtility {
         const element = document.createElement(tag);
         if (className) element.classList.add(className);
         if (textContent) element.textContent = textContent;
-        
+
         for (const [key, value] of Object.entries(attributes)) {
-          element.setAttribute(key, value);
+            element.setAttribute(key, value);
         }
-      
+
         return element;
-      }
+    }
 
     static renderSvg(svgString) {
         const tempDiv = document.createElement('div');
@@ -53,7 +53,7 @@ export default class DomUtility {
             option.textContent = o;
             option.value = o;
             select.appendChild(option);
-        }) ;
+        });
 
         formGroup.appendChild(label);
         formGroup.appendChild(select);
@@ -64,9 +64,9 @@ export default class DomUtility {
         const formGroup = document.createElement("div");
         formGroup.classList.add("form-group");
 
-        const date = document.createElement("label");
-        date.setAttribute("for", id);
-        date.textContent = labelText;
+        const label = document.createElement("label");
+        label.setAttribute("for", id);
+        label.textContent = labelText;
 
         const input = document.createElement("input");
         input.id = id;
@@ -74,8 +74,28 @@ export default class DomUtility {
         input.minLength = minLength;
         input.maxLength = maxLength;
 
-        formGroup.appendChild(date);
+        formGroup.appendChild(label);
         formGroup.appendChild(input);
+        return formGroup;
+    }
+
+
+    static createDateFormGroup(id, labelText, required) {
+        const formGroup = document.createElement("div");
+        formGroup.classList.add("form-group");
+
+        const label = document.createElement("label");
+        label.setAttribute("for", id);
+        label.textContent = labelText;
+
+        const input = document.createElement("input");
+        input.type = "date";
+        input.id = id;
+        input.required = required;
+
+        formGroup.appendChild(label);
+        formGroup.appendChild(input);
+
         return formGroup;
     }
 

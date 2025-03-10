@@ -70,7 +70,7 @@ export default function NewTaskModal() {
             Utility.createTextAreaFormGroup("description", "Description", false, 0, 500),
             Utility.createSelectFormGroup("priority", "Priority", ["P1", "P2", "P3", "P4", "P5"]),
             Utility.createSelectFormGroup("status", "Status", statuses),
-            Utility.createInputFormGroup("date", "Due date", true, 10, 10)
+            Utility.createDateFormGroup("date", "Due date", false)
         );
 
         return form;
@@ -80,7 +80,7 @@ export default function NewTaskModal() {
         const footer = Utility.createElement("div", "modal-footer");
 
         const createBtn = Utility.createElement("button", "create-btn", "Create", { type: "submit" });
-        createBtn.addEventListener("click", createTask);
+        createBtn.addEventListener("click", submitTaskData);
 
         const cancelBtn = Utility.createElement("button", "cancel-btn", "Cancel", { type: "button" });
         cancelBtn.addEventListener("click", destroy);
@@ -89,7 +89,7 @@ export default function NewTaskModal() {
         return footer;
     }
 
-    function createTask(event) {
+    function submitTaskData(event) {
         event.preventDefault();
 
         if (Validator.isValidTaskData(fields)) {
@@ -107,7 +107,7 @@ export default function NewTaskModal() {
 
     function destroy() {
         if (element) {
-            form?.removeEventListener("submit", createTask);
+            form?.removeEventListener("submit", submitTaskData);
             element.remove();
             element = null;
             fields = {};

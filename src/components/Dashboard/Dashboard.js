@@ -99,6 +99,7 @@ export default class Dashboard {
     }
 
     createTask(data) {
+
         const task = new Task(`${data.project}-${this.#taskService.getIndex()}`,
             data.project,
             data.summary,

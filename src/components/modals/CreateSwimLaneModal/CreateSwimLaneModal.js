@@ -11,12 +11,18 @@ export default function CreateSwimLaneModal() {
 
     const parent = document.querySelector(".app-wrapper");
     let element = null;
+    let status = null;
 
     EventBus.on("addSwimlane", launchModal);
 
     function launchModal() {
         if (!element) element = createElement();
+        cacheFields();
         render();
+    }
+
+    function cacheFields() {
+        status = element.querySelector("#status")
     }
 
 
@@ -31,7 +37,7 @@ export default function CreateSwimLaneModal() {
         const body = Utility.createElement("div", "body");
         const form = Utility.createElement("form", "form");
         const status = Utility.createInputFormGroup("status", "Status", true, 1, 20);
-        status.value = "";
+        status.querySelector("input").textContent = "";
         form.appendChild(status);
 
         const submit = Utility.createElement("button", "submit", "Add");

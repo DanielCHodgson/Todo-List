@@ -11,6 +11,7 @@ export default class Task {
         if (!id || !project || !summary || !priority || !status) {
             throw new Error("Missing required fields.");
         }
+
         this.#id = id;
         this.#project = project;
         this.#summary = summary;
@@ -18,6 +19,7 @@ export default class Task {
         this.#priority = priority;
         this.#dueDate = dueDate;
         this.#status = status;
+        console.log(this.#dueDate)
     }
 
     getId() {
@@ -61,7 +63,7 @@ export default class Task {
             data.summary,
             data.description,
             data.priority,
-            data.dueDate,
+            data.date,
             data.status
         );
     }

@@ -1,6 +1,5 @@
 export default class Validator {
 
-
     static isValidTaskData(fields) {
 
         const errors = [];
@@ -18,11 +17,6 @@ export default class Validator {
 
         if (fields.summary.value.length > 50) {
             errors.push("Summary must be 50 characters or less.");
-        }
-
-        const dateRegex = /^([0-2][0-9]|(3)[0-1])-(0[1-9]|1[0-2])-\d{4}$/;
-        if (!dateRegex.test(fields.date.value)) {
-            errors.push("Date must be in the format DD-MM-YYYY.");
         }
 
         if (errors.length > 0) {
