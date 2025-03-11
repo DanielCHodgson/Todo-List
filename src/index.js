@@ -15,6 +15,8 @@ import ProjectsPage from "./LaunchPage/ProjectsPage.js";
 let nav = null;
 let currentPage = null;
 
+let createProjectModal = new CreateProjectModal();
+
 if (ProjectService.CURRENT_PROJECT === null) {
     //testData.projects.forEach(project => ProjectService.saveProject(ProjectModel.fromJSON(project)));
     //ProjectService.setCurrentProject("SAAS");
@@ -40,21 +42,20 @@ function openNav() {
 }
 
 function openDashboard() {
+    if (currentPage)
+        currentPage.destroy();
     currentPage = new Dashboard();
 }
 
 function switchProject(projectName) {
     if (projectName !== ProjectService.getCurrentProjectName()) {
         ProjectService.setCurrentProject(projectName);
-
-        currentPage = new Dashboard();
-
         openDashboard();
         openNav();
     }
 }
 
-EventBus.on("addProject", () => CreateProjectModal().launchModal());
+EventBus.on("addProject", () => createProjectModal.open());
 EventBus.on("createProject", (data) => createProject(data));
 EventBus.on("switchProject", (projectName) => switchProject(projectName));
 

@@ -3,62 +3,67 @@ import Utility from "../../../utilities/DomUtility";
 import Validator from "../../../utilities/Validator";
 import EventBus from "../../../utilities/EventBus";
 
-export default function ViewTaskModal() {
-    const parent = document.querySelector(".app-wrapper");
-    let currentTask = null;
-    let fields = null;
-    let element = null;
+export default class ViewTaskModal {
+    constructor() {
+        this.parent = document.querySelector(".app-wrapper");
+        this.currentTask = null;
+        this.fields = null;
+        this.element = null;
 
-    const icons = {
-        close: `<svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 384 512"><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5C45.3 29.9 25.1 28.1 11.5 39.4S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306 327.4 468.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z"/></svg>`
-    };
+        this.icons = {
+            close: `<svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 384 512">
+                <path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5C45.3 29.9 25.1 28.1 11.5 39.4S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306 327.4 468.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z"/>
+            </svg>`
+        };
 
-    EventBus.on("viewTask", (task) => launchModal(task));
-
-    function launchModal(task) {
-        if (!element) element = createElement();
-        currentTask = task;
-        cacheFields();
-        setData(task);
-        render();
+        this.boundOpen = this.open.bind(this);
+        EventBus.on("viewTask", this.boundOpen);
     }
 
-    function cacheFields() {
-        fields = {
-            "summary": element.querySelector("#summary"),
-            "description": element.querySelector("#description"),
-            "project": element.querySelector("#project"),
-            "priority": element.querySelector("#priority"),
-            "status": element.querySelector("#status"),
-            "date": element.querySelector("#date")
+    open(task) {
+        if (!this.element) this.element = this.createElement();
+        this.currentTask = task;
+        this.cacheFields();
+        this.setData(task);
+        this.render();
+    }
+
+    cacheFields() {
+        this.fields = {
+            summary: this.element.querySelector("#summary"),
+            description: this.element.querySelector("#description"),
+            project: this.element.querySelector("#project"),
+            priority: this.element.querySelector("#priority"),
+            status: this.element.querySelector("#status"),
+            date: this.element.querySelector("#date")
         };
     }
 
-    function setData(task) {
+    setData(task) {
         if (!task) return;
-        fields.summary.value = task.getSummary();
-        fields.description.value = task.getDescription();
-        fields.project.value = task.getProject();
-        fields.priority.value = task.getPriority();
-        fields.status.value = task.getStatus();
-        fields.date.value = task.getDueDate();
+        this.fields.summary.value = task.getSummary();
+        this.fields.description.value = task.getDescription();
+        this.fields.project.value = task.getProject();
+        this.fields.priority.value = task.getPriority();
+        this.fields.status.value = task.getStatus();
+        this.fields.date.value = task.getDueDate();
     }
 
-    function createElement() {
+    createElement() {
         const modal = Utility.createElement("div", "view-task-modal");
-        modal.appendChild(createHeader());
-        modal.appendChild(createBody());
-        modal.appendChild(createFooter());
+        modal.appendChild(this.createHeader());
+        modal.appendChild(this.createBody());
+        modal.appendChild(this.createFooter());
         return modal;
     }
 
-    function createHeader() {
+    createHeader() {
         const container = Utility.createElement("div", "view-task-header");
         const upper = Utility.createElement("div", "upper");
         upper.appendChild(Utility.createElement("p", "id"));
 
         const iconRow = Utility.createElement("div", "icon-row");
-        iconRow.appendChild(Utility.createIconButton("close", icons.close, destroy));
+        iconRow.appendChild(Utility.createIconButton("close", this.icons.close, this.destroy.bind(this)));
         upper.appendChild(iconRow);
 
         const lower = Utility.createElement("div", "lower");
@@ -74,7 +79,7 @@ export default function ViewTaskModal() {
         return container;
     }
 
-    function createBody() {
+    createBody() {
         const container = Utility.createElement("div", "view-task-body");
 
         const left = Utility.createElement("div", "modal-left");
@@ -91,48 +96,50 @@ export default function ViewTaskModal() {
         return container;
     }
 
-    function updateTask() {
-        if (Validator.isValidTaskData(fields)) {
-            const data = trimFields(fields);
-            data.id = currentTask.getId();
-            EventBus.emit("updateTask", { "task": currentTask, "newData": data });
-            destroy();
+    updateTask() {
+        if (Validator.isValidTaskData(this.fields)) {
+            const data = this.trimFields(this.fields);
+            data.id = this.currentTask.getId();
+            EventBus.emit("updateTask", { task: this.currentTask, newData: data });
+            this.destroy();
         }
     }
 
-    function trimFields(fields) {
+    trimFields(fields) {
         return Object.fromEntries(
-            Object.entries(fields).map(([key, element]) => {
-                return [key, element.value.trim()];
-            })
+            Object.entries(fields).map(([key, element]) => [key, element.value.trim()])
         );
     }
 
-    function createFooter() {
+    createFooter() {
         const footer = Utility.createElement("div", "view-task-footer");
         const updateBtn = Utility.createElement("button", "update-btn", "Update");
-        updateBtn.addEventListener("click", updateTask);
+        updateBtn.addEventListener("click", this.updateTask.bind(this));
 
         const cancelBtn = Utility.createElement("button", "cancel-btn", "Cancel");
-        cancelBtn.addEventListener("click", destroy);
+        cancelBtn.addEventListener("click", this.destroy.bind(this));
 
         footer.appendChild(updateBtn);
         footer.appendChild(cancelBtn);
         return footer;
     }
 
-    function render() {
-        if (!parent.contains(element)) {
-            parent.appendChild(element);
+    render() {
+        if (!this.parent.contains(this.element)) {
+            this.parent.appendChild(this.element);
         }
     }
 
-    function destroy() {
-        if (element && parent.contains(element)) {
-            parent.removeChild(element);
-            element = null;
-            fields = null;
-            currentTask = null;
+    cleanup() {
+        EventBus.off("viewTask", this.boundOpen);
+    }
+
+    destroy() {
+        if (this.element && this.parent.contains(this.element)) {
+            this.parent.removeChild(this.element);
+            this.element = null;
+            this.fields = null;
+            this.currentTask = null;
         }
     }
 }

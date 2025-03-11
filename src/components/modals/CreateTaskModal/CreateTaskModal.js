@@ -4,110 +4,110 @@ import Validator from "../../../utilities/Validator.js";
 import EventBus from "../../../utilities/EventBus.js";
 import getIcons from "../../../res/icons/icons.js";
 
-export default function NewTaskModal() {
-    const parent = document.querySelector(".app-wrapper");
+export default class NewTaskModal {
+    constructor() {
+        this.parent = document.querySelector(".app-wrapper");
+        this.element = null;
+        this.form = null;
+        this.fields = {};
+        this.statuses = null;
 
-    let element = null;
-    let form = null;
-    let fields = {};
-    let statuses = null;
+        this.boundOpen = this.open.bind(this);
+        EventBus.on("openNewTaskModal", this.boundOpen);
+    }
 
-    EventBus.on("openNewTaskModal", (laneService) => launchModal(laneService));
+    open(laneService) {
+        this.statuses = laneService.getLanes().map(lane => lane.getStatus());
 
-    function launchModal(laneService) {
-
-        statuses = laneService
-            .getLanes()
-            .map(lane => {
-                return lane.getStatus();
-            })
-
-        if (!element) {
-            element = createElement();
-            render();
-            cacheFields();
+        if (!this.element) {
+            this.element = this.createElement();
+            this.render();
+            this.cacheFields();
         }
     }
 
-    function cacheFields() {
-        fields = {
-            summary: element.querySelector("#summary"),
-            description: element.querySelector("#description"),
-            project: element.querySelector("#project"),
-            priority: element.querySelector("#priority"),
-            status: element.querySelector("#status"),
-            date: element.querySelector("#date")
+    cacheFields() {
+        this.fields = {
+            summary: this.element.querySelector("#summary"),
+            description: this.element.querySelector("#description"),
+            project: this.element.querySelector("#project"),
+            priority: this.element.querySelector("#priority"),
+            status: this.element.querySelector("#status"),
+            date: this.element.querySelector("#date")
         };
     }
 
-    function createElement() {
+    createElement() {
         const modal = Utility.createElement("div", "create-task-modal");
-        modal.append(createHeader(), createForm(), createFooter());
+        modal.append(this.createHeader(), this.createForm(), this.createFooter());
         return modal;
     }
 
-    function createHeader() {
+    createHeader() {
         const header = Utility.createElement("div", "modal-header");
         header.appendChild(Utility.createElement("h2", "modal-title", "New task"));
 
         const iconRow = Utility.createElement("div", "icon-row");
         iconRow.appendChild(Utility.createIconButton("expand", getIcons().expand));
-        iconRow.appendChild(Utility.createIconButton("close", getIcons().close, destroy));
+        iconRow.appendChild(Utility.createIconButton("close", getIcons().close, () => this.destroy()));
 
         header.appendChild(iconRow);
         return header;
     }
 
-    function createForm() {
-        form = Utility.createElement("form", null, null, { id: "new-task-form" });
+    createForm() {
+        this.form = Utility.createElement("form", null, null, { id: "new-task-form" });
 
-        form.append(
+        this.form.append(
             Utility.createSelectFormGroup("project", "Project", ["SAAS"]),
             Utility.createInputFormGroup("summary", "Summary", true, 1, 35),
             Utility.createTextAreaFormGroup("description", "Description", false, 0, 500),
             Utility.createSelectFormGroup("priority", "Priority", ["P1", "P2", "P3", "P4", "P5"]),
-            Utility.createSelectFormGroup("status", "Status", statuses),
+            Utility.createSelectFormGroup("status", "Status", this.statuses),
             Utility.createDateFormGroup("date", "Due date", false)
         );
 
-        return form;
+        return this.form;
     }
 
-    function createFooter() {
+    createFooter() {
         const footer = Utility.createElement("div", "modal-footer");
 
         const createBtn = Utility.createElement("button", "create-btn", "Create", { type: "submit" });
-        createBtn.addEventListener("click", submitTaskData);
+        createBtn.addEventListener("click", (event) => this.submitTaskData(event));
 
         const cancelBtn = Utility.createElement("button", "cancel-btn", "Cancel", { type: "button" });
-        cancelBtn.addEventListener("click", destroy);
+        cancelBtn.addEventListener("click", () => this.destroy());
 
         footer.append(createBtn, cancelBtn);
         return footer;
     }
 
-    function submitTaskData(event) {
+    submitTaskData(event) {
         event.preventDefault();
 
-        if (Validator.isValidTaskData(fields)) {
+        if (Validator.isValidTaskData(this.fields)) {
             const data = Object.fromEntries(
-                Object.entries(fields).map(([key, element]) => [key, element.value.trim()])
+                Object.entries(this.fields).map(([key, element]) => [key, element.value.trim()])
             );
             EventBus.emit("createTask", data);
-            destroy();
+            this.destroy();
         }
     }
 
-    function render() {
-        parent.appendChild(element);
+    render() {
+        this.parent.appendChild(this.element);
     }
 
-    function destroy() {
-        if (element) {
-            form?.removeEventListener("submit", submitTaskData);
-            element.remove();
-            element = null;
-            fields = {};
+    destroy() {
+        if (this.element) {
+            this.element.remove();
+            this.element = null;
+            this.fields = {};
         }
+    }
+
+    cleanup() {
+        EventBus.off("openNewTaskModal", this.boundOpen);
     }
 }

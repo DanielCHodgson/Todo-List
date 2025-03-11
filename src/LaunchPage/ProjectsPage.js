@@ -24,7 +24,7 @@ export default function ProjectsPage() {
             dummyCard.appendChild(DomUtility.createElement("p", "prompt", "Start from scratch"));
         }
         const icon = DomUtility.createElement("div", "plus-icon");
-        icon.appendChild(DomUtility.renderSvg(getIcons.add));
+        icon.appendChild(DomUtility.renderSvg(getIcons().add));
 
         dummyCard.appendChild(icon);
 
@@ -62,7 +62,7 @@ export default function ProjectsPage() {
     }
 
     function handleNewProjectClick() {
-        CreateProjectModal().launchModal()
+        EventBus.emit("addProject");
     }
 
 
@@ -74,7 +74,6 @@ export default function ProjectsPage() {
     }
 
     function render() {
-        console.log(parent)
         if (parent && element)
             parent.appendChild(element);
     }

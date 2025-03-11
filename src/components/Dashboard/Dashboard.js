@@ -19,6 +19,7 @@ export default class Dashboard {
     #taskService;
     #laneService;
     #lanesContainer;
+    #modals = [];
 
     constructor() {
         this.#project = ProjectService.CURRENT_PROJECT;
@@ -40,12 +41,16 @@ export default class Dashboard {
 
         this.renderSwimLanes();
         this.render();
+
+        console.log("LOADING DASHBOARD!")
     }
 
     initModals() {
-        CreateTaskModal(EventBus);
-        ViewTaskModal(EventBus);
-        CreateSwimLaneModal(EventBus);
+        this.#modals.push[
+            new CreateTaskModal(),
+            new ViewTaskModal(),
+            new CreateSwimLaneModal()
+        ];
     }
 
     createDashboard() {
@@ -194,6 +199,8 @@ export default class Dashboard {
 
     destroy() {
         this.#element.remove();
+        this.#modals.forEach(modal => modal.cleanUp());
+        this.#modals = [];
     }
 
     render() {

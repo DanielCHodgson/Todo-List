@@ -27,7 +27,7 @@ export default class ProjectService {
     }
     
     static loadProject(projectName) {
-        const storedProjects = JSON.parse(localStorage.getItem(ProjectService.PROJECT_STORAGE_KEY)) || [];
+        const storedProjects = this.getProjects() || [];
 
         if (storedProjects.length === 0) {
             console.log("No project data");
@@ -43,6 +43,10 @@ export default class ProjectService {
             TaskService.fromJSON(projectData.taskService),
             LaneService.fromJSON(projectData.laneService),
         );
+    }
+
+    static getProjects() {
+        return JSON.parse(localStorage.getItem(this.PROJECT_STORAGE_KEY));
     }
 
     static loadCurrentProject() {

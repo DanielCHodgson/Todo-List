@@ -1,38 +1,39 @@
-import "./CreateProjectModal.css"
-
+import "./CreateProjectModal.css";
 import Utility from "../../../utilities/DomUtility";
 import Validator from "../../../utilities/Validator";
 import EventBus from "../../../utilities/EventBus";
 import getIcons from "../../../res/icons/icons";
 
-export default function CreateProjectModal() {
+export default class CreateProjectModal {
+    constructor() {
+        this.parent = document.querySelector(".app-wrapper");
+        this.element = null;
+        this.fields = null;
 
-    const parent = document.querySelector(".app-wrapper");
-    let element = null;
-    let fields = null;
+        EventBus.on("addProject", (task) => this.open(task));
+    }
 
-    function launchModal() {
-        if (!element) {
-            element = createElement();
-            render();
-            cacheFields();
+    open() {
+        if (!this.element) {
+            this.element = this.createElement();
+            this.render();
+            this.cacheFields();
         }
     }
 
-    function cacheFields() {
-        fields = {
-            name: element.querySelector("#name"),
-            type: element.querySelector("#type"),
+    cacheFields() {
+        this.fields = {
+            name: this.element.querySelector("#name"),
+            type: this.element.querySelector("#type"),
         };
     }
 
-    function createElement() {
-
+    createElement() {
         const modal = Utility.createElement("div", "create-project-modal");
 
         const header = Utility.createElement("div", "header");
-        header.appendChild(Utility.createElement("P", "title", "New Project"))
-        header.appendChild(Utility.createIconButton("close", getIcons().close, destroy));
+        header.appendChild(Utility.createElement("p", "title", "New Project"));
+        header.appendChild(Utility.createIconButton("close", getIcons().close, this.destroy.bind(this)));
 
         const body = Utility.createElement("div", "body");
         const form = Utility.createElement("form", "form");
@@ -40,7 +41,7 @@ export default function CreateProjectModal() {
         form.appendChild(Utility.createInputFormGroup("type", "Type", true, 1, 15));
 
         const submit = Utility.createElement("button", "submit", "Add");
-        submit.addEventListener("click", (event) => handleSubmit(event))
+        submit.addEventListener("click", (event) => this.handleSubmit(event));
         form.appendChild(submit);
 
         body.appendChild(form);
@@ -50,25 +51,35 @@ export default function CreateProjectModal() {
         return modal;
     }
 
-    function handleSubmit(event) {
+    handleSubmit(event) {
         event.preventDefault();
-        const data = Object.fromEntries(Object.entries(fields).map(([key, element]) => [key, element.value.trim()]));
+        const data = Object.fromEntries(
+            Object.entries(this.fields).map(([key, element]) => [key, element.value.trim()])
+        );
+
         if (Validator.isValidProjectData(data)) {
             EventBus.emit("createProject", data);
-            destroy();
+            this.destroy();
         }
     }
 
-    function destroy() {
-        element.remove();
+    destroy() {
+        if (this.element && this.parent.contains(this.element)) {
+            this.element.remove();
+            this.element = null;
+            this.fields = null;
+            
+        }
     }
 
 
-    function render() {
-        parent.appendChild(element)
+    cleanup() {
+        EventBus.off("addProject");
     }
 
-    return {
-        launchModal
+    render() {
+        if (!this.parent.contains(this.element)) {
+            this.parent.appendChild(this.element);
+        }
     }
 }
