@@ -130,7 +130,7 @@ export default class ViewTaskModal {
         }
     }
 
-    cleanup() {
+    cleanUp() {
         EventBus.off("viewTask", this.boundOpen);
     }
 

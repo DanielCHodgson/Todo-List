@@ -42,8 +42,12 @@ function openNav() {
 }
 
 function openDashboard() {
-    if (currentPage)
+    if (currentPage) {
+        console.log(currentPage)
         currentPage.destroy();
+
+    }
+       
     currentPage = new Dashboard();
 }
 

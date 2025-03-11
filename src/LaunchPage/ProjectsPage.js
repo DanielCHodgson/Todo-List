@@ -2,7 +2,6 @@ import "./ProjectsPage.css";
 import ProjectService from "../services/ProjectService";
 import DomUtility from "../utilities/DomUtility";
 import EventBus from "../utilities/EventBus";
-import CreateProjectModal from "../components/modals/CreateProjectModal/CreateProjectModal";
 import getIcons from "../res/icons/icons";
 
 export default function ProjectsPage() {

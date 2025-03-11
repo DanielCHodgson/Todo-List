@@ -68,12 +68,11 @@ export default class CreateProjectModal {
             this.element.remove();
             this.element = null;
             this.fields = null;
-            
         }
     }
 
 
-    cleanup() {
+    cleanUp() {
         EventBus.off("addProject");
     }
 

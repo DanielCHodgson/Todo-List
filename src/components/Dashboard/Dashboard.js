@@ -20,6 +20,7 @@ export default class Dashboard {
     #laneService;
     #lanesContainer;
     #modals = [];
+    #eventListeners = {};
 
     constructor() {
         this.#project = ProjectService.CURRENT_PROJECT;
@@ -33,20 +34,31 @@ export default class Dashboard {
 
         this.initModals();
 
-        EventBus.on("createTask", (data) => this.createTask(data));
-        EventBus.on("updateTask", (id, data) => this.updateTask(id, data));
-        EventBus.on("moveTask", ({ taskId, newStatus }) => this.moveTask(taskId, newStatus));
-        EventBus.on("deleteTask", (task) => this.deleteTask(task));
-        EventBus.on("createSwimLane", (status) => this.addSwimLane(status));
+        this.storeEventListeners();
+        this.registerEventListeners();
 
         this.renderSwimLanes();
         this.render();
+    }
 
-        console.log("LOADING DASHBOARD!")
+    storeEventListeners() {
+        this.#eventListeners.createTask = (data) => this.createTask(data);
+        this.#eventListeners.updateTask = (id, data) => this.updateTask(id, data);
+        this.#eventListeners.moveTask = ({ taskId, newStatus }) => this.moveTask(taskId, newStatus);
+        this.#eventListeners.deleteTask = (task) => this.deleteTask(task);
+        this.#eventListeners.createSwimLane = (status) => this.addSwimLane(status);
+    }
+
+    registerEventListeners() {
+        EventBus.on("createTask", this.#eventListeners.createTask);
+        EventBus.on("updateTask", this.#eventListeners.updateTask);
+        EventBus.on("moveTask", this.#eventListeners.moveTask);
+        EventBus.on("deleteTask", this.#eventListeners.deleteTask);
+        EventBus.on("createSwimLane", this.#eventListeners.createSwimLane);
     }
 
     initModals() {
-        this.#modals.push[
+        this.#modals = [
             new CreateTaskModal(),
             new ViewTaskModal(),
             new CreateSwimLaneModal()
@@ -182,13 +194,11 @@ export default class Dashboard {
     }
 
     deleteTask(task) {
-        console.log(this.#laneService.getLaneByStatus(task.getStatus()).getCardService())
         this.#taskService.removeTask(task.getId());
         this.#laneService.getLaneByStatus(task.getStatus())
             .getCardService()
             .removeCard(task.getId());
         ProjectService.saveProject(this.#project);
-        console.log(this.#laneService.getLaneByStatus(task.getStatus()).getCardService())
     }
 
     handleNewTaskClick() {
@@ -199,8 +209,19 @@ export default class Dashboard {
 
     destroy() {
         this.#element.remove();
-        this.#modals.forEach(modal => modal.cleanUp());
+        this.cleanUp();
+    }
+
+    cleanUp() {
+        this.#modals.forEach(modal => {
+            modal.cleanUp();
+        });
         this.#modals = [];
+
+        Object.entries(this.#eventListeners).forEach(([event, handler]) => {
+            EventBus.off(event, handler);
+        });
+        this.#eventListeners = {};
     }
 
     render() {

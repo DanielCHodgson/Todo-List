@@ -107,7 +107,7 @@ export default class NewTaskModal {
         }
     }
 
-    cleanup() {
+    cleanUp() {
         EventBus.off("openNewTaskModal", this.boundOpen);
     }
 }

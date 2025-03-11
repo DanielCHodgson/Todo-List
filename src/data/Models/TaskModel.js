@@ -19,7 +19,6 @@ export default class Task {
         this.#priority = priority;
         this.#dueDate = dueDate;
         this.#status = status;
-        console.log(this.#dueDate)
     }
 
     getId() {
