@@ -18,6 +18,7 @@ export default class TaskCard {
         this.#element = this.#createCardElement();
         this.#cacheFields();
         this.#setData(task);
+    
         this.#bindEvents();
     }
 
@@ -25,8 +26,6 @@ export default class TaskCard {
         this.#eventListeners.cardClick = () => EventBus.emit("viewTask", this.#task);
         this.#eventListeners.dragStart = this.#handleDragStart.bind(this);
         this.#eventListeners.dragEnd = this.#handleDragEnd.bind(this);
-        this.#eventListeners.deleteClick = (event) => this.#handleDelete(event);
-
         this.#element.addEventListener("click", this.#eventListeners.cardClick);
         this.#element.addEventListener("dragstart", this.#eventListeners.dragStart);
         this.#element.addEventListener("dragend", this.#eventListeners.dragEnd);
@@ -36,6 +35,7 @@ export default class TaskCard {
         this.#element.removeEventListener("click", this.#eventListeners.cardClick);
         this.#element.removeEventListener("dragstart", this.#eventListeners.dragStart);
         this.#element.removeEventListener("dragend", this.#eventListeners.dragEnd);
+        this.#element.querySelector(".delete-icon").removeEventListener("click", (event) => this.#handleDelete(event));
         this.#eventListeners = {};
     }
 
@@ -68,12 +68,11 @@ export default class TaskCard {
 
     #createHeaderElement() {
         const header = Utility.createElement("div", "task-header");
+
         const deleteIcon = Utility.createElement("div", "delete-icon");
-
         deleteIcon.appendChild(DomUtility.renderSvg(getIcons().close));
-
-        deleteIcon.addEventListener("click", this.#eventListeners.deleteClick);
-
+        deleteIcon.addEventListener("click", (event) => this.#handleDelete(event));
+    
         header.append(Utility.createElement("p", "summary"), deleteIcon);
         return header;
     }
@@ -105,6 +104,7 @@ export default class TaskCard {
 
     #handleDelete(event) {
         event.stopPropagation();
+       
         this.destroy();
     }
 
