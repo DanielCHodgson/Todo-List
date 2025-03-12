@@ -22,6 +22,10 @@ export default class Dashboard {
     #modals = [];
     #eventListeners = {};
 
+    #createTaskModal = null;
+    #viewTaskModal = null;
+    #createSwimlaneModal = null;
+
     constructor() {
         this.#initModals();
         this.#setupEventListeners();
@@ -31,15 +35,18 @@ export default class Dashboard {
 
     #initModals() {
         this.#modals = [
-            new CreateTaskModal(),
-            new ViewTaskModal(),
-            new CreateSwimLaneModal(),
+            this.#createTaskModal = new CreateTaskModal(),
+            this.#viewTaskModal = new ViewTaskModal(),
+            this.#createSwimlaneModal = new CreateSwimLaneModal(),
         ];
     }
 
     #setupEventListeners() {
         const events = [
             { event: "createTask", handler: (data) => this.#createTask(data) },
+            { event: "openNewTaskModal", handler: (laneService) => this.#createTaskModal.open(laneService) },
+            { event: "openCreateSwimlaneModal", handler: () => this.#createSwimlaneModal.open() },
+            { event: "viewTask", handler: (task) => this.#viewTaskModal.open(task) },
             { event: "updateTask", handler: (id, data) => this.#updateTask(id, data) },
             { event: "moveTask", handler: ({ taskId, newStatus }) => this.#moveTask(taskId, newStatus) },
             { event: "deleteTask", handler: (task) => this.#deleteTask(task) },
@@ -57,7 +64,7 @@ export default class Dashboard {
         const dashboard = Utility.createElement("div", "dashboard");
         dashboard.appendChild(this.#createHeader("Board"));
 
-        const filterPane = FilterPane(EventBus);
+        const filterPane = new FilterPane();
         filterPane.render(dashboard);
 
         dashboard.appendChild(Utility.createElement("div", "swim-lane-list"));
@@ -192,12 +199,10 @@ export default class Dashboard {
         Object.entries(this.#eventListeners).forEach(([event, handler]) => {
             EventBus.off(event, handler);
         });
-
     }
 
     #cleanUp() {
         this.#modals.forEach((modal) => {
-            console.log(modal)
             modal.destroy();
         });
 
@@ -207,8 +212,10 @@ export default class Dashboard {
     }
 
     render() {
-        this.#container.innerHTML = "";
-        if (this.#element) this.#container.appendChild(this.#element);
+        if (this.#element) {
+            this.#element.remove();
+        }
+        this.#container.appendChild(this.#element);
     }
 
 }

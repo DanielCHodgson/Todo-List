@@ -9,17 +9,6 @@ export default class ViewTaskModal {
         this.element = null;
         this.fields = {};
         this.currentTask = null;
-
-        this.boundOpen = this.open.bind(this);
-        this.#bindEvents();
-    }
-
-    #bindEvents() {
-        EventBus.on("viewTask", this.boundOpen);
-    }
-
-    #unbindEvents() {
-        EventBus.off("viewTask", this.boundOpen);
     }
 
     open(task) {
@@ -64,7 +53,7 @@ export default class ViewTaskModal {
         header.appendChild(DomUtility.createElement("p", "id"));
 
         const iconRow = DomUtility.createElement("div", "icon-row");
-        iconRow.appendChild(DomUtility.createIconButton("close", "×", this.destroy.bind(this)));
+        iconRow.appendChild(DomUtility.createIconButton("close", "×", () => this.destroy()));
         header.appendChild(iconRow);
 
         const summary = document.createElement("input");
@@ -128,7 +117,6 @@ export default class ViewTaskModal {
             this.element = null;
             this.fields = {};
             this.currentTask = null;
-            this.#unbindEvents();
         }
     }
 }

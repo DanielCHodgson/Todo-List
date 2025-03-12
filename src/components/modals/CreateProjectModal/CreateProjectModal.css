@@ -22,7 +22,6 @@
     font-weight: bold;
 }
 
-
 .header svg {
     cursor: pointer;
 }
@@ -36,7 +35,7 @@
     flex-direction: column;
     justify-content: center;
     gap: 1rem;
-    font-family: "Robot", Arial, Helvetica, sans-serif;
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
 }
 
 .create-project-modal .submit {
@@ -49,3 +48,4 @@
     color: #FFFFFF;
     cursor: pointer;
 }
+

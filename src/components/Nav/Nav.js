@@ -4,28 +4,34 @@ import DomUtility from "../../utilities/DomUtility";
 import ProjectService from "../../services/ProjectService";
 import EventBus from "../../utilities/EventBus";
 
-export default function nav() {
+export default class Nav {
 
-    const project = ProjectService.CURRENT_PROJECT;
-    const nav = document.querySelector(".nav");
-    const element = createElement();
 
-    function createElement() {
+    #currentProject;
+    #nav;
+    #element;
+
+    constructor() {
+        this.#currentProject = ProjectService.CURRENT_PROJECT;
+        this.#nav = document.querySelector(".nav");
+        this.#element = this.createElement();
+        this.render();
+    }
+
+    createElement() {
         const navPane = DomUtility.createElement("div", "nav-pane");
-        navPane.appendChild(createLeftNav())
-        navPane.appendChild(createRightNav())
+        navPane.appendChild(this.createLeftNav());
+        navPane.appendChild(this.createRightNav());
         return navPane;
     }
 
-    function createHeader() {
+    createHeader() {
         const navHeader = DomUtility.createElement("div", "nav-header");
 
-        if (project !== null) {
-            const icon = DomUtility.createImg(project.getIcon(), "team-icon", "3rem", "3rem");
-            const name = DomUtility.createElement("p", "project-name", project.getName());
-            const type = DomUtility.createElement("p", "project-type", `${project.getType()} project`);
-            navHeader.append(icon, name, type);
-
+        if (this.#currentProject !== null) {
+            const icon = DomUtility.createImg(this.#currentProject.getIcon(), "team-icon", "3rem", "3rem");
+            const name = DomUtility.createElement("p", "project-name", this.#currentProject.getName());
+            const type = DomUtility.createElement("p", "project-type", `${this.#currentProject.getType()} project`);
             navHeader.append(icon, name, type);
 
             const dropdownButton = DomUtility.createElement("button", "dropdown-button");
@@ -57,7 +63,7 @@ export default function nav() {
             });
 
             window.addEventListener("click", (event) => {
-                if (nav && !nav.contains(event.target) && dropdownContent.classList.contains("visible")) {
+                if (this.#nav && !this.#nav.contains(event.target) && dropdownContent.classList.contains("visible")) {
                     dropdownContent.classList.remove("visible");
                     dropdownContent.classList.add("hidden");
                     dropdownButton.firstChild.replaceWith(DomUtility.renderSvg(getIcons().chevronDown));
@@ -69,22 +75,21 @@ export default function nav() {
         return navHeader;
     }
 
-    function createNavList() {
-
-        const navList = DomUtility.createElement("ul", "nav-list")
+    createNavList() {
+        const navList = DomUtility.createElement("ul", "nav-list");
 
         const projects = DomUtility.createElement("li", "projects", "Projects");
         projects.prepend(DomUtility.renderSvg(getIcons().projects));
         projects.addEventListener("click", () => EventBus.emit("openProjectsPage"));
         navList.appendChild(projects);
 
-        const tasks = DomUtility.createElement("li", "tasks", "Tasks")
+        const tasks = DomUtility.createElement("li", "tasks", "Tasks");
         tasks.prepend(DomUtility.renderSvg(getIcons().backlog));
         navList.appendChild(tasks);
 
         const board = DomUtility.createElement("li", "board", "Dashboard");
         board.prepend(DomUtility.renderSvg(getIcons().dashboard));
-        board.addEventListener("click", () => EventBus.emit("openDashboard"));
+        board.addEventListener("click", () => EventBus.emit("loadDashboard"));
         navList.appendChild(board);
 
         const settings = DomUtility.createElement("li", "settings", "Settings");
@@ -94,18 +99,18 @@ export default function nav() {
         return navList;
     }
 
-    function createLeftNav() {
+    createLeftNav() {
         const leftNav = DomUtility.createElement("div", "left-nav");
 
         const logo = DomUtility.createElement("div", "logo");
-        const logoImg = DomUtility.createElement("div", "logo-img")
+        const logoImg = DomUtility.createElement("div", "logo-img");
         logoImg.appendChild(DomUtility.renderSvg(getIcons().logo));
         logo.appendChild(logoImg);
 
         const iconsContainer = DomUtility.createElement("div", "left-nav-icons");
 
         const search = DomUtility.createElement("div", "search");
-        search.appendChild(DomUtility.renderSvg(getIcons().search))
+        search.appendChild(DomUtility.renderSvg(getIcons().search));
 
         const addProject = DomUtility.createElement("div", "add-project");
         addProject.appendChild(DomUtility.renderSvg(getIcons().addProject));
@@ -119,31 +124,21 @@ export default function nav() {
         return leftNav;
     }
 
-    function createRightNav() {
+    createRightNav() {
         const rightNav = DomUtility.createElement("div", "right-nav");
-        rightNav.appendChild(createHeader());
-        rightNav.appendChild(createNavList());
+        rightNav.appendChild(this.createHeader());
+        rightNav.appendChild(this.createNavList());
         return rightNav;
     }
 
-    function destroy() {
-        if(element) {
-           element.remove();
-        }
+    destroy() {
+        if (this.#element)
+            this.#element.remove();
     }
 
-    function render() {
-        destroy();
-        nav.appendChild(createLeftNav())
-        nav.appendChild(createRightNav())
+    render() {
+        this.destroy();
+        this.#nav.appendChild(this.#element);
     }
 
-    return {
-        render
-    }
-};
-
-
-
-
-
+}

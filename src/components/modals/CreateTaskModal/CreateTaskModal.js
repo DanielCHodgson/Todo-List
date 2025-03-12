@@ -15,17 +15,15 @@ export default class NewTaskModal {
         this.boundOpen = this.open.bind(this);
         this.boundSubmit = this.#submitTaskData.bind(this);
         this.boundDestroy = this.destroy.bind(this);
-        
-        EventBus.on("openNewTaskModal", this.boundOpen);
     }
 
     open(laneService) {
+        //to do remove laneservice dependency and change input to text
         this.statuses = laneService.getLanes().map(lane => lane.getStatus());
 
         if (!this.element) {
             this.element = this.#createElement();
             this.#cacheFields();
-            this.#bindEvents();
         }
         this.render();
     }
@@ -100,17 +98,10 @@ export default class NewTaskModal {
         }
     }
 
-    #bindEvents() {
-        EventBus.on("openNewTaskModal", this.boundOpen);
-    }
 
-    #unbindEvents() {
-        EventBus.off("openNewTaskModal", this.boundOpen);
-    }
 
     destroy() {
         if (this.element) {
-            this.#unbindEvents();
             this.form?.querySelector(".create-btn")?.removeEventListener("click", this.boundSubmit);
             this.element.remove();
             this.element = null;

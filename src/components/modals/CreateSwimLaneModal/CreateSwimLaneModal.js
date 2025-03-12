@@ -5,27 +5,35 @@ import Validator from "../../../utilities/Validator";
 import getIcons from "../../../res/icons/icons";
 
 export default class CreateSwimLaneModal {
-    constructor() {
-        this.parent = document.querySelector(".app-wrapper");
-        this.element = null;
-        this.statusField = null;
 
-        this.boundOpen = this.open.bind(this);
-        this.boundSubmit = this.#handleSubmit.bind(this);
-        EventBus.on("addSwimlane", this.boundOpen);
+    #parent;
+    #element;
+    #statusField;
+    #overlay;
+
+    #boundSubmit;
+    #boundOverlayClick;
+
+    constructor() {
+        this.#parent = document.querySelector(".app-wrapper");
+        this.#element = null;
+        this.#statusField = null;
+        this.#overlay = null;
+
+        this.#boundSubmit = this.#handleSubmit.bind(this);
+        this.#boundOverlayClick = this.#handleOverlayClick.bind(this);
     }
 
     open() {
-        if (!this.element) {
-            this.element = this.#createElement();
-            this.#cacheFields();
-            this.#bindEvents();
-        }
+        console.log("opening!")
+        this.#element = this.#createElement();
+        this.#cacheFields();
         this.render();
+        this.#createOverlay();
     }
 
     #cacheFields() {
-        this.statusField = this.element.querySelector("#status");
+        this.#statusField = this.#element.querySelector("#status");
     }
 
     #createElement() {
@@ -43,7 +51,7 @@ export default class CreateSwimLaneModal {
         form.appendChild(status);
 
         const submit = DomUtility.createElement("button", "submit", "Add");
-        submit.addEventListener("click", this.boundSubmit);
+        submit.addEventListener("click", this.#boundSubmit);
         form.appendChild(submit);
 
         body.appendChild(form);
@@ -55,32 +63,47 @@ export default class CreateSwimLaneModal {
 
     #handleSubmit(event) {
         event.preventDefault();
-        const status = this.statusField.value.trim().toLowerCase();
+        const status = this.#statusField.value.trim().toLowerCase();
         if (Validator.isValidSwimLaneStatus(status)) {
             EventBus.emit("createSwimLane", status);
             this.destroy();
         }
     }
 
-    #bindEvents() {
-        EventBus.on("addSwimlane", this.boundOpen);
-    }
 
     #unbindEvents() {
-        EventBus.off("addSwimlane", this.boundOpen);
+        this.#element.querySelector(".submit").removeEventListener("click", this.#boundSubmit);
+        this.#element.querySelector(".submit").removeEventListener("click", () => this.destroy());
     }
 
     destroy() {
-        if (this.element) {
+        if (this.#element) {
             this.#unbindEvents();
-            this.element.querySelector(".submit").removeEventListener("click", this.boundSubmit);
-            this.element.remove();
-            this.element = null;
+
+            if (this.#overlay) {
+                this.#overlay.removeEventListener("click", this.#boundOverlayClick);
+                this.#overlay.remove();
+            }
+            this.#element.remove();
+            this.#element = null;
+            this.#overlay = null;
         }
     }
 
     render() {
-        if (!this.element || this.parent.contains(this.element)) return;
-        this.parent.appendChild(this.element);
+        if (!this.#element || this.#parent.contains(this.#element)) return;
+        this.#parent.appendChild(this.#element);
+    }
+
+    #createOverlay() {
+        if (!this.#overlay) {
+            this.#overlay = DomUtility.createElement("div", "modal-overlay");
+            this.#overlay.addEventListener("click", this.#boundOverlayClick);
+            this.#parent.appendChild(this.#overlay);
+        }
+    }
+
+    #handleOverlayClick() {
+        this.destroy();
     }
 }

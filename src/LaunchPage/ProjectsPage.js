@@ -4,32 +4,31 @@ import DomUtility from "../utilities/DomUtility";
 import EventBus from "../utilities/EventBus";
 import getIcons from "../res/icons/icons";
 
-export default function ProjectsPage() {
+export default class ProjectsPage {
 
-    const parent = document.querySelector(".content");
-    let projects = null;
-    let element = null;
+    #parent;
+    #projects;
+    #element;
 
-    function open() {
-        if (!parent.querySelector(".projects-page")) {
-            projects = ProjectService.getProjects();
-            element = createPage();
-            render();
-        }
+    constructor() {
+        this.#parent = document.querySelector(".content");
+        this.#projects = ProjectService.getProjects();
+        this.#element = this.createPage();
+        this.render();
     }
 
 
-    function createProjectCard(name) {
+    createProjectCard(name) {
         const projectCard = DomUtility.createElement("div", "project-card");
         projectCard.appendChild(DomUtility.createElement("p", "name", name));
-        projectCard.addEventListener("click", handleOpenProjectClick(name));
+        projectCard.addEventListener("click", this.handleOpenProjectClick(name));
         return projectCard;
     }
 
-    function createDummyCard() {
+    createDummyCard() {
         const dummyCard = DomUtility.createElement("div", "dummy-card");
 
-        if (projects === null) {
+        if (this.#projects === null) {
             dummyCard.classList.add("bounce");
             dummyCard.appendChild(DomUtility.createElement("p", "prompt", "Start from scratch"));
         }
@@ -38,11 +37,11 @@ export default function ProjectsPage() {
 
         dummyCard.appendChild(icon);
 
-        dummyCard.addEventListener("click", (name) => handleNewProjectClick(name))
+        dummyCard.addEventListener("click", (name) => this.handleNewProjectClick(name));
         return dummyCard;
     }
 
-    function createDemoCard() {
+    createDemoCard() {
         const dummyCard = DomUtility.createElement("div", "dummy-card");
 
         dummyCard.classList.add("bounce");
@@ -56,57 +55,49 @@ export default function ProjectsPage() {
         return dummyCard;
     }
 
-    function createPage() {
+    createPage() {
         const projectsPage = DomUtility.createElement("div", "projects-page");
         const projectsList = DomUtility.createElement("div", "projects-list");
 
-        if (projects !== null) {
-            projects.forEach(project => {
-                projectsList.appendChild(createProjectCard(project.name))
+        if (this.#projects !== null) {
+            this.#projects.forEach(project => {
+                projectsList.appendChild(this.createProjectCard(project.name));
             });
         }
 
-        projectsList.appendChild(createDummyCard());
+        projectsList.appendChild(this.createDummyCard());
 
-        if (projects === null) {
+        if (this.#projects === null) {
             projectsList.classList.add("init");
-            projectsList.appendChild(createDemoCard());
+            projectsList.appendChild(this.createDemoCard());
         }
 
-        projectsPage.appendChild(projectsList)
+        projectsPage.appendChild(projectsList);
 
         return projectsPage;
     }
 
-    function handleOpenProjectClick(name) {
-        EventBus.emit("openProject", name);
+    handleOpenProjectClick(name) {
+        return () => {
+            EventBus.emit("openProject", name);
+        };
     }
 
-    function handleNewProjectClick() {
+    handleNewProjectClick() {
         EventBus.emit("addProject");
     }
 
-
-    function destroy() {
-        if (element) {
-            element.remove();
-            element = null;
-            projects = null;
+    destroy() {
+        if (this.#element) {
+            console.log("destroying projects page!")
+            this.#element.remove();
+            this.#element = null;
+            this.#projects = null;
         }
     }
 
-    function render() {
-        if (parent && element) {
-            if (!parent.querySelector(".projects-page"))
-                parent.appendChild(element);
-        }
-
+    render() {
+        if (!this.#parent.querySelector(".projects-page"))
+            this.#parent.appendChild(this.#element);
     }
-
-    return {
-        open,
-        render,
-        destroy
-    }
-
 }
