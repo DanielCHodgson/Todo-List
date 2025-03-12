@@ -5,7 +5,6 @@ import EventBus from "../../../utilities/EventBus.js";
 import getIcons from "../../../res/icons/icons.js";
 
 export default class NewTaskModal {
-    
     constructor() {
         this.parent = document.querySelector(".app-wrapper");
         this.element = null;
@@ -14,6 +13,9 @@ export default class NewTaskModal {
         this.statuses = null;
 
         this.boundOpen = this.open.bind(this);
+        this.boundSubmit = this.#submitTaskData.bind(this);
+        this.boundDestroy = this.destroy.bind(this);
+        
         EventBus.on("openNewTaskModal", this.boundOpen);
     }
 
@@ -21,13 +23,14 @@ export default class NewTaskModal {
         this.statuses = laneService.getLanes().map(lane => lane.getStatus());
 
         if (!this.element) {
-            this.element = this.createElement();
-            this.render();
-            this.cacheFields();
+            this.element = this.#createElement();
+            this.#cacheFields();
+            this.#bindEvents();
         }
+        this.render();
     }
 
-    cacheFields() {
+    #cacheFields() {
         this.fields = {
             summary: this.element.querySelector("#summary"),
             description: this.element.querySelector("#description"),
@@ -38,25 +41,26 @@ export default class NewTaskModal {
         };
     }
 
-    createElement() {
+    #createElement() {
         const modal = Utility.createElement("div", "create-task-modal");
-        modal.append(this.createHeader(), this.createForm(), this.createFooter());
+        modal.id = "modal";
+        modal.append(this.#createHeader(), this.#createForm(), this.#createFooter());
         return modal;
     }
 
-    createHeader() {
+    #createHeader() {
         const header = Utility.createElement("div", "modal-header");
         header.appendChild(Utility.createElement("h2", "modal-title", "New task"));
 
         const iconRow = Utility.createElement("div", "icon-row");
         iconRow.appendChild(Utility.createIconButton("expand", getIcons().expand));
-        iconRow.appendChild(Utility.createIconButton("close", getIcons().close, () => this.destroy()));
+        iconRow.appendChild(Utility.createIconButton("close", getIcons().close, this.boundDestroy));
 
         header.appendChild(iconRow);
         return header;
     }
 
-    createForm() {
+    #createForm() {
         this.form = Utility.createElement("form", null, null, { id: "new-task-form" });
 
         this.form.append(
@@ -71,20 +75,20 @@ export default class NewTaskModal {
         return this.form;
     }
 
-    createFooter() {
+    #createFooter() {
         const footer = Utility.createElement("div", "modal-footer");
 
         const createBtn = Utility.createElement("button", "create-btn", "Create", { type: "submit" });
-        createBtn.addEventListener("click", (event) => this.submitTaskData(event));
+        createBtn.addEventListener("click", this.boundSubmit);
 
         const cancelBtn = Utility.createElement("button", "cancel-btn", "Cancel", { type: "button" });
-        cancelBtn.addEventListener("click", () => this.destroy());
+        cancelBtn.addEventListener("click", this.boundDestroy);
 
         footer.append(createBtn, cancelBtn);
         return footer;
     }
 
-    submitTaskData(event) {
+    #submitTaskData(event) {
         event.preventDefault();
 
         if (Validator.isValidTaskData(this.fields)) {
@@ -96,19 +100,26 @@ export default class NewTaskModal {
         }
     }
 
-    render() {
-        this.parent.appendChild(this.element);
+    #bindEvents() {
+        EventBus.on("openNewTaskModal", this.boundOpen);
+    }
+
+    #unbindEvents() {
+        EventBus.off("openNewTaskModal", this.boundOpen);
     }
 
     destroy() {
         if (this.element) {
+            this.#unbindEvents();
+            this.form?.querySelector(".create-btn")?.removeEventListener("click", this.boundSubmit);
             this.element.remove();
             this.element = null;
             this.fields = {};
         }
     }
 
-    cleanUp() {
-        EventBus.off("openNewTaskModal", this.boundOpen);
+    render() {
+        if (!this.element || this.parent.contains(this.element)) return;
+        this.parent.appendChild(this.element);
     }
 }

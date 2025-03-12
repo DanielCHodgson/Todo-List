@@ -10,86 +10,89 @@ export default class SwimLane {
     #status;
     #element;
     #cardsContainer;
+    #eventListeners = {};
 
     constructor(cardService, status) {
         this.#cardService = cardService;
         this.#status = status;
         this.#element = this.#createElement();
         this.#cardsContainer = this.#element.querySelector(".card-list");
-        this.bindEvents();
+
+        this.#bindEvents();
     }
 
+    #bindEvents() {
+        this.#eventListeners.dragStart = (status) => this.#toggleDroppableStyles(status, true);
+        this.#eventListeners.dragEnd = (status) => this.#toggleDroppableStyles(status, false);
 
-    bindEvents() {
-        this.boundDragStart = this.toggleDroppableStyles.bind(this);
-        this.boundDragEnd = this.toggleDroppableStyles.bind(this);
+        EventBus.on("cardDragStart", this.#eventListeners.dragStart);
+        EventBus.on("cardDragEnd", this.#eventListeners.dragEnd);
+    }
 
-        EventBus.on("cardDragStart", (status) => {
-            this.boundDragStart(status, true);
-        });
-
-        EventBus.on("cardDragEnd", (status) => {
-            this.boundDragEnd(status, false);
-        });
+    #unbindEvents() {
+        EventBus.off("cardDragStart", this.#eventListeners.dragStart);
+        EventBus.off("cardDragEnd", this.#eventListeners.dragEnd);
+        this.#eventListeners = {};
     }
 
     #createElement() {
         const swimLane = DomUtility.createElement("div", "swim-lane");
         swimLane.dataset.status = this.#status;
-
-        swimLane.appendChild(this.#createHeader());
-        swimLane.appendChild(this.#createCardsContainer());
-
+        swimLane.append(this.#createHeader(), this.#createCardsContainer());
         return swimLane;
-    }
-
-    #createCardsContainer() {
-        const cardsContainer = DomUtility.createElement("div", "card-list");
-        cardsContainer.addEventListener("dragover", (event) => this.#handleDragOver(event));
-        cardsContainer.addEventListener("dragleave", (event) => this.#handleDragLeave(event));
-        cardsContainer.addEventListener("drop", (event) => this.#handleDrop(event));
-        return cardsContainer;
     }
 
     #createHeader() {
         const header = DomUtility.createElement("div", "lane-header");
-        const titleStr = this.#status.replace(/-/g, " ");
-        const title = DomUtility.createElement("h3", "", titleStr.toUpperCase());
+        const title = DomUtility.createElement("h3", "", this.#status.replace(/-/g, " ").toUpperCase());
 
-        header.appendChild(title);
-        header.appendChild(DomUtility.createIconButton("close", getIcons().close, () => this.destroy()))
+        const closeBtn = DomUtility.createIconButton("close", getIcons().close, () => this.destroy());
+
+        header.append(title, closeBtn);
         return header;
+    }
+
+    #createCardsContainer() {
+        const container = DomUtility.createElement("div", "card-list");
+        container.addEventListener("dragover", this.#handleDragOver.bind(this));
+        container.addEventListener("dragleave", this.#handleDragLeave.bind(this));
+        container.addEventListener("drop", this.#handleDrop.bind(this));
+        return container;
     }
 
     #handleDragOver(event) {
         event.preventDefault();
-        if (event.target === this.#cardsContainer || this.#cardsContainer.contains(event.target)) {
-            this.#cardsContainer.classList.add("drag-over");
-        }
+        this.#toggleDragOverEffect(event, true);
     }
 
     #handleDragLeave(event) {
-        if (event.target === this.#cardsContainer || this.#cardsContainer.contains(event.target)) {
-            this.#cardsContainer.classList.remove("drag-over");
-        }
+        this.#toggleDragOverEffect(event, false);
     }
 
     #handleDrop(event) {
-
         event.preventDefault();
-        if (event.target === this.#cardsContainer || this.#cardsContainer.contains(event.target)) {
-            const taskId = event.dataTransfer.getData("text/plain");
-            if (!taskId) return;
+        const taskId = event.dataTransfer.getData("text/plain");
+        if (taskId) {
             EventBus.emit("moveTask", { taskId, newStatus: this.#status });
-            this.#cardsContainer.classList.remove("drag-over");
+        }
+        this.#toggleDragOverEffect(event, false);
+    }
+
+    #toggleDragOverEffect(event, shouldAdd) {
+        if (event.target === this.#cardsContainer || this.#cardsContainer.contains(event.target)) {
+            this.#cardsContainer.classList.toggle("drag-over", shouldAdd);
+        }
+    }
+
+    #toggleDroppableStyles(status, shouldAdd) {
+        if (this.#status !== status) {
+            this.#cardsContainer.classList.toggle("droppable", shouldAdd);
         }
     }
 
     renderCards() {
-        if (this.#cardsContainer)
-            this.#cardsContainer.innerHTML = "";
-
-        this.#cardService.getCards().forEach(card => card.render(this.#cardsContainer));
+        this.#cardsContainer.innerHTML = "";
+        this.#cardService.getCards().forEach((card) => card.render(this.#cardsContainer));
     }
 
     render(parent) {
@@ -98,26 +101,17 @@ export default class SwimLane {
         this.renderCards();
     }
 
-    toggleDroppableStyles(status, shouldAdd) {
-        if (this.#status !== status) {
-            shouldAdd ? this.#cardsContainer.classList.add("droppable") : this.#cardsContainer.classList.remove("droppable");
-        }
-    }
-
     destroy() {
-        if (this.#parent && this.#element && this.#parent.contains(this.#element)) {
+        if (this.#parent?.contains(this.#element)) {
             this.#parent.removeChild(this.#element);
         }
+
+        this.#unbindEvents();
         this.#parent = null;
         this.#element = null;
         this.#cardsContainer = null;
-        this.cleanUp();
-        EventBus.emit("deleteSwimLane", this.#status);
-    }
 
-    cleanUp() {
-        EventBus.off("openNewTaskModal", this.boundDragStart);
-        EventBus.off("openNewTaskModal", this.boundDragEnd);
+        EventBus.emit("deleteSwimLane", this.#status);
     }
 
     getStatus() {
@@ -132,7 +126,6 @@ export default class SwimLane {
         return this.#cardService;
     }
 
-
     toJSON() {
         return {
             cardService: this.#cardService.toJSON(),
@@ -141,10 +134,6 @@ export default class SwimLane {
     }
 
     static fromJSON(data) {
-        const swimLane = new SwimLane(
-            CardService.fromJSON(data.cardService),
-            data.status,
-        );
-        return swimLane;
+        return new SwimLane(CardService.fromJSON(data.cardService), data.status);
     }
 }

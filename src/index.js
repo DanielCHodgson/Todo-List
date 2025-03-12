@@ -23,17 +23,18 @@ if (ProjectService.CURRENT_PROJECT === null) {
     //CreateProjectModal().launchModal();
     openProjectsPage()
 } else {
-    openNav()
+    nav = openNav()
     openDashboard();
 }
 
 function createProject(data) {
+
     ProjectService.saveProject(new ProjectModel(data.name, data.type, logoIcon, new TaskService([], 1), new LaneService([])));
     if (JSON.parse(localStorage.getItem("projectData")).length === 1) {
         ProjectService.setCurrentProject(data.name);
-        openDashboard();
+        currentPage = openDashboard();
     }
-    openNav();
+    nav.render();
 }
 
 function openNav() {
@@ -46,7 +47,7 @@ function openProjectsPage() {
         if (currentPage) {
             currentPage.destroy();
         }
-        ProjectsPage().open();
+        currentPage = ProjectsPage().open();
     }
 }
 
@@ -63,8 +64,8 @@ function openDashboard() {
 function switchProject(projectName) {
     if (projectName !== ProjectService.getCurrentProjectName()) {
         ProjectService.setCurrentProject(projectName);
-        openDashboard();
-        openNav();
+        currentPage = openDashboard();
+        nav.render();
     }
 }
 

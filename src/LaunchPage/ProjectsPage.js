@@ -60,10 +60,11 @@ export default function ProjectsPage() {
         const projectsPage = DomUtility.createElement("div", "projects-page");
         const projectsList = DomUtility.createElement("div", "projects-list");
 
-
-        projects.forEach(project => {
-            projectsList.appendChild(createProjectCard(project.name))
-        });
+        if (projects !== null) {
+            projects.forEach(project => {
+                projectsList.appendChild(createProjectCard(project.name))
+            });
+        }
 
         projectsList.appendChild(createDummyCard());
 

@@ -1,134 +1,140 @@
-import "./TaskCard.css"
+import "./TaskCard.css";
 import Utility from "../../utilities/DomUtility";
 import EventBus from "../../utilities/EventBus";
 import TaskModel from "../../data/models/TaskModel";
+import getIcons from "../../res/icons/icons";
+import DomUtility from "../../utilities/DomUtility";
 
 export default class TaskCard {
+    #task;
+    #id;
+    #element;
+    #fields = {};
+    #eventListeners = {};
 
-  #task
-  #id = null;
-  #element
-  #fields = null;
-
-  constructor(task) {
-    this.#task = task;
-    this.#id = this.#task.getId();
-    this.#element = this.createCardElement();
-    this.cacheFields();
-    this.setData(task);
-    this.#element.addEventListener("click", () => this.handleCardClick(task));
-  }
-
-  cacheFields() {
-    this.#fields = {
-      "summary": this.#element.querySelector(".summary"),
-      "priority": this.#element.querySelector(".priority"),
-      "date": this.#element.querySelector(".date"),
-      "slug": this.#element.querySelector(".slug")
-    };
-  }
-
-  setData(task) {
-    if (!task) return;
-    this.#fields.slug.textContent = task.getId();
-    this.#fields.summary.textContent = task.getSummary();
-    this.#fields.priority.textContent = task.getPriority();
-    this.#fields.date.textContent = task.getDueDate();
-  }
-
-  createCardElement() {
-    const card = Utility.createElement("div", "task-card");
-    card.draggable = true;
-    card.dataset.taskId = this.#id;
-
-    card.addEventListener("dragstart", this.#handleDragStart.bind(this));
-    card.addEventListener("dragend", this.#handleDragEnd.bind(this));
-
-    card.appendChild(this.createHeaderElement());
-    card.appendChild(this.createBodyElement());
-    card.appendChild(this.createFooterElement());
-    return card;
-  }
-
-  createHeaderElement() {
-    const deleteIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 384 512"><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5C45.3 29.9 25.1 28.1 11.5 39.4S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306 327.4 468.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z"/></svg>`;
-
-    const header = Utility.createElement("div", "task-header");
-
-    const del = Utility.createElement("div", "delete-icon");
-    del.appendChild(Utility.renderSvg(deleteIcon));
-    del.addEventListener("click", (event) => this.#handleDelete(event));
-
-    header.appendChild(Utility.createElement("p", "summary"));
-    header.appendChild(del);
-    return header;
-  }
-
-  createBodyElement() {
-    const body = Utility.createElement("div", "task-body");
-    //To do: add stuff
-    return body;
-  }
-
-  createFooterElement() {
-    const footer = Utility.createElement("div", "task-footer");
-    footer.appendChild(Utility.createElement("p", "slug",));
-    footer.appendChild(Utility.createElement("p", "priority"));
-    footer.appendChild(Utility.createElement("p", "date"));
-    return footer;
-  }
-
-  handleCardClick(task) {
-    EventBus.emit("viewTask", task)
-  }
-
-  #handleDragStart(event) {
-    event.dataTransfer.setData("text/plain", this.#id);
-    event.target.classList.add("dragging");
-    EventBus.emit("cardDragStart", this.#task.getStatus());
-  }
-
-  #handleDragEnd(event) {
-    event.target.classList.remove("dragging");
-    EventBus.emit("cardDragEnd", this.#task.getStatus());
-  }
-
-  #handleDelete(event) {
-    this.destroy();
-    event.stopPropagation();
-  }
-
-  render(parent) {
-    parent.appendChild(this.#element);
-  }
-
-  destroy() {
-    EventBus.emit("deleteTask", this.#task);
-    if (this.#element) {
-      this.#element.remove();
+    constructor(task) {
+        this.#task = task;
+        this.#id = task.getId();
+        this.#element = this.#createCardElement();
+        this.#cacheFields();
+        this.#setData(task);
+        this.#bindEvents();
     }
-  }
 
-  getId() {
-    return this.#id;
-  }
+    #bindEvents() {
+        this.#eventListeners.cardClick = () => EventBus.emit("viewTask", this.#task);
+        this.#eventListeners.dragStart = this.#handleDragStart.bind(this);
+        this.#eventListeners.dragEnd = this.#handleDragEnd.bind(this);
+        this.#eventListeners.deleteClick = (event) => this.#handleDelete(event);
 
-  getTask() {
-    return this.#task;
-  }
+        this.#element.addEventListener("click", this.#eventListeners.cardClick);
+        this.#element.addEventListener("dragstart", this.#eventListeners.dragStart);
+        this.#element.addEventListener("dragend", this.#eventListeners.dragEnd);
+    }
 
-  getCard() {
-    return this.#element;
-  }
+    #unbindEvents() {
+        this.#element.removeEventListener("click", this.#eventListeners.cardClick);
+        this.#element.removeEventListener("dragstart", this.#eventListeners.dragStart);
+        this.#element.removeEventListener("dragend", this.#eventListeners.dragEnd);
+        this.#eventListeners = {};
+    }
 
-  toJSON() {
-    return {
-      task: this.#task,
-    };
-  }
+    #cacheFields() {
+        this.#fields = {
+            summary: this.#element.querySelector(".summary"),
+            priority: this.#element.querySelector(".priority"),
+            date: this.#element.querySelector(".date"),
+            slug: this.#element.querySelector(".slug"),
+        };
+    }
 
-  static fromJSON(data) {
-    return new TaskCard(TaskModel.fromJSON(data.task));
-  }
+    #setData(task) {
+        if (!task) return;
+        this.#fields.slug.textContent = task.getId();
+        this.#fields.summary.textContent = task.getSummary();
+        this.#fields.priority.textContent = task.getPriority();
+        this.#fields.date.textContent = task.getDueDate();
+    }
 
+  
+    #createCardElement() {
+        const card = Utility.createElement("div", "task-card");
+        card.draggable = true;
+        card.dataset.taskId = this.#id;
+
+        card.append(this.#createHeaderElement(), this.#createBodyElement(), this.#createFooterElement());
+        return card;
+    }
+
+    #createHeaderElement() {
+        const header = Utility.createElement("div", "task-header");
+        const deleteIcon = Utility.createElement("div", "delete-icon");
+
+        deleteIcon.appendChild(DomUtility.renderSvg(getIcons().close));
+
+        deleteIcon.addEventListener("click", this.#eventListeners.deleteClick);
+
+        header.append(Utility.createElement("p", "summary"), deleteIcon);
+        return header;
+    }
+
+    #createBodyElement() {
+        return Utility.createElement("div", "task-body");
+    }
+
+    #createFooterElement() {
+        const footer = Utility.createElement("div", "task-footer");
+        footer.append(
+            Utility.createElement("p", "slug"),
+            Utility.createElement("p", "priority"),
+            Utility.createElement("p", "date")
+        );
+        return footer;
+    }
+
+    #handleDragStart(event) {
+        event.dataTransfer.setData("text/plain", this.#id);
+        this.#element.classList.add("dragging");
+        EventBus.emit("cardDragStart", this.#task.getStatus());
+    }
+
+    #handleDragEnd() {
+        this.#element.classList.remove("dragging");
+        EventBus.emit("cardDragEnd", this.#task.getStatus());
+    }
+
+    #handleDelete(event) {
+        event.stopPropagation();
+        this.destroy();
+    }
+
+    destroy() {
+        EventBus.emit("deleteTask", this.#task);
+        this.#unbindEvents();
+        this.#element?.remove();
+    }
+
+    render(parent) {
+        parent.appendChild(this.#element);
+    }
+
+    getId() {
+        return this.#id;
+    }
+
+    getTask() {
+        return this.#task;
+    }
+
+    getCard() {
+        return this.#element;
+    }
+
+    toJSON() {
+        return { task: this.#task };
+    }
+
+    static fromJSON(data) {
+        return new TaskCard(TaskModel.fromJSON(data.task));
+    }
 }

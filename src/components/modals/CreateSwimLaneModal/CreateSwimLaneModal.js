@@ -1,5 +1,5 @@
 import "./CreateSwimlaneModal.css";
-import Utility from "../../../utilities/DomUtility";
+import DomUtility from "../../../utilities/DomUtility";
 import EventBus from "../../../utilities/EventBus";
 import Validator from "../../../utilities/Validator";
 import getIcons from "../../../res/icons/icons";
@@ -11,34 +11,39 @@ export default class CreateSwimLaneModal {
         this.statusField = null;
 
         this.boundOpen = this.open.bind(this);
+        this.boundSubmit = this.#handleSubmit.bind(this);
         EventBus.on("addSwimlane", this.boundOpen);
     }
 
     open() {
-        if (!this.element) this.element = this.createElement();
-        this.cacheFields();
+        if (!this.element) {
+            this.element = this.#createElement();
+            this.#cacheFields();
+            this.#bindEvents();
+        }
         this.render();
     }
 
-    cacheFields() {
+    #cacheFields() {
         this.statusField = this.element.querySelector("#status");
     }
 
-    createElement() {
-        const modal = Utility.createElement("div", "create-swimlane-modal");
+    #createElement() {
+        const modal = DomUtility.createElement("div", "create-swimlane-modal");
+        modal.id = "modal";
 
-        const header = Utility.createElement("div", "header");
-        header.appendChild(Utility.createElement("p", "title", "Add Swimlane"));
-        header.appendChild(Utility.createIconButton("close", getIcons().close, () => this.destroy()));
+        const header = DomUtility.createElement("div", "header");
+        header.appendChild(DomUtility.createElement("p", "title", "Add Swimlane"));
+        header.appendChild(DomUtility.createIconButton("close", getIcons().close, () => this.destroy()));
 
-        const body = Utility.createElement("div", "body");
-        const form = Utility.createElement("form", "form");
-        const status = Utility.createInputFormGroup("status", "Status", true, 1, 20);
+        const body = DomUtility.createElement("div", "body");
+        const form = DomUtility.createElement("form", "form");
+        const status = DomUtility.createInputFormGroup("status", "Status", true, 1, 20);
         status.querySelector("input").textContent = "";
         form.appendChild(status);
 
-        const submit = Utility.createElement("button", "submit", "Add");
-        submit.addEventListener("click", (event) => this.handleSubmit(event, status));
+        const submit = DomUtility.createElement("button", "submit", "Add");
+        submit.addEventListener("click", this.boundSubmit);
         form.appendChild(submit);
 
         body.appendChild(form);
@@ -48,30 +53,34 @@ export default class CreateSwimLaneModal {
         return modal;
     }
 
-    handleSubmit(event, fieldGroup) {
+    #handleSubmit(event) {
         event.preventDefault();
-
-        const status = fieldGroup.querySelector("#status").value.toLowerCase();
+        const status = this.statusField.value.trim().toLowerCase();
         if (Validator.isValidSwimLaneStatus(status)) {
             EventBus.emit("createSwimLane", status);
             this.destroy();
         }
     }
 
+    #bindEvents() {
+        EventBus.on("addSwimlane", this.boundOpen);
+    }
+
+    #unbindEvents() {
+        EventBus.off("addSwimlane", this.boundOpen);
+    }
+
     destroy() {
         if (this.element) {
+            this.#unbindEvents();
+            this.element.querySelector(".submit").removeEventListener("click", this.boundSubmit);
             this.element.remove();
             this.element = null;
         }
     }
 
-    cleanUp() {
-        EventBus.off("addSwimlane", this.boundOpen);
-    }
-
     render() {
-        if (!this.parent.contains(this.element)) {
-            this.parent.appendChild(this.element);
-        }
+        if (!this.element || this.parent.contains(this.element)) return;
+        this.parent.appendChild(this.element);
     }
 }
