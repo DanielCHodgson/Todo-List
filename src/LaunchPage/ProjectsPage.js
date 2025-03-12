@@ -13,19 +13,19 @@ export default class ProjectsPage {
     constructor() {
         this.#parent = document.querySelector(".content");
         this.#projects = ProjectService.getProjects();
-        this.#element = this.createPage();
+        this.#element = this.#createPage();
         this.render();
     }
 
 
-    createProjectCard(name) {
+    #createProjectCard(name) {
         const projectCard = DomUtility.createElement("div", "project-card");
         projectCard.appendChild(DomUtility.createElement("p", "name", name));
-        projectCard.addEventListener("click", this.handleOpenProjectClick(name));
+        projectCard.addEventListener("click", this.#handleOpenProjectClick(name));
         return projectCard;
     }
 
-    createDummyCard() {
+    #createDummyCard() {
         const dummyCard = DomUtility.createElement("div", "dummy-card");
 
         if (this.#projects === null) {
@@ -37,11 +37,11 @@ export default class ProjectsPage {
 
         dummyCard.appendChild(icon);
 
-        dummyCard.addEventListener("click", (name) => this.handleNewProjectClick(name));
+        dummyCard.addEventListener("click", (name) => this.#handleNewProjectClick(name));
         return dummyCard;
     }
 
-    createDemoCard() {
+    #createDemoCard() {
         const dummyCard = DomUtility.createElement("div", "dummy-card");
 
         dummyCard.classList.add("bounce");
@@ -55,21 +55,21 @@ export default class ProjectsPage {
         return dummyCard;
     }
 
-    createPage() {
+    #createPage() {
         const projectsPage = DomUtility.createElement("div", "projects-page");
         const projectsList = DomUtility.createElement("div", "projects-list");
 
         if (this.#projects !== null) {
             this.#projects.forEach(project => {
-                projectsList.appendChild(this.createProjectCard(project.name));
+                projectsList.appendChild(this.#createProjectCard(project.name));
             });
         }
 
-        projectsList.appendChild(this.createDummyCard());
+        projectsList.appendChild(this.#createDummyCard());
 
         if (this.#projects === null) {
             projectsList.classList.add("init");
-            projectsList.appendChild(this.createDemoCard());
+            projectsList.appendChild(this.#createDemoCard());
         }
 
         projectsPage.appendChild(projectsList);
@@ -77,13 +77,13 @@ export default class ProjectsPage {
         return projectsPage;
     }
 
-    handleOpenProjectClick(name) {
+    #handleOpenProjectClick(name) {
         return () => {
             EventBus.emit("openProject", name);
         };
     }
 
-    handleNewProjectClick() {
+    #handleNewProjectClick() {
         EventBus.emit("addProject");
     }
 

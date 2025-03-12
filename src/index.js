@@ -32,8 +32,12 @@ function createProject(data) {
     if (JSON.parse(localStorage.getItem("projectData")).length === 1) {
         ProjectService.setCurrentProject(data.name);
         currentPage = loadDashboard();
-
     }
+
+    if (document.querySelector(".projects-page")) {
+        loadProjectsPage();
+    }
+
     loadNav()
 }
 
@@ -44,10 +48,8 @@ function loadNav() {
 
 
 function loadProjectsPage() {
-    if (!document.querySelector(".projects-page")) {
-        if (currentPage !== null) currentPage.destroy();
-        currentPage = new ProjectsPage();
-    }
+    if (currentPage !== null) currentPage.destroy();
+    currentPage = new ProjectsPage();
 }
 
 function loadDashboard() {
