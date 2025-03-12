@@ -13,8 +13,11 @@ export default class LaneService {
             this.#lanes.push(newLane);
     }
 
-    removeLane(laneToRemove) {
-        this.#lanes = this.#lanes.filter(lane => lane.getStatus() !== laneToRemove.getStatus());
+    removeLane(status) {
+        if (status) {
+            console.log(status)
+            this.#lanes = this.#lanes.filter(lane => lane.getStatus() !== status);
+        }
     }
 
     updateLane(updatedLane) {
@@ -41,7 +44,7 @@ export default class LaneService {
 
     static fromJSON(data) {
         return new LaneService(data.lanes.map(lane => {
-           return SwimLane.fromJSON(lane);
+            return SwimLane.fromJSON(lane);
         }));
     }
 }

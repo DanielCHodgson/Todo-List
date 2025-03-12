@@ -5,6 +5,7 @@ import EventBus from "../../../utilities/EventBus.js";
 import getIcons from "../../../res/icons/icons.js";
 
 export default class NewTaskModal {
+    
     constructor() {
         this.parent = document.querySelector(".app-wrapper");
         this.element = null;

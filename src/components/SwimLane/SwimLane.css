@@ -23,9 +23,13 @@
     border-radius: 10px;
 }
 
-.lane-header {
-    font-size: 0.8rem;
-    font-weight: 200;
+.swim-lane .close {
+    fill: var(--text-sublist);
+    cursor: pointer;
+}
+
+.swim-lane .close:hover {
+   opacity: 0.5;
 }
 
 .lane-header {
@@ -37,6 +41,11 @@
     font-family: "Roboto", serif;
     display: flex;
     justify-content: flex-start;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: 200;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
 }
 

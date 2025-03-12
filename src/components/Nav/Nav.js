@@ -1,62 +1,44 @@
 import "./Nav.css";
 import getIcons from "../../res/icons/icons";
-import Utility from "../../utilities/DomUtility";
-import ProjectService from "../../services/ProjectService";
 import DomUtility from "../../utilities/DomUtility";
+import ProjectService from "../../services/ProjectService";
 import EventBus from "../../utilities/EventBus";
 
 export default function nav() {
 
     const project = ProjectService.CURRENT_PROJECT;
     const nav = document.querySelector(".nav");
+    const element = createElement();
 
-    function createLeftNav() {
-        const leftNav = Utility.createElement("div", "left-nav");
-
-        const logo = Utility.createElement("div", "logo");
-        const logoImg = Utility.createElement("div", "logo-img")
-        logoImg.appendChild(Utility.renderSvg(getIcons().logo));
-        logo.appendChild(logoImg);
-
-        const iconsContainer = Utility.createElement("div", "left-nav-icons");
-
-        const search = Utility.createElement("div", "search");
-        search.appendChild(Utility.renderSvg(getIcons().search))
-
-        const addProject = Utility.createElement("div", "add-project");
-        addProject.appendChild(Utility.renderSvg(getIcons().add));
-        addProject.addEventListener("click", () => EventBus.emit("addProject"));
-
-        iconsContainer.appendChild(search);
-        iconsContainer.appendChild(addProject);
-
-        leftNav.appendChild(logo);
-        leftNav.appendChild(iconsContainer);
-        return leftNav;
+    function createElement() {
+        const navPane = DomUtility.createElement("div", "nav-pane");
+        navPane.appendChild(createLeftNav())
+        navPane.appendChild(createRightNav())
+        return navPane;
     }
 
     function createHeader() {
-        const navHeader = Utility.createElement("div", "nav-header");
+        const navHeader = DomUtility.createElement("div", "nav-header");
 
         if (project !== null) {
-            const icon = Utility.createImg(project.getIcon(), "team-icon", "3rem", "3rem");
-            const name = Utility.createElement("p", "project-name", project.getName());
-            const type = Utility.createElement("p", "project-type", `${project.getType()} project`);
+            const icon = DomUtility.createImg(project.getIcon(), "team-icon", "3rem", "3rem");
+            const name = DomUtility.createElement("p", "project-name", project.getName());
+            const type = DomUtility.createElement("p", "project-type", `${project.getType()} project`);
             navHeader.append(icon, name, type);
 
             navHeader.append(icon, name, type);
 
-            const dropdownButton = Utility.createElement("button", "dropdown-button");
+            const dropdownButton = DomUtility.createElement("button", "dropdown-button");
             const toggleIcon = DomUtility.renderSvg(getIcons().chevronDown);
             dropdownButton.appendChild(toggleIcon);
             navHeader.appendChild(dropdownButton);
 
-            const dropdownContent = Utility.createElement("div", "dropdown-content");
+            const dropdownContent = DomUtility.createElement("div", "dropdown-content");
             dropdownContent.classList.add("hidden");
 
             const projects = JSON.parse(localStorage.getItem(ProjectService.PROJECT_STORAGE_KEY)) || [];
             projects.forEach((project) => {
-                const option = Utility.createElement("p", "option", project.name);
+                const option = DomUtility.createElement("p", "option", project.name);
                 option.addEventListener("click", () => {
                     EventBus.emit("switchProject", option.textContent);
                 });
@@ -71,14 +53,14 @@ export default function nav() {
                 const icon = dropdownContent.classList.contains("visible")
                     ? getIcons().chevronUp
                     : getIcons().chevronDown;
-                dropdownButton.firstChild.replaceWith(Utility.renderSvg(icon));
+                dropdownButton.firstChild.replaceWith(DomUtility.renderSvg(icon));
             });
 
             window.addEventListener("click", (event) => {
                 if (nav && !nav.contains(event.target) && dropdownContent.classList.contains("visible")) {
                     dropdownContent.classList.remove("visible");
                     dropdownContent.classList.add("hidden");
-                    dropdownButton.firstChild.replaceWith(Utility.renderSvg(getIcons().chevronDown));
+                    dropdownButton.firstChild.replaceWith(DomUtility.renderSvg(getIcons().chevronDown));
                 }
             });
 
@@ -89,33 +71,65 @@ export default function nav() {
 
     function createNavList() {
 
-        const navList = Utility.createElement("ul", "nav-list")
+        const navList = DomUtility.createElement("ul", "nav-list")
 
-        const backlog = Utility.createElement("li", "backlog", "Backlog")
-        backlog.prepend(Utility.renderSvg(getIcons().backlog));
+        const projects = DomUtility.createElement("li", "projects", "Projects");
+        projects.prepend(DomUtility.renderSvg(getIcons().projects));
+        projects.addEventListener("click", () => EventBus.emit("openProjectsPage"));
+        navList.appendChild(projects);
 
-        navList.appendChild(backlog);
+        const tasks = DomUtility.createElement("li", "tasks", "Tasks")
+        tasks.prepend(DomUtility.renderSvg(getIcons().backlog));
+        navList.appendChild(tasks);
 
-        const board = Utility.createElement("li", "board", "Dashboard");
-        board.prepend(Utility.renderSvg(getIcons().dashboard));
+        const board = DomUtility.createElement("li", "board", "Dashboard");
+        board.prepend(DomUtility.renderSvg(getIcons().dashboard));
+        board.addEventListener("click", () => EventBus.emit("openDashboard"));
         navList.appendChild(board);
 
-        const settings = Utility.createElement("li", "settings", "Settings");
-        settings.prepend(Utility.renderSvg(getIcons().settings));
+        const settings = DomUtility.createElement("li", "settings", "Settings");
+        settings.prepend(DomUtility.renderSvg(getIcons().settings));
         navList.appendChild(settings);
 
         return navList;
     }
 
+    function createLeftNav() {
+        const leftNav = DomUtility.createElement("div", "left-nav");
+
+        const logo = DomUtility.createElement("div", "logo");
+        const logoImg = DomUtility.createElement("div", "logo-img")
+        logoImg.appendChild(DomUtility.renderSvg(getIcons().logo));
+        logo.appendChild(logoImg);
+
+        const iconsContainer = DomUtility.createElement("div", "left-nav-icons");
+
+        const search = DomUtility.createElement("div", "search");
+        search.appendChild(DomUtility.renderSvg(getIcons().search))
+
+        const addProject = DomUtility.createElement("div", "add-project");
+        addProject.appendChild(DomUtility.renderSvg(getIcons().addProject));
+        addProject.addEventListener("click", () => EventBus.emit("addProject"));
+
+        iconsContainer.appendChild(search);
+        iconsContainer.appendChild(addProject);
+
+        leftNav.appendChild(logo);
+        leftNav.appendChild(iconsContainer);
+        return leftNav;
+    }
+
     function createRightNav() {
-        const rightNav = Utility.createElement("div", "right-nav");
+        const rightNav = DomUtility.createElement("div", "right-nav");
         rightNav.appendChild(createHeader());
         rightNav.appendChild(createNavList());
         return rightNav;
     }
 
     function destroy() {
-        nav.innerHTML = "";
+        if(element) {
+           element.remove();
+        }
     }
 
     function render() {
@@ -123,7 +137,6 @@ export default function nav() {
         nav.appendChild(createLeftNav())
         nav.appendChild(createRightNav())
     }
-
 
     return {
         render

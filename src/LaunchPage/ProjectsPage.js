@@ -6,13 +6,24 @@ import getIcons from "../res/icons/icons";
 
 export default function ProjectsPage() {
 
-    const projects = localStorage.getItem(ProjectService.PROJECT_STORAGE_KEY);
-    const parent = document.querySelector(".content")
-    const element = createPage();
+    const parent = document.querySelector(".content");
+    let projects = null;
+    let element = null;
+
+    function open() {
+        if (!parent.querySelector(".projects-page")) {
+            projects = ProjectService.getProjects();
+            element = createPage();
+            render();
+        }
+    }
 
 
-    function createProjectCard() {
-
+    function createProjectCard(name) {
+        const projectCard = DomUtility.createElement("div", "project-card");
+        projectCard.appendChild(DomUtility.createElement("p", "name", name));
+        projectCard.addEventListener("click", handleOpenProjectClick(name));
+        return projectCard;
     }
 
     function createDummyCard() {
@@ -27,7 +38,7 @@ export default function ProjectsPage() {
 
         dummyCard.appendChild(icon);
 
-        dummyCard.addEventListener("click", handleNewProjectClick)
+        dummyCard.addEventListener("click", (name) => handleNewProjectClick(name))
         return dummyCard;
     }
 
@@ -49,7 +60,13 @@ export default function ProjectsPage() {
         const projectsPage = DomUtility.createElement("div", "projects-page");
         const projectsList = DomUtility.createElement("div", "projects-list");
 
+
+        projects.forEach(project => {
+            projectsList.appendChild(createProjectCard(project.name))
+        });
+
         projectsList.appendChild(createDummyCard());
+
         if (projects === null) {
             projectsList.classList.add("init");
             projectsList.appendChild(createDemoCard());
@@ -60,6 +77,10 @@ export default function ProjectsPage() {
         return projectsPage;
     }
 
+    function handleOpenProjectClick(name) {
+        EventBus.emit("openProject", name);
+    }
+
     function handleNewProjectClick() {
         EventBus.emit("addProject");
     }
@@ -67,17 +88,22 @@ export default function ProjectsPage() {
 
     function destroy() {
         if (element) {
-            projects = null;
             element.remove();
+            element = null;
+            projects = null;
         }
     }
 
     function render() {
-        if (parent && element)
-            parent.appendChild(element);
+        if (parent && element) {
+            if (!parent.querySelector(".projects-page"))
+                parent.appendChild(element);
+        }
+
     }
 
     return {
+        open,
         render,
         destroy
     }

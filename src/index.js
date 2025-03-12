@@ -21,7 +21,7 @@ if (ProjectService.CURRENT_PROJECT === null) {
     //testData.projects.forEach(project => ProjectService.saveProject(ProjectModel.fromJSON(project)));
     //ProjectService.setCurrentProject("SAAS");
     //CreateProjectModal().launchModal();
-    ProjectsPage().render();
+    openProjectsPage()
 } else {
     openNav()
     openDashboard();
@@ -41,14 +41,23 @@ function openNav() {
     nav.render();
 }
 
-function openDashboard() {
-    if (currentPage) {
-        console.log(currentPage)
-        currentPage.destroy();
-
+function openProjectsPage() {
+    if (!document.querySelector(".projects-page")) {
+        if (currentPage) {
+            currentPage.destroy();
+        }
+        ProjectsPage().open();
     }
-       
-    currentPage = new Dashboard();
+}
+
+function openDashboard() {
+    if (!document.querySelector(".dashboard")) {
+        if (currentPage) {
+            console.log(currentPage)
+            currentPage.destroy();
+        }
+        currentPage = new Dashboard();
+    }
 }
 
 function switchProject(projectName) {
@@ -62,4 +71,6 @@ function switchProject(projectName) {
 EventBus.on("addProject", () => createProjectModal.open());
 EventBus.on("createProject", (data) => createProject(data));
 EventBus.on("switchProject", (projectName) => switchProject(projectName));
+EventBus.on("openProjectsPage", () => openProjectsPage());
+EventBus.on("openDashboard", () => openDashboard());
 

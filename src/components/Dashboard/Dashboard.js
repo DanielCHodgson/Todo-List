@@ -47,6 +47,7 @@ export default class Dashboard {
         this.#eventListeners.moveTask = ({ taskId, newStatus }) => this.moveTask(taskId, newStatus);
         this.#eventListeners.deleteTask = (task) => this.deleteTask(task);
         this.#eventListeners.createSwimLane = (status) => this.addSwimLane(status);
+        this.#eventListeners.deleteSwimlane = (status) => this.deleteSwimlane(status);
     }
 
     registerEventListeners() {
@@ -55,6 +56,7 @@ export default class Dashboard {
         EventBus.on("moveTask", this.#eventListeners.moveTask);
         EventBus.on("deleteTask", this.#eventListeners.deleteTask);
         EventBus.on("createSwimLane", this.#eventListeners.createSwimLane);
+        EventBus.on("deleteSwimLane", this.#eventListeners.deleteSwimlane);
     }
 
     initModals() {
@@ -79,23 +81,22 @@ export default class Dashboard {
         return dashboard;
     }
 
-    createSwimLane(status, parent) {
-        const taskCards = this.#taskService
-            .getTasksByStatus(status)
-            .map(task => new TaskCard(task, EventBus));
-
-        this.#laneService.addLane(new SwimLane(parent, new CardService(taskCards), status, EventBus));
-    }
 
     addSwimLane(status) {
+
+        if (this.#laneService.getLanes().some(lane => lane.getStatus() === status)) {
+            alert("Lane already exists");
+            return;
+        }
+
         const cards = this.#taskService
             .getTasksByStatus(status)
             .map(task => {
-                return new TaskCard(task, EventBus);
+                return new TaskCard(task);
             });
 
 
-        const lane = new SwimLane(new CardService(cards), status, EventBus);
+        const lane = new SwimLane(new CardService(cards), status);
         this.#laneService.addLane(lane);
         lane.render(this.#lanesContainer);
         ProjectService.saveProject(this.#project);
@@ -205,6 +206,12 @@ export default class Dashboard {
         if (!document.querySelector(".create-task-modal")) {
             EventBus.emit("openNewTaskModal", this.#laneService);
         }
+    }
+
+
+    deleteSwimlane(status) {
+        this.#laneService.removeLane(status);
+        ProjectService.saveProject(this.#project);
     }
 
     destroy() {

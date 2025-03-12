@@ -1,7 +1,8 @@
 import "./SwimLane.css";
-import Utility from "../../utilities/DomUtility";
+import DomUtility from "../../utilities/DomUtility";
 import EventBus from "../../utilities/EventBus";
 import CardService from "../../services/CardService";
+import getIcons from "../../res/icons/icons";
 
 export default class SwimLane {
     #parent;
@@ -9,7 +10,7 @@ export default class SwimLane {
     #status;
     #element;
     #cardsContainer;
-    
+
     constructor(cardService, status) {
         this.#cardService = cardService;
         this.#status = status;
@@ -18,20 +19,22 @@ export default class SwimLane {
         this.bindEvents();
     }
 
+
     bindEvents() {
+        this.boundDragStart = this.toggleDroppableStyles.bind(this);
+        this.boundDragEnd = this.toggleDroppableStyles.bind(this);
 
         EventBus.on("cardDragStart", (status) => {
-            this.toggleDroppableStyles(status, true);
+            this.boundDragStart(status, true);
         });
 
         EventBus.on("cardDragEnd", (status) => {
-            this.toggleDroppableStyles(status, false);
+            this.boundDragEnd(status, false);
         });
-
     }
 
     #createElement() {
-        const swimLane = Utility.createElement("div", "swim-lane");
+        const swimLane = DomUtility.createElement("div", "swim-lane");
         swimLane.dataset.status = this.#status;
 
         swimLane.appendChild(this.#createHeader());
@@ -41,7 +44,7 @@ export default class SwimLane {
     }
 
     #createCardsContainer() {
-        const cardsContainer = Utility.createElement("div", "card-list");
+        const cardsContainer = DomUtility.createElement("div", "card-list");
         cardsContainer.addEventListener("dragover", (event) => this.#handleDragOver(event));
         cardsContainer.addEventListener("dragleave", (event) => this.#handleDragLeave(event));
         cardsContainer.addEventListener("drop", (event) => this.#handleDrop(event));
@@ -49,12 +52,12 @@ export default class SwimLane {
     }
 
     #createHeader() {
-        const header = Utility.createElement("div", "lane-header");
+        const header = DomUtility.createElement("div", "lane-header");
         const titleStr = this.#status.replace(/-/g, " ");
-        const title = Utility.createElement("h3", "", titleStr.toUpperCase());
-
+        const title = DomUtility.createElement("h3", "", titleStr.toUpperCase());
 
         header.appendChild(title);
+        header.appendChild(DomUtility.createIconButton("close", getIcons().close, () => this.destroy()))
         return header;
     }
 
@@ -108,6 +111,13 @@ export default class SwimLane {
         this.#parent = null;
         this.#element = null;
         this.#cardsContainer = null;
+        this.cleanUp();
+        EventBus.emit("deleteSwimLane", this.#status);
+    }
+
+    cleanUp() {
+        EventBus.off("openNewTaskModal", this.boundDragStart);
+        EventBus.off("openNewTaskModal", this.boundDragEnd);
     }
 
     getStatus() {

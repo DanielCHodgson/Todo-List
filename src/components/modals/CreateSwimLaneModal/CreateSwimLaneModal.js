@@ -18,8 +18,6 @@ export default class CreateSwimLaneModal {
         if (!this.element) this.element = this.createElement();
         this.cacheFields();
         this.render();
-
-        console.log("LAUNCHED ADDSWIMLANE MODAL");
     }
 
     cacheFields() {
