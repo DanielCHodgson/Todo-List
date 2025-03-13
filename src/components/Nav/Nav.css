@@ -115,7 +115,7 @@
 }
 
 .nav-list li:hover {
-    background-color: #dddddd;
+    background-color: var(--hover-hightlight-light);
 }
 
 .nav-list li svg {

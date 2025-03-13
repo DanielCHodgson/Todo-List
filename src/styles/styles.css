@@ -5,8 +5,8 @@
     --secondary-light: #F7F8F9;
     --tertiary-light: #FFFFFF;
     --icons-light: #223558;
-    --text-sublist: #626f86;
-    --taxt: #172b4d;
+    --text-sublist-light: #626f86;
+    --hover-hightlight-light: #dddddd;
 }
 
 .app-wrapper {
@@ -40,4 +40,19 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 999;
+}
+
+
+.alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #f44336;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+
 }

@@ -42,7 +42,7 @@ export default class Task {
     getStatus() {
         return this.#status;
     }
-    
+
     toJSON() {
         return {
             id: this.#id,
@@ -52,6 +52,18 @@ export default class Task {
             priority: this.#priority,
             dueDate: this.#date,
             status: this.#status
+        };
+    }
+
+    getPrivateProperties() {
+        return {
+            id: this.#id,
+            project: this.#project,
+            summary: this.#summary,
+            description: this.#description,
+            priority: this.#priority,
+            date: this.#date,
+            status: this.#status,
         };
     }
 

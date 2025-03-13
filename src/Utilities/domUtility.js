@@ -85,7 +85,7 @@ export default class DomUtility {
         input.required = required;
         input.minLength = minLength;
         input.maxLength = maxLength;
-        return input ;
+        return input;
     }
 
 
@@ -126,6 +126,20 @@ export default class DomUtility {
         formGroup.appendChild(input);
 
         return formGroup;
+    }
+
+
+    static showAlert(textContent) {
+        const alertBox = document.createElement("div");
+        alertBox.classList.add("alert");
+        alertBox.textContent = textContent;
+
+        document.body.appendChild(alertBox);
+
+        setTimeout(() => {
+            alertBox.style.opacity = "0";
+            setTimeout(() => alertBox.remove(), 500);
+        }, 3000);
     }
 
 }
