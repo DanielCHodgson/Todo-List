@@ -40,11 +40,11 @@ export default class TaskService {
     }
 
     getTaskById(id) {
-        return this.#tasks.find(task => task.getId() === id);
+        return this.#tasks.find(task => task.getId() === id) || null;
     }
 
     getTasksByStatus(status) {
-        return this.#tasks.filter(task => task.getStatus() === status);
+        return this.#tasks.filter(task => task.getStatus() === status) || null;
     }
 
     getTasks() {

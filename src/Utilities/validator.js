@@ -19,6 +19,10 @@ export default class Validator {
             errors.push("Summary must be 50 characters or less.");
         }
 
+        if (fields.status.value.length > 20) {
+            errors.push("Status must be 20 characters or less.");
+        }
+
         if (errors.length > 0) {
             this.displayErrorMessages(errors);
             return false;

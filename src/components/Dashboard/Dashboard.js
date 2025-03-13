@@ -112,6 +112,7 @@ export default class Dashboard {
             data.status
         );
 
+        console.log(data)
         this.#taskService.addTask(task);
         this.#addTaskToLane(task);
         ProjectService.saveProject(this.#project);
@@ -170,9 +171,13 @@ export default class Dashboard {
     }
 
     #addTaskToLane(task) {
+        console.log(task)
         const lane = this.#laneService.getLaneByStatus(task.getStatus());
-        lane.getCardService().addCard(new TaskCard(task, EventBus));
-        lane.renderCards();
+        console.log(lane)
+        if (lane !== null) {
+            lane.getCardService().addCard(new TaskCard(task, EventBus));
+            lane.renderCards();
+        }
     }
 
     #moveUpdatedTask(updatedTask, oldTask) {
@@ -181,9 +186,9 @@ export default class Dashboard {
 
         if (newLane !== oldLane) {
             oldLane.getCardService().removeCard(oldTask.getId());
-            newLane.getCardService().addCard(new TaskCard(updatedTask, EventBus));
+            newLane.getCardService().addCard(new TaskCard(updatedTask));
         } else {
-            newLane.getCardService().updateCard(oldTask.getId(), new TaskCard(updatedTask, EventBus));
+            newLane.getCardService().updateCard(oldTask.getId(), new TaskCard(updatedTask));
         }
 
         newLane.renderCards();

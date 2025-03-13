@@ -18,9 +18,22 @@
     place-content: center;
 }
 
+.view-task-header .icon-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.view-task-header .close {
+    background-color: transparent;
+    border: none;
+    outline:none;
+}
+
 .view-task-header {
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
 }
 
 .view-task-header .id {

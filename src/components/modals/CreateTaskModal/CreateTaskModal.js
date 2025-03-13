@@ -10,17 +10,12 @@ export default class NewTaskModal {
         this.element = null;
         this.form = null;
         this.fields = {};
-        this.statuses = null;
-
         this.boundOpen = this.open.bind(this);
         this.boundSubmit = this.#submitTaskData.bind(this);
         this.boundDestroy = this.destroy.bind(this);
     }
 
-    open(laneService) {
-        //to do remove laneservice dependency and change input to text
-        this.statuses = laneService.getLanes().map(lane => lane.getStatus());
-
+    open() {
         if (!this.element) {
             this.element = this.#createElement();
             this.#cacheFields();
@@ -66,7 +61,7 @@ export default class NewTaskModal {
             Utility.createInputFormGroup("summary", "Summary", true, 1, 35),
             Utility.createTextAreaFormGroup("description", "Description", false, 0, 500),
             Utility.createSelectFormGroup("priority", "Priority", ["P1", "P2", "P3", "P4", "P5"]),
-            Utility.createSelectFormGroup("status", "Status", this.statuses),
+            Utility.createInputFormGroup("status", "Status", true, 1, 20),
             Utility.createDateFormGroup("date", "Due date", false)
         );
 
@@ -91,7 +86,11 @@ export default class NewTaskModal {
 
         if (Validator.isValidTaskData(this.fields)) {
             const data = Object.fromEntries(
-                Object.entries(this.fields).map(([key, element]) => [key, element.value.trim()])
+                Object.entries(this.fields).map(([key, element]) => {
+                    return key === "status" ?
+                        [key, element.value.trim().toLowerCase()] :
+                        [key, element.value.trim()]
+                })
             );
             EventBus.emit("createTask", data);
             this.destroy();

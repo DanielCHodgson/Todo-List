@@ -79,6 +79,15 @@ export default class DomUtility {
         return formGroup;
     }
 
+    static createInputField(id, required, minLength, maxLength) {
+        const input = document.createElement("input");
+        input.id = id;
+        input.required = required;
+        input.minLength = minLength;
+        input.maxLength = maxLength;
+        return input ;
+    }
+
 
     static createDateFormGroup(id, labelText, required) {
         const formGroup = document.createElement("div");

@@ -96,7 +96,7 @@ select {
     outline: 1px solid black;
 }
 
-#summary, #date {
+input {
     width: 100%;
     height: 2.2rem;
     padding: 0 0.5rem;

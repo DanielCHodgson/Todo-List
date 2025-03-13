@@ -85,6 +85,7 @@ export default class Nav {
 
         const tasks = DomUtility.createElement("li", "tasks", "Tasks");
         tasks.prepend(DomUtility.renderSvg(getIcons().backlog));
+        tasks.addEventListener("click", () => EventBus.emit("openTasksPage"));
         navList.appendChild(tasks);
 
         const board = DomUtility.createElement("li", "board", "Dashboard");

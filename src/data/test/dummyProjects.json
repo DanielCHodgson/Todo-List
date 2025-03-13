@@ -1,52 +1,395 @@
-{
-   "projects": [
-        {
-            "name": "SAAS",
-            "type": "software",
-            "icon": "http://localhost:8080/6ee8420bd4d604ccff22.png",
-            "taskService": {
-                "tasks": [
-                    {
-                        "id": "SAAS-1",
-                        "project": "SAAS",
-                        "summary": "DevOps: Prepare 2.5.6 build",
-                        "description": "Prepare build, Set up project dependencies, build the application, run tests and fix issues, create deployment package, deploy to staging, verify deployment, push to production, monitor performance, and rollback if needed.",
-                        "priority": "P2",
-                        "dueDate": "20-03-2025",
-                        "status": "ready to start"
-                    },
-                    {
-                        "id": "SAAS-2",
-                        "project": "SAAS",
-                        "summary": "Bugs: Warning icons not displaying red",
-                        "description": "Locate the error in the code, identify the current color setting, update it to red, test the change, verify consistency across the UI, commit the fix, deploy the update, and confirm the issue is resolved.",
-                        "priority": "P3",
-                        "dueDate": "05-03-2025",
-                        "status": "ready to start"
-                    },
-                    {
-                        "id": "SAAS-3",
-                        "project": "SAAS",
-                        "summary": "Testing: QA testing for 2.5.6 build",
-                        "description": "Review requirements, create test cases, set up the test environment, execute tests, log defects, verify fixes, perform regression testing, validate functionality, generate reports, and ensure quality standards.",
-                        "priority": "P2",
-                        "dueDate": "01-03-2025",
-                        "status": "in progress"
-                    }
-                ],
-                "index": 4
-            },
-            "dashboard": {}
+[
+    {
+        "name": "SAAS",
+        "type": "Software",
+        "icon": "http://localhost:8080/cb7e597cf7686128fa96.jpg",
+        "taskService": {
+            "tasks": [
+                {
+                    "id": "SAAS-1",
+                    "project": "SAAS",
+                    "summary": "DevOps: Prepare 2.5.6 build",
+                    "description": "",
+                    "priority": "P1",
+                    "status": "ready to start"
+                },
+                {
+                    "id": "SAAS-2",
+                    "project": "SAAS",
+                    "summary": "Cloud: Tier locked features",
+                    "description": "",
+                    "priority": "P1",
+                    "status": "closed"
+                },
+                {
+                    "id": "SAAS-3",
+                    "project": "SAAS",
+                    "summary": "Cloud: Tier locked features",
+                    "description": "",
+                    "priority": "P1",
+                    "status": "closed"
+                },
+                {
+                    "id": "SAAS-4",
+                    "project": "SAAS",
+                    "summary": "Backend: Optimize database queries",
+                    "description": "",
+                    "priority": "P2",
+                    "status": "in progress"
+                },
+                {
+                    "id": "SAAS-5",
+                    "project": "SAAS",
+                    "summary": "Frontend: Improve UI responsiveness",
+                    "description": "",
+                    "priority": "P2",
+                    "status": "open"
+                },
+                {
+                    "id": "SAAS-6",
+                    "project": "SAAS",
+                    "summary": "Security: Implement OAuth2 authentication",
+                    "description": "",
+                    "priority": "P1",
+                    "status": "ready to start"
+                },
+                {
+                    "id": "SAAS-7",
+                    "project": "SAAS",
+                    "summary": "API: Create new endpoint for analytics",
+                    "description": "",
+                    "priority": "P3",
+                    "status": "in review"
+                },
+                {
+                    "id": "SAAS-8",
+                    "project": "SAAS",
+                    "summary": "Testing: Automate regression tests",
+                    "description": "",
+                    "priority": "P2",
+                    "status": "in progress"
+                },
+                {
+                    "id": "SAAS-9",
+                    "project": "SAAS",
+                    "summary": "DevOps: Improve CI/CD pipeline",
+                    "description": "",
+                    "priority": "P1",
+                    "status": "ready to start"
+                },
+                {
+                    "id": "SAAS-10",
+                    "project": "SAAS",
+                    "summary": "Support: Resolve critical customer issues",
+                    "description": "",
+                    "priority": "P1",
+                    "status": "open"
+                }
+            ],
+            "index": 10
         },
-        {
-            "name": "DOCS",
-            "type": "documentation",
-            "icon": "http://localhost:8080/6ee8420bd4d604ccff22.png",
-            "taskService": {
-                "tasks": [],
-                "index": 1
-            },
-            "dashboard": {}
+        "laneService": {
+            "lanes": [
+                {
+                    "cardService": {
+                        "cards": [
+                            {
+                                "task": {
+                                    "id": "SAAS-1",
+                                    "project": "SAAS",
+                                    "summary": "DevOps: Prepare 2.5.6 build",
+                                    "description": "",
+                                    "priority": "P1",
+                                    "status": "ready to start"
+                                }
+                            },
+                            {
+                                "task": {
+                                    "id": "SAAS-6",
+                                    "project": "SAAS",
+                                    "summary": "Security: Implement OAuth2 authentication",
+                                    "description": "",
+                                    "priority": "P1",
+                                    "status": "ready to start"
+                                }
+                            },
+                            {
+                                "task": {
+                                    "id": "SAAS-9",
+                                    "project": "SAAS",
+                                    "summary": "DevOps: Improve CI/CD pipeline",
+                                    "description": "",
+                                    "priority": "P1",
+                                    "status": "ready to start"
+                                }
+                            }
+                        ]
+                    },
+                    "status": "ready to start"
+                },
+                {
+                    "cardService": {
+                        "cards": [
+                            {
+                                "task": {
+                                    "id": "SAAS-4",
+                                    "project": "SAAS",
+                                    "summary": "Backend: Optimize database queries",
+                                    "description": "",
+                                    "priority": "P2",
+                                    "status": "in progress"
+                                }
+                            },
+                            {
+                                "task": {
+                                    "id": "SAAS-8",
+                                    "project": "SAAS",
+                                    "summary": "Testing: Automate regression tests",
+                                    "description": "",
+                                    "priority": "P2",
+                                    "status": "in progress"
+                                }
+                            }
+                        ]
+                    },
+                    "status": "in progress"
+                },
+                {
+                    "cardService": {
+                        "cards": [
+                            {
+                                "task": {
+                                    "id": "SAAS-7",
+                                    "project": "SAAS",
+                                    "summary": "API: Create new endpoint for analytics",
+                                    "description": "",
+                                    "priority": "P3",
+                                    "status": "in review"
+                                }
+                            }
+                        ]
+                    },
+                    "status": "in review"
+                },
+                {
+                    "cardService": {
+                        "cards": [
+                            {
+                                "task": {
+                                    "id": "SAAS-2",
+                                    "project": "SAAS",
+                                    "summary": "Cloud: Tier locked features",
+                                    "description": "",
+                                    "priority": "P1",
+                                    "status": "closed"
+                                }
+                            },
+                            {
+                                "task": {
+                                    "id": "SAAS-3",
+                                    "project": "SAAS",
+                                    "summary": "Cloud: Tier locked features",
+                                    "description": "",
+                                    "priority": "P1",
+                                    "status": "closed"
+                                }
+                            }
+                        ]
+                    },
+                    "status": "closed"
+                }
+            ]
         }
-    ]
-}
+    },
+    {
+        "name": "DOCS",
+        "type": "Documentation",
+        "icon": "http://localhost:8080/docs-icon.jpg",
+        "taskService": {
+            "tasks": [
+                {
+                    "id": "DOCS-1",
+                    "project": "DOCS",
+                    "summary": "Update API documentation for v2.5",
+                    "description": "",
+                    "priority": "P1",
+                    "status": "in review"
+                },
+                {
+                    "id": "DOCS-2",
+                    "project": "DOCS",
+                    "summary": "Create getting started guide for new users",
+                    "description": "",
+                    "priority": "P2",
+                    "status": "open"
+                },
+                {
+                    "id": "DOCS-3",
+                    "project": "DOCS",
+                    "summary": "Review and improve developer documentation",
+                    "description": "",
+                    "priority": "P2",
+                    "status": "ready to start"
+                },
+                {
+                    "id": "DOCS-4",
+                    "project": "DOCS",
+                    "summary": "Add troubleshooting section to user manual",
+                    "description": "",
+                    "priority": "P3",
+                    "status": "open"
+                },
+                {
+                    "id": "DOCS-5",
+                    "project": "DOCS",
+                    "summary": "Document API rate limits and best practices",
+                    "description": "",
+                    "priority": "P1",
+                    "status": "in progress"
+                },
+                {
+                    "id": "DOCS-6",
+                    "project": "DOCS",
+                    "summary": "Improve formatting and structure of knowledge base",
+                    "description": "",
+                    "priority": "P3",
+                    "status": "open"
+                },
+                {
+                    "id": "DOCS-7",
+                    "project": "DOCS",
+                    "summary": "Update security guidelines in documentation",
+                    "description": "",
+                    "priority": "P1",
+                    "status": "ready to start"
+                },
+                {
+                    "id": "DOCS-8",
+                    "project": "DOCS",
+                    "summary": "Translate user guide into Spanish",
+                    "description": "",
+                    "priority": "P2",
+                    "status": "in review"
+                },
+                {
+                    "id": "DOCS-9",
+                    "project": "DOCS",
+                    "summary": "Write best practices guide for API integration",
+                    "description": "",
+                    "priority": "P2",
+                    "status": "in progress"
+                },
+                {
+                    "id": "DOCS-10",
+                    "project": "DOCS",
+                    "summary": "Improve search functionality in help center",
+                    "description": "",
+                    "priority": "P3",
+                    "status": "ready to start"
+                }
+            ],
+            "index": 10
+        },
+        "laneService": {
+            "lanes": [
+                {
+                    "cardService": {
+                        "cards": [
+                            {
+                                "task": {
+                                    "id": "DOCS-3",
+                                    "project": "DOCS",
+                                    "summary": "Review and improve developer documentation",
+                                    "description": "",
+                                    "priority": "P2",
+                                    "status": "ready to start"
+                                }
+                            },
+                            {
+                                "task": {
+                                    "id": "DOCS-7",
+                                    "project": "DOCS",
+                                    "summary": "Update security guidelines in documentation",
+                                    "description": "",
+                                    "priority": "P1",
+                                    "status": "ready to start"
+                                }
+                            },
+                            {
+                                "task": {
+                                    "id": "DOCS-10",
+                                    "project": "DOCS",
+                                    "summary": "Improve search functionality in help center",
+                                    "description": "",
+                                    "priority": "P3",
+                                    "status": "ready to start"
+                                }
+                            }
+                        ]
+                    },
+                    "status": "ready to start"
+                },
+                {
+                    "cardService": {
+                        "cards": [
+                            {
+                                "task": {
+                                    "id": "DOCS-5",
+                                    "project": "DOCS",
+                                    "summary": "Document API rate limits and best practices",
+                                    "description": "",
+                                    "priority": "P1",
+                                    "status": "in progress"
+                                }
+                            },
+                            {
+                                "task": {
+                                    "id": "DOCS-9",
+                                    "project": "DOCS",
+                                    "summary": "Write best practices guide for API integration",
+                                    "description": "",
+                                    "priority": "P2",
+                                    "status": "in progress"
+                                }
+                            }
+                        ]
+                    },
+                    "status": "in progress"
+                },
+                {
+                    "cardService": {
+                        "cards": [
+                            {
+                                "task": {
+                                    "id": "DOCS-1",
+                                    "project": "DOCS",
+                                    "summary": "Update API documentation for v2.5",
+                                    "description": "",
+                                    "priority": "P1",
+                                    "status": "in review"
+                                }
+                            },
+                            {
+                                "task": {
+                                    "id": "DOCS-8",
+                                    "project": "DOCS",
+                                    "summary": "Translate user guide into Spanish",
+                                    "description": "",
+                                    "priority": "P2",
+                                    "status": "in review"
+                                }
+                            }
+                        ]
+                    },
+                    "status": "in review"
+                },
+                {
+                    "cardService": {
+                        "cards": []
+                    },
+                    "status": "closed"
+                }
+            ]
+        }
+    }
+]

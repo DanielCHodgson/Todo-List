@@ -2,6 +2,7 @@ import "./ViewTaskModal.css";
 import DomUtility from "../../../utilities/DomUtility";
 import Validator from "../../../utilities/Validator";
 import EventBus from "../../../utilities/EventBus";
+import getIcons from "../../../res/icons/icons";
 
 export default class ViewTaskModal {
     constructor() {
@@ -23,6 +24,7 @@ export default class ViewTaskModal {
 
     #cacheFields() {
         this.fields = {
+            id: this.element.querySelector(".id"),
             summary: this.element.querySelector("#summary"),
             description: this.element.querySelector("#description"),
             project: this.element.querySelector("#project"),
@@ -34,34 +36,47 @@ export default class ViewTaskModal {
 
     setData(task) {
         if (!task) return;
+        this.fields.id.textContent = task.getId();
         this.fields.summary.value = task.getSummary();
         this.fields.description.value = task.getDescription();
         this.fields.project.value = task.getProject();
         this.fields.priority.value = task.getPriority();
         this.fields.status.value = task.getStatus();
         this.fields.date.value = task.getDueDate();
+        console.log(task)
     }
 
     #createElement() {
-        const modal = DomUtility.createElement("div", "view-task-modal", { id: "modal" });
+        const modal = DomUtility.createElement("div", "view-task-modal");
+        modal.id = "modal";
         modal.append(this.#createHeader(), this.#createBody(), this.#createFooter());
         return modal;
     }
 
     #createHeader() {
         const header = DomUtility.createElement("div", "view-task-header");
-        header.appendChild(DomUtility.createElement("p", "id"));
-
         const iconRow = DomUtility.createElement("div", "icon-row");
-        iconRow.appendChild(DomUtility.createIconButton("close", "×", () => this.destroy()));
-        header.appendChild(iconRow);
+        iconRow.appendChild(DomUtility.createElement("p", "id"));
+
+        const closeBtn = DomUtility.createElement("button", "close");
+
+        closeBtn.appendChild(DomUtility.renderSvg(getIcons().close));
+        closeBtn.addEventListener("click", () => this.destroy());
+
+        iconRow.appendChild(closeBtn);
+
+
+        const title = DomUtility.createElement("div", "title")
 
         const summary = document.createElement("input");
         summary.id = "summary";
         summary.required = true;
         summary.minLength = 1;
         summary.maxLength = 50;
-        header.appendChild(summary);
+        title.appendChild(summary);
+
+        header.appendChild(iconRow);
+        header.appendChild(title)
 
         return header;
     }
@@ -73,9 +88,10 @@ export default class ViewTaskModal {
         left.appendChild(DomUtility.createTextAreaFormGroup("description", "Description", false, 0, 1000));
 
         const right = DomUtility.createElement("div", "modal-right");
-        ["project", "priority", "status", "date"].forEach(field => {
+        ["project", "priority", "status",].forEach(field => {
             right.appendChild(DomUtility.createInputFormGroup(field, field.charAt(0).toUpperCase() + field.slice(1), true));
         });
+        right.appendChild(DomUtility.createDateFormGroup("date", "Date", false));
 
         body.append(left, right);
         return body;
@@ -83,7 +99,7 @@ export default class ViewTaskModal {
 
     #createFooter() {
         const footer = DomUtility.createElement("div", "view-task-footer");
-        
+
         const updateBtn = DomUtility.createElement("button", "update-btn", "Update");
         updateBtn.addEventListener("click", this.#updateTask.bind(this));
 

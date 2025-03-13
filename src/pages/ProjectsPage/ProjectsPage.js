@@ -1,8 +1,8 @@
 import "./ProjectsPage.css";
-import ProjectService from "../services/ProjectService";
-import DomUtility from "../utilities/DomUtility";
-import EventBus from "../utilities/EventBus";
-import getIcons from "../res/icons/icons";
+import ProjectService from "../../services/ProjectService";
+import DomUtility from "../../utilities/DomUtility";
+import EventBus from "../../utilities/EventBus";
+import getIcons from "../../res/icons/icons";
 
 export default class ProjectsPage {
 
