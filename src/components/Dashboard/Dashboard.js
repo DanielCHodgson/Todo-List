@@ -175,7 +175,7 @@ export default class Dashboard {
         const lane = this.#laneService.getLaneByStatus(task.getStatus());
         console.log(lane)
         if (lane !== null) {
-            lane.getCardService().addCard(new TaskCard(task, EventBus));
+            lane.getCardService().addCard(new TaskCard(task));
             lane.renderCards();
         }
     }

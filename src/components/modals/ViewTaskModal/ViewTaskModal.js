@@ -5,45 +5,58 @@ import EventBus from "../../../utilities/EventBus";
 import getIcons from "../../../res/icons/icons";
 
 export default class ViewTaskModal {
+
+    #parent;
+    #element;
+    #fields;
+    #currentTask;
+    #closeBtnEventListener;
+    #dateMouseEnterListener;
+    #dateMouseLeaveListener;
+    #overlay;
+    #boundOverlayClick
+
     constructor() {
-        this.parent = document.querySelector(".app-wrapper");
-        this.element = null;
-        this.fields = {};
-        this.currentTask = null;
+        this.#parent = document.querySelector(".app-wrapper");
+        this.#element = null;
+        this.#fields = {};
+        this.#currentTask = null;
+
+        this.#boundOverlayClick = this.#handleOverlayClick.bind(this);
     }
 
     open(task) {
-        if (!this.element) {
-            this.element = this.#createElement();
+        if (!this.#element) {
+            this.#element = this.#createElement();
             this.render();
             this.#cacheFields();
         }
-        this.currentTask = task;
+        this.#currentTask = task;
         this.setData(task);
+        this.#createOverlay();
     }
 
     #cacheFields() {
-        this.fields = {
-            id: this.element.querySelector(".id"),
-            summary: this.element.querySelector("#summary"),
-            description: this.element.querySelector("#description"),
-            project: this.element.querySelector("#project"),
-            priority: this.element.querySelector("#priority"),
-            status: this.element.querySelector("#status"),
-            date: this.element.querySelector("#date")
+        this.#fields = {
+            id: this.#element.querySelector(".id"),
+            summary: this.#element.querySelector("#summary"),
+            description: this.#element.querySelector("#description"),
+            project: this.#element.querySelector("#project"),
+            priority: this.#element.querySelector("#priority"),
+            status: this.#element.querySelector("#status"),
+            date: this.#element.querySelector("#date")
         };
     }
 
     setData(task) {
         if (!task) return;
-        this.fields.id.textContent = task.getId();
-        this.fields.summary.value = task.getSummary();
-        this.fields.description.value = task.getDescription();
-        this.fields.project.value = task.getProject();
-        this.fields.priority.value = task.getPriority();
-        this.fields.status.value = task.getStatus();
-        this.fields.date.value = task.getDueDate();
-        console.log(task)
+        this.#fields.id.textContent = task.getId();
+        this.#fields.summary.value = task.getSummary();
+        this.#fields.description.value = task.getDescription();
+        this.#fields.project.value = task.getProject();
+        this.#fields.priority.value = task.getPriority();
+        this.#fields.status.value = task.getStatus();
+        this.#fields.date.value = task.getDueDate();
     }
 
     #createElement() {
@@ -65,7 +78,6 @@ export default class ViewTaskModal {
 
         iconRow.appendChild(closeBtn);
 
-
         const title = DomUtility.createElement("div", "title")
 
         const summary = document.createElement("input");
@@ -76,7 +88,10 @@ export default class ViewTaskModal {
         title.appendChild(summary);
 
         header.appendChild(iconRow);
-        header.appendChild(title)
+        header.appendChild(title);
+
+        this.#closeBtnEventListener = () => this.destroy();
+        closeBtn.addEventListener("click", this.#closeBtnEventListener);
 
         return header;
     }
@@ -88,10 +103,25 @@ export default class ViewTaskModal {
         left.appendChild(DomUtility.createTextAreaFormGroup("description", "Description", false, 0, 1000));
 
         const right = DomUtility.createElement("div", "modal-right");
-        ["project", "priority", "status",].forEach(field => {
+        ["project", "status"].forEach(field => {
             right.appendChild(DomUtility.createInputFormGroup(field, field.charAt(0).toUpperCase() + field.slice(1), true));
         });
-        right.appendChild(DomUtility.createDateFormGroup("date", "Date", false));
+
+
+        const priority = DomUtility.createSelectFormGroup("priority", "Priority", ["P1", "P2", "P3", "P4", "P5"]);
+
+
+        const date = DomUtility.createInputField("date");
+        date.addEventListener("mouseenter", (event) => this.#handleDateMouseEnter(event));
+        date.addEventListener("mouseleave", (event) => this.#handleDateMouseLeave(event));
+
+        this.#dateMouseEnterListener = (event) => this.#handleDateMouseEnter(event);
+        this.#dateMouseLeaveListener = (event) => this.#handleDateMouseLeave(event);
+        date.addEventListener("mouseenter", this.#dateMouseEnterListener);
+        date.addEventListener("mouseleave", this.#dateMouseLeaveListener);
+
+        right.appendChild(priority);
+        right.appendChild(date);
 
         body.append(left, right);
         return body;
@@ -111,28 +141,72 @@ export default class ViewTaskModal {
     }
 
     #updateTask() {
-        if (Validator.isValidTaskData(this.fields)) {
+        if (Validator.isValidTaskData(this.#fields)) {
             const data = Object.fromEntries(
-                Object.entries(this.fields).map(([key, element]) => [key, element.value.trim()])
+                Object.entries(this.#fields).map(([key, element]) => {
+
+                    if (element.tagName === "P") {
+                        return [key, element.textContent.trim()];
+                    } else
+                        return [key, element.value.trim()];
+                })
             );
-            data.id = this.currentTask.getId();
-            EventBus.emit("updateTask", { task: this.currentTask, newData: data });
+            data.id = this.#currentTask.getId();
+            EventBus.emit("updateTask", { task: this.#currentTask, newData: data });
             this.destroy();
         }
     }
 
+    #handleDateMouseEnter(event) {
+        event.target.type = 'date';
+    }
+
+    #handleDateMouseLeave(event) {
+        if (!event.target.value) {
+            event.target.type = 'text';
+            event.target.value = this.#currentTask.getDueDate();
+        }
+    }
+
     render() {
-        if (!this.parent.contains(this.element)) {
-            this.parent.appendChild(this.element);
+        if (!this.#parent.contains(this.#element)) {
+            this.#parent.appendChild(this.#element);
         }
     }
 
     destroy() {
-        if (this.element) {
-            this.element.remove();
-            this.element = null;
-            this.fields = {};
-            this.currentTask = null;
+        if (this.#element) {
+            const closeBtn = this.#element.querySelector(".close");
+            closeBtn.removeEventListener("click", this.#closeBtnEventListener);
+
+            const date = this.#element.querySelector("#date");
+            date.removeEventListener("mouseenter", this.#dateMouseEnterListener);
+            date.removeEventListener("mouseleave", this.#dateMouseLeaveListener);
+
+            if (this.#overlay) {
+                this.#overlay.removeEventListener("click", this.#boundOverlayClick);
+                this.#overlay.remove();
+                this.#overlay = null;
+            }
+
+            this.#element.remove();
+            this.#element = null;
+            this.#fields = {};
+            this.#currentTask = null;
         }
+    }
+
+
+
+    #createOverlay() {
+        if (!this.#overlay) {
+            this.#overlay = DomUtility.createElement("div", "modal-overlay");
+            this.#overlay.addEventListener("click", this.#boundOverlayClick);
+            this.#parent.appendChild(this.#overlay);
+        }
+    }
+
+    #handleOverlayClick() {
+        this.destroy();
     }
 }

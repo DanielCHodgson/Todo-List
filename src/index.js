@@ -29,7 +29,7 @@ function createProject(data) {
     ProjectService.saveProject(new ProjectModel(data.name, data.type, logoIcon, new TaskService([], 1), new LaneService([])));
     if (JSON.parse(localStorage.getItem("projectData")).length === 1) {
         ProjectService.setCurrentProject(data.name);
-        loadPage(new Dashboard);
+        loadPage("dashboard");
     }
 
     if (document.querySelector(".projects-page")) {
@@ -94,7 +94,7 @@ function switchProject(projectName) {
 
 
 function loadDemoEnv() {
-    testData.projects.forEach(project => ProjectService.saveProject(ProjectModel.fromJSON(project)));
+    testData.forEach(project => ProjectService.saveProject(ProjectModel.fromJSON(project)));
     ProjectService.setCurrentProject("SAAS");
     loadPage("dashboard");
     loadNav();

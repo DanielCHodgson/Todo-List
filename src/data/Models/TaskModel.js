@@ -4,10 +4,10 @@ export default class Task {
     #summary;
     #description;
     #priority;
-    #dueDate;
+    #date;
     #status;
 
-    constructor(id, project, summary, description, priority, dueDate, status) {
+    constructor(id, project, summary, description, priority, date, status) {
         if (!id || !project || !summary || !priority || !status) {
             throw new Error("Missing required fields.");
         }
@@ -17,7 +17,7 @@ export default class Task {
         this.#summary = summary;
         this.#description = description || "";
         this.#priority = priority;
-        this.#dueDate = dueDate;
+        this.#date = date || "";
         this.#status = status;
     }
 
@@ -37,7 +37,7 @@ export default class Task {
         return this.#priority;
     }
     getDueDate() {
-        return this.#dueDate;
+        return this.#date;
     }
     getStatus() {
         return this.#status;
@@ -50,7 +50,7 @@ export default class Task {
             summary: this.#summary,
             description: this.#description,
             priority: this.#priority,
-            dueDate: this.#dueDate,
+            dueDate: this.#date,
             status: this.#status
         };
     }

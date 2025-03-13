@@ -36,6 +36,8 @@ export default class ProjectService {
 
         const projectData = storedProjects.find(project => project.name === projectName);
 
+        console.log(projectData)
+
         return new ProjectModel(
             projectData.name,
             projectData.type,

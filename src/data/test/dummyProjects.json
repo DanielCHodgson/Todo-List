@@ -9,81 +9,91 @@
                     "id": "SAAS-1",
                     "project": "SAAS",
                     "summary": "DevOps: Prepare 2.5.6 build",
-                    "description": "",
+                    "description": "The task involves preparing the 2.5.6 build for the SAAS platform. This includes ensuring that all dependencies are up to date and that the build process follows the necessary steps to ensure smooth functionality. DevOps practices will be applied to ensure that the build integrates well with the deployment pipeline, and any issues that arise during this process will be addressed quickly to maintain the integrity of the platform. Testing of the build in various environments will be conducted to ensure compatibility across platforms.",
                     "priority": "P1",
-                    "status": "ready to start"
+                    "status": "ready to start",
+                    "date": "15-05-2025"
                 },
                 {
                     "id": "SAAS-2",
                     "project": "SAAS",
                     "summary": "Cloud: Tier locked features",
-                    "description": "",
+                    "description": "This task focuses on implementing tier-locked features within the cloud infrastructure of the SAAS project. The goal is to restrict certain features based on user tier levels. This involves configuring the backend to support the locking mechanism and ensuring that users only access the features associated with their specific subscription tier. Extensive testing will be done to make sure that the tier restrictions are correctly applied, and the user experience is seamless while navigating the platform.",
                     "priority": "P1",
-                    "status": "closed"
+                    "status": "closed",
+                    "date": "10-03-2025"
                 },
                 {
                     "id": "SAAS-3",
                     "project": "SAAS",
                     "summary": "Cloud: Tier locked features",
-                    "description": "",
+                    "description": "This task addresses the implementation of tier-locked features in the SAAS cloud environment. It requires close collaboration with both the backend and front-end teams to ensure that features are effectively restricted based on the user's subscription level. Additionally, the integration of the tier locking mechanism must be tested thoroughly to ensure that there are no issues when users upgrade, downgrade, or interact with restricted features. Security protocols will be followed to guarantee the integrity of tier data.",
                     "priority": "P1",
-                    "status": "closed"
+                    "status": "closed",
+                    "date": "10-03-2025"
                 },
                 {
                     "id": "SAAS-4",
                     "project": "SAAS",
                     "summary": "Backend: Optimize database queries",
-                    "description": "",
+                    "description": "This task aims to optimize the database queries for the SAAS project, ensuring that the platform operates at peak performance. Several queries will be analyzed to identify bottlenecks, unnecessary joins, or inefficient indexes. The goal is to improve response time and reduce server load, ultimately enhancing the overall user experience. Special focus will be given to large datasets and high-traffic queries to ensure scalability, especially as the platform expands. Monitoring and testing will be conducted to validate improvements.",
                     "priority": "P2",
-                    "status": "in progress"
+                    "status": "in progress",
+                    "date": "12-03-2025"
                 },
                 {
                     "id": "SAAS-5",
                     "project": "SAAS",
                     "summary": "Frontend: Improve UI responsiveness",
-                    "description": "",
+                    "description": "This task focuses on improving the user interface (UI) responsiveness of the SAAS platform. With the growing use of mobile devices and varying screen sizes, it is crucial to optimize the UI to provide an optimal experience across all platforms. This includes improving layout flexibility, ensuring fast loading times, and enhancing touch interactions. Developers will utilize responsive design techniques such as CSS media queries and JavaScript to create a fluid experience. Testing across different devices and browsers will be essential to ensure seamless operation.",
                     "priority": "P2",
-                    "status": "open"
+                    "status": "open",
+                    "date": "11-03-2025"
                 },
                 {
                     "id": "SAAS-6",
                     "project": "SAAS",
                     "summary": "Security: Implement OAuth2 authentication",
-                    "description": "",
+                    "description": "The task involves integrating OAuth2 authentication into the SAAS platform to improve security and user management. OAuth2 allows third-party services to securely grant access to their resources without sharing credentials. This implementation will include configuring authorization servers, defining scopes, and creating tokens to ensure a secure and user-friendly authentication process. Security testing will be performed to prevent vulnerabilities like token theft or misuse. The solution will also be scalable, supporting future integration with other platforms and services.",
                     "priority": "P1",
-                    "status": "ready to start"
+                    "status": "ready to start",
+                    "date": "15-05-2025"
                 },
                 {
                     "id": "SAAS-7",
                     "project": "SAAS",
                     "summary": "API: Create new endpoint for analytics",
-                    "description": "",
+                    "description": "This task involves developing a new API endpoint designed to retrieve analytics data from the SAAS platform. The endpoint will allow users to gather insights into their usage patterns and make data-driven decisions. The API will be optimized for performance, with filters and parameters to return specific datasets in various formats. Security measures, such as rate limiting and authentication, will be implemented to protect sensitive user data. Thorough testing will ensure the endpoint is robust and handles high traffic.",
                     "priority": "P3",
-                    "status": "in review"
+                    "status": "in review",
+                    "date": "14-03-2025"
                 },
                 {
                     "id": "SAAS-8",
                     "project": "SAAS",
                     "summary": "Testing: Automate regression tests",
-                    "description": "",
+                    "description": "The task is aimed at automating regression tests for the SAAS platform to ensure that updates do not introduce new issues. The team will develop test scripts to verify that all features are functioning correctly after code changes, with a focus on critical user workflows. Tools like Selenium or Cypress will be utilized to automate the testing process. This will allow for faster release cycles and more reliable product quality. Additionally, automated tests will be integrated into the CI/CD pipeline to run on every code update.",
                     "priority": "P2",
-                    "status": "in progress"
+                    "status": "in progress",
+                    "date": "12-03-2025"
                 },
                 {
                     "id": "SAAS-9",
                     "project": "SAAS",
                     "summary": "DevOps: Improve CI/CD pipeline",
-                    "description": "",
+                    "description": "This task focuses on enhancing the Continuous Integration and Continuous Deployment (CI/CD) pipeline for the SAAS platform. By improving the pipeline, developers can deploy new features more efficiently and with fewer errors. The task includes optimizing build times, adding additional testing steps, and automating deployments to different environments. A goal is to achieve faster feedback cycles, reduce manual errors, and ensure that new releases are stable and secure. The team will work with version control, automated testing, and containerization tools to streamline the process.",
                     "priority": "P1",
-                    "status": "ready to start"
+                    "status": "ready to start",
+                    "date": "15-05-2025"
                 },
                 {
                     "id": "SAAS-10",
                     "project": "SAAS",
                     "summary": "Support: Resolve critical customer issues",
-                    "description": "",
+                    "description": "This task involves providing support to resolve critical issues reported by customers using the SAAS platform. The team will prioritize fixing issues that affect user experience, data integrity, or platform functionality. A detailed investigation will be carried out to identify the root causes of problems, followed by developing and testing solutions. Regular communication with customers will be maintained to keep them informed about the progress. The goal is to ensure customer satisfaction by providing timely and effective resolutions to high-priority issues.",
                     "priority": "P1",
-                    "status": "open"
+                    "status": "open",
+                    "date": "14-03-2025"
                 }
             ],
             "index": 10
@@ -98,9 +108,10 @@
                                     "id": "SAAS-1",
                                     "project": "SAAS",
                                     "summary": "DevOps: Prepare 2.5.6 build",
-                                    "description": "",
+                                    "description": "The task involves preparing the 2.5.6 build for the SAAS platform. This includes ensuring that all dependencies are up to date and that the build process follows the necessary steps to ensure smooth functionality. DevOps practices will be applied to ensure that the build integrates well with the deployment pipeline, and any issues that arise during this process will be addressed quickly to maintain the integrity of the platform. Testing of the build in various environments will be conducted to ensure compatibility across platforms.",
                                     "priority": "P1",
-                                    "status": "ready to start"
+                                    "status": "ready to start",
+                                    "date": "15-05-2025"
                                 }
                             },
                             {
@@ -108,9 +119,10 @@
                                     "id": "SAAS-6",
                                     "project": "SAAS",
                                     "summary": "Security: Implement OAuth2 authentication",
-                                    "description": "",
+                                    "description": "The task involves integrating OAuth2 authentication into the SAAS platform to improve security and user management. OAuth2 allows third-party services to securely grant access to their resources without sharing credentials. This implementation will include configuring authorization servers, defining scopes, and creating tokens to ensure a secure and user-friendly authentication process. Security testing will be performed to prevent vulnerabilities like token theft or misuse. The solution will also be scalable, supporting future integration with other platforms and services.",
                                     "priority": "P1",
-                                    "status": "ready to start"
+                                    "status": "ready to start",
+                                    "date": "15-05-2025"
                                 }
                             },
                             {
@@ -118,9 +130,10 @@
                                     "id": "SAAS-9",
                                     "project": "SAAS",
                                     "summary": "DevOps: Improve CI/CD pipeline",
-                                    "description": "",
+                                    "description": "This task focuses on enhancing the Continuous Integration and Continuous Deployment (CI/CD) pipeline for the SAAS platform. By improving the pipeline, developers can deploy new features more efficiently and with fewer errors. The task includes optimizing build times, adding additional testing steps, and automating deployments to different environments. A goal is to achieve faster feedback cycles, reduce manual errors, and ensure that new releases are stable and secure. The team will work with version control, automated testing, and containerization tools to streamline the process.",
                                     "priority": "P1",
-                                    "status": "ready to start"
+                                    "status": "ready to start",
+                                    "date": "15-05-2025"
                                 }
                             }
                         ]
@@ -135,9 +148,10 @@
                                     "id": "SAAS-4",
                                     "project": "SAAS",
                                     "summary": "Backend: Optimize database queries",
-                                    "description": "",
+                                    "description": "This task aims to optimize the database queries for the SAAS project, ensuring that the platform operates at peak performance. Several queries will be analyzed to identify bottlenecks, unnecessary joins, or inefficient indexes. The goal is to improve response time and reduce server load, ultimately enhancing the overall user experience. Special focus will be given to large datasets and high-traffic queries to ensure scalability, especially as the platform expands. Monitoring and testing will be conducted to validate improvements.",
                                     "priority": "P2",
-                                    "status": "in progress"
+                                    "status": "in progress",
+                                    "date": "12-03-2025"
                                 }
                             },
                             {
@@ -145,9 +159,10 @@
                                     "id": "SAAS-8",
                                     "project": "SAAS",
                                     "summary": "Testing: Automate regression tests",
-                                    "description": "",
+                                    "description": "The task is aimed at automating regression tests for the SAAS platform to ensure that updates do not introduce new issues. The team will develop test scripts to verify that all features are functioning correctly after code changes, with a focus on critical user workflows. Tools like Selenium or Cypress will be utilized to automate the testing process. This will allow for faster release cycles and more reliable product quality. Additionally, automated tests will be integrated into the CI/CD pipeline to run on every code update.",
                                     "priority": "P2",
-                                    "status": "in progress"
+                                    "status": "in progress",
+                                    "date": "12-03-2025"
                                 }
                             }
                         ]
@@ -162,9 +177,10 @@
                                     "id": "SAAS-7",
                                     "project": "SAAS",
                                     "summary": "API: Create new endpoint for analytics",
-                                    "description": "",
+                                    "description": "This task involves developing a new API endpoint designed to retrieve analytics data from the SAAS platform. The endpoint will allow users to gather insights into their usage patterns and make data-driven decisions. The API will be optimized for performance, with filters and parameters to return specific datasets in various formats. Security measures, such as rate limiting and authentication, will be implemented to protect sensitive user data. Thorough testing will ensure the endpoint is robust and handles high traffic.",
                                     "priority": "P3",
-                                    "status": "in review"
+                                    "status": "in review",
+                                    "date": "14-03-2025"
                                 }
                             }
                         ]
@@ -179,9 +195,10 @@
                                     "id": "SAAS-2",
                                     "project": "SAAS",
                                     "summary": "Cloud: Tier locked features",
-                                    "description": "",
+                                    "description": "This task focuses on implementing tier-locked features within the cloud infrastructure of the SAAS project. The goal is to restrict certain features based on user tier levels. This involves configuring the backend to support the locking mechanism and ensuring that users only access the features associated with their specific subscription tier. Extensive testing will be done to make sure that the tier restrictions are correctly applied, and the user experience is seamless while navigating the platform.",
                                     "priority": "P1",
-                                    "status": "closed"
+                                    "status": "closed",
+                                    "date": "10-03-2025"
                                 }
                             },
                             {
@@ -189,9 +206,10 @@
                                     "id": "SAAS-3",
                                     "project": "SAAS",
                                     "summary": "Cloud: Tier locked features",
-                                    "description": "",
+                                    "description": "This task addresses the implementation of tier-locked features in the SAAS cloud environment. It requires close collaboration with both the backend and front-end teams to ensure that features are effectively restricted based on the user's subscription level. Additionally, the integration of the tier locking mechanism must be tested thoroughly to ensure that there are no issues when users upgrade, downgrade, or interact with restricted features. Security protocols will be followed to guarantee the integrity of tier data.",
                                     "priority": "P1",
-                                    "status": "closed"
+                                    "status": "closed",
+                                    "date": "10-03-2025"
                                 }
                             }
                         ]
@@ -211,84 +229,58 @@
                     "id": "DOCS-1",
                     "project": "DOCS",
                     "summary": "Update API documentation for v2.5",
-                    "description": "",
+                    "description": "This task is aimed at updating the API documentation to reflect the changes and new features introduced in version 2.5 of the platform. The updates will include adding new endpoints, explaining their usage, and documenting any changes made to existing API functionality. The documentation must be clear and easy to follow for both developers and non-technical users. Additionally, any code examples or integration guides will need to be revised to reflect new best practices and any new features introduced in this version.",
                     "priority": "P1",
-                    "status": "in review"
+                    "status": "in review",
+                    "date": "14-03-2025"
                 },
                 {
                     "id": "DOCS-2",
                     "project": "DOCS",
                     "summary": "Create getting started guide for new users",
-                    "description": "",
+                    "description": "This task involves creating a comprehensive getting started guide aimed at new users of the platform. It will include detailed instructions on how to sign up, navigate the platform, and get the most out of its core features. Special focus will be placed on explaining complex concepts in a simple and easy-to-understand manner. The guide will be designed with user experience in mind, ensuring that it is intuitive, well-organized, and accessible to individuals with varying levels of technical knowledge.",
                     "priority": "P2",
-                    "status": "open"
+                    "status": "open",
+                    "date": "11-03-2025"
                 },
                 {
                     "id": "DOCS-3",
                     "project": "DOCS",
                     "summary": "Review and improve developer documentation",
-                    "description": "",
+                    "description": "This task focuses on reviewing the existing developer documentation and identifying areas for improvement. The goal is to ensure that all the technical details are accurately described and easy to follow. Any missing information will be added, and any unclear explanations will be rewritten for clarity. This task also involves checking that the documentation adheres to the latest coding standards and practices. Improvements will be made to ensure that developers can easily find the information they need to integrate with or develop on the platform.",
                     "priority": "P2",
-                    "status": "ready to start"
+                    "status": "ready to start",
+                    "date": "15-05-2025"
                 },
                 {
                     "id": "DOCS-4",
                     "project": "DOCS",
                     "summary": "Add troubleshooting section to user manual",
-                    "description": "",
+                    "description": "This task involves adding a troubleshooting section to the user manual to help users resolve common issues. The section will include detailed steps for diagnosing and fixing problems, common error messages, and how to contact support for further assistance. The goal is to provide users with a self-service resource that will help them solve problems without needing to reach out to support. The troubleshooting section will be organized and presented in a clear, concise manner to make it as user-friendly as possible.",
                     "priority": "P3",
-                    "status": "open"
+                    "status": "open",
+                    "date": "11-03-2025"
                 },
                 {
                     "id": "DOCS-5",
                     "project": "DOCS",
                     "summary": "Document API rate limits and best practices",
-                    "description": "",
+                    "description": "This task involves documenting the rate limits imposed on the platform’s APIs and the best practices for managing API usage effectively. It will provide developers with information on the maximum number of requests allowed within a given time frame, as well as guidelines on how to prevent throttling or rate limit errors. The documentation will also include tips on efficient API usage to avoid hitting rate limits and ensure optimal platform performance. Best practices for error handling and retry strategies will also be detailed.",
                     "priority": "P1",
-                    "status": "in progress"
+                    "status": "in progress",
+                    "date": "12-03-2025"
                 },
                 {
                     "id": "DOCS-6",
                     "project": "DOCS",
                     "summary": "Improve formatting and structure of knowledge base",
-                    "description": "",
+                    "description": "This task aims to improve the overall structure and formatting of the knowledge base to make it more user-friendly and accessible. This will involve reorganizing content into clearly defined sections, adding links to related articles, and ensuring consistent formatting across all articles. The goal is to make it easier for users to navigate the knowledge base and find the information they need quickly. Any outdated content will be updated, and new content will be added to cover emerging topics and platform features.",
                     "priority": "P3",
-                    "status": "open"
-                },
-                {
-                    "id": "DOCS-7",
-                    "project": "DOCS",
-                    "summary": "Update security guidelines in documentation",
-                    "description": "",
-                    "priority": "P1",
-                    "status": "ready to start"
-                },
-                {
-                    "id": "DOCS-8",
-                    "project": "DOCS",
-                    "summary": "Translate user guide into Spanish",
-                    "description": "",
-                    "priority": "P2",
-                    "status": "in review"
-                },
-                {
-                    "id": "DOCS-9",
-                    "project": "DOCS",
-                    "summary": "Write best practices guide for API integration",
-                    "description": "",
-                    "priority": "P2",
-                    "status": "in progress"
-                },
-                {
-                    "id": "DOCS-10",
-                    "project": "DOCS",
-                    "summary": "Improve search functionality in help center",
-                    "description": "",
-                    "priority": "P3",
-                    "status": "ready to start"
+                    "status": "open",
+                    "date": "14-03-2025"
                 }
             ],
-            "index": 10
+            "index": 5
         },
         "laneService": {
             "lanes": [
@@ -297,32 +289,42 @@
                         "cards": [
                             {
                                 "task": {
+                                    "id": "DOCS-1",
+                                    "project": "DOCS",
+                                    "summary": "Update API documentation for v2.5",
+                                    "description": "This task is aimed at updating the API documentation to reflect the changes and new features introduced in version 2.5 of the platform. The updates will include adding new endpoints, explaining their usage, and documenting any changes made to existing API functionality. The documentation must be clear and easy to follow for both developers and non-technical users. Additionally, any code examples or integration guides will need to be revised to reflect new best practices and any new features introduced in this version.",
+                                    "priority": "P1",
+                                    "status": "in review",
+                                    "date": "14-03-2025"
+                                }
+                            },
+                            {
+                                "task": {
+                                    "id": "DOCS-2",
+                                    "project": "DOCS",
+                                    "summary": "Create getting started guide for new users",
+                                    "description": "This task involves creating a comprehensive getting started guide aimed at new users of the platform. It will include detailed instructions on how to sign up, navigate the platform, and get the most out of its core features. Special focus will be placed on explaining complex concepts in a simple and easy-to-understand manner. The guide will be designed with user experience in mind, ensuring that it is intuitive, well-organized, and accessible to individuals with varying levels of technical knowledge.",
+                                    "priority": "P2",
+                                    "status": "open",
+                                    "date": "11-03-2025"
+                                }
+                            }
+                        ]
+                    },
+                    "status": "in review"
+                },
+                {
+                    "cardService": {
+                        "cards": [
+                            {
+                                "task": {
                                     "id": "DOCS-3",
                                     "project": "DOCS",
                                     "summary": "Review and improve developer documentation",
-                                    "description": "",
+                                    "description": "This task focuses on reviewing the existing developer documentation and identifying areas for improvement. The goal is to ensure that all the technical details are accurately described and easy to follow. Any missing information will be added, and any unclear explanations will be rewritten for clarity. This task also involves checking that the documentation adheres to the latest coding standards and practices. Improvements will be made to ensure that developers can easily find the information they need to integrate with or develop on the platform.",
                                     "priority": "P2",
-                                    "status": "ready to start"
-                                }
-                            },
-                            {
-                                "task": {
-                                    "id": "DOCS-7",
-                                    "project": "DOCS",
-                                    "summary": "Update security guidelines in documentation",
-                                    "description": "",
-                                    "priority": "P1",
-                                    "status": "ready to start"
-                                }
-                            },
-                            {
-                                "task": {
-                                    "id": "DOCS-10",
-                                    "project": "DOCS",
-                                    "summary": "Improve search functionality in help center",
-                                    "description": "",
-                                    "priority": "P3",
-                                    "status": "ready to start"
+                                    "status": "ready to start",
+                                    "date": "15-05-2025"
                                 }
                             }
                         ]
@@ -334,60 +336,18 @@
                         "cards": [
                             {
                                 "task": {
-                                    "id": "DOCS-5",
+                                    "id": "DOCS-4",
                                     "project": "DOCS",
-                                    "summary": "Document API rate limits and best practices",
-                                    "description": "",
-                                    "priority": "P1",
-                                    "status": "in progress"
-                                }
-                            },
-                            {
-                                "task": {
-                                    "id": "DOCS-9",
-                                    "project": "DOCS",
-                                    "summary": "Write best practices guide for API integration",
-                                    "description": "",
-                                    "priority": "P2",
-                                    "status": "in progress"
+                                    "summary": "Add troubleshooting section to user manual",
+                                    "description": "This task involves adding a troubleshooting section to the user manual to help users resolve common issues. The section will include detailed steps for diagnosing and fixing problems, common error messages, and how to contact support for further assistance. The goal is to provide users with a self-service resource that will help them solve problems without needing to reach out to support. The troubleshooting section will be organized and presented in a clear, concise manner to make it as user-friendly as possible.",
+                                    "priority": "P3",
+                                    "status": "open",
+                                    "date": "11-03-2025"
                                 }
                             }
                         ]
                     },
-                    "status": "in progress"
-                },
-                {
-                    "cardService": {
-                        "cards": [
-                            {
-                                "task": {
-                                    "id": "DOCS-1",
-                                    "project": "DOCS",
-                                    "summary": "Update API documentation for v2.5",
-                                    "description": "",
-                                    "priority": "P1",
-                                    "status": "in review"
-                                }
-                            },
-                            {
-                                "task": {
-                                    "id": "DOCS-8",
-                                    "project": "DOCS",
-                                    "summary": "Translate user guide into Spanish",
-                                    "description": "",
-                                    "priority": "P2",
-                                    "status": "in review"
-                                }
-                            }
-                        ]
-                    },
-                    "status": "in review"
-                },
-                {
-                    "cardService": {
-                        "cards": []
-                    },
-                    "status": "closed"
+                    "status": "open"
                 }
             ]
         }

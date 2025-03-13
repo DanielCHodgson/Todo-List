@@ -88,6 +88,16 @@
     transition: all ease 0.3s;
 }
 
+.view-task-modal #priority {
+    height: 2.1rem;
+    outline: none;
+    border: 1px solid black;
+    border-radius: 4px;
+}
+.view-task-modal #priority:focus {
+    outline: 1px solid black;
+}
+
 .view-task-header #summary:hover {
     background-color: #f0f1f4;
     border: 1px solid black;
