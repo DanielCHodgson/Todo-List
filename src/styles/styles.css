@@ -47,12 +47,12 @@
     position: fixed;
     top: 20px;
     right: 20px;
-    background-color: #f44336;
+    background-color: var(--primary-light);
     color: white;
     padding: 15px;
     border-radius: 5px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
     opacity: 1;
     transition: opacity 0.5s ease-out;
-
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
 }

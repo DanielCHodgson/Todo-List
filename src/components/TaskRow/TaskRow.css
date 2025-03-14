@@ -1,0 +1,38 @@
+.tasks-list .task-row {
+    width: 100%;
+}
+
+.tasks-list .task-form{
+    width: 100%;
+    height: auto;
+
+    display: grid;
+    padding: 0 0.5rem;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: 2.5rem;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
+    font-size: 1rem;
+    border: 1px solid #d1d1d1;
+    cursor: pointer;
+}
+
+.task-row #summary:hover, .task-row #status:hover {
+    background-color: var(--hover-hightlight-light);
+}
+
+.task-row .id {
+    color: var(--primary-light);
+    font-weight: bold;
+}
+
+.task-row input {
+    border: none;
+}
+
+.task-row input:active {
+    border: 1px solid #d1d1d1;
+}

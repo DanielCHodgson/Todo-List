@@ -2,102 +2,109 @@ import "./TasksPage.css";
 import ProjectService from "../../services/ProjectService";
 import DomUtility from "../../utilities/DomUtility";
 import Task from "../../data/models/TaskModel";
+import TaskRow from "../../components/TaskRow/TaskRow";
+import EventBus from "../../utilities/EventBus";
 
 export default class TasksPage {
-
-    #project
-    #taskService;
-    #listItems;
+    #project;
+    #tasks;
     #parent;
     #element;
+    #rows;
+    #taskList;
 
     constructor() {
-        this.#project = ProjectService.CURRENT_PROJECT;
-        this.#taskService = this.#project.getTaskService();
+        this.#project = ProjectService.loadCurrentProject();
+        this.#tasks = this.#project.getTaskService().getTasks();
+        this.#rows = [];
+
+        if (!this.#project) {
+            throw new Error("No current project found.");
+        }
+
         this.#parent = document.querySelector(".content");
-        this.#listItems = [];
+
         this.#element = this.#createElement();
-        this.render();
+
+        if (this.#parent && this.#element) {
+            this.render();
+
+        }
+
+        EventBus.on("updateRow", (data) => this.#updateRow(data))
     }
-
-
-    #updateTaskField(task, originalValue, newValue) {
-
-        //TO DO 
-        /*
-        if (originalValue === newValue)
-            return;
-
-     
-
-        const updatedTask = 
-
-        this.#taskService.updateTask(updatedTask);
-        ProjectService.saveProject(this.#project);
-
-        DomUtility.showAlert("Task updated");
-        */
-    }
-
-
 
 
     #createElement() {
         const tasksPage = DomUtility.createElement("div", "tasks-page");
-
-
+        const container = DomUtility.createElement("div", "container");
         const tasksList = DomUtility.createElement("div", "tasks-list");
+        this.#taskList = tasksList;
 
-        this.#project.getTaskService().getTasks().forEach(task => {
-            tasksList.appendChild(this.#createTaskListItem(task));
+        this.#tasks.forEach(task => {
+            this.#rows.push(new TaskRow(tasksList, task));
         });
 
+        container.appendChild(tasksList);
         tasksPage.appendChild(this.#createHeader());
-        tasksPage.appendChild(tasksList);
+        tasksPage.appendChild(container);
         return tasksPage;
     }
 
     #createHeader() {
         const header = DomUtility.createElement("div", "tasks-header");
-        header.appendChild(DomUtility.createElement("h2", "title", "Tasks"))
+        header.appendChild(DomUtility.createElement("h2", "title", "Tasks"));
         return header;
     }
 
-    #createTaskListItem(task) {
-        const listItem = DomUtility.createElement("div", "task-item");
 
-        const id = DomUtility.createElement("p", "id", task.getId());
+    #updateRow(data) {
 
-        const summary = DomUtility.createInputField("summary", true, 1, 31);
-        summary.value = task.getSummary();
-        summary.addEventListener("blur", () => this.#updateTaskField(task, task.getSummary(), summary.value));
+        const fieldName = data.inputField.id;
+        const newValue = data.inputField.value;
 
-        const status = DomUtility.createInputField("status", true, 1, 20)
-        status.value = task.getStatus();
-        status.addEventListener("blur", () => this.#updateTaskField(task, task.getStatus(), status.value));
+        if (!(fieldName in data.taskData)) {
+            console.error(`Invalid field: ${fieldName}`);
+            return;
+        }
 
-        listItem.appendChild(id);
-        listItem.appendChild(summary);
-        listItem.appendChild(status);
+        console.log(`task data: ${data.taskData[fieldName]}`)
+        console.log(`new value: ${newValue}`)
+       
 
-        this.#listItems.push(listItem);
+        if (data.taskData[fieldName] === newValue) 
+            return;
 
-        return listItem;
+        const updatedTask = new Task(
+            data.taskData.id,
+            fieldName === "project" ? newValue : data.taskData.project,
+            fieldName === "summary" ? newValue : data.taskData.summary,
+            fieldName === "description" ? newValue : data.taskData.description,
+            fieldName === "priority" ? newValue : data.taskData.priority,
+            fieldName === "date" ? newValue : data.taskData.date,
+            fieldName === "status" ? newValue : data.taskData.status
+        );
+
+        this.saveTaskAndProject(updatedTask);
+        DomUtility.showAlert("Task updated");
     }
 
-    #handleSubmit(event) {
-        console.log("FIRED!")
-        console.log(event)
+
+    saveTaskAndProject(task) {
+        this.#project.getTaskService().updateTask(task);
+        ProjectService.saveProject(this.#project);
     }
 
     render() {
-        if (this.#element)
+        if (this.#parent && !this.#parent.contains(this.#element)) {
             this.#parent.appendChild(this.#element);
+        }
     }
-
 
     destroy() {
-        this.#element.remove();
+        if (this.#element) {
+            this.#element.remove();
+        }
+        EventBus.off("updateRow", () => this.#updateRow(data));
     }
-
 }

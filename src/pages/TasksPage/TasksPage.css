@@ -1,6 +1,5 @@
 .tasks-page {
     width: 100%;
-    height: 100%;
     padding: 2rem;
     display: grid;
     grid-template-rows: auto 1fr;
@@ -12,48 +11,17 @@
     font-size: 1.3rem;
 }
 
+.tasks-page .container {
+    width: 100%;
+    height: auto;
+    background-color: var(--secondary-light);
+    padding: 0.5rem;
+}
+
 .tasks-page .tasks-list {
     display: flex;
     flex-direction: column;
     width: 100%;
     justify-content: start;
     align-items: center;
-}
-
-.tasks-list .task-item {
-    width: 100%;
-    display: grid;
-    padding: 0 0.5rem;
-    grid-template-columns: auto 1fr auto;
-    grid-template-rows: 2.5rem;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-
-    font-family: "Roboto", Arial, Helvetica, sans-serif;
-    font-size: 1rem;
-    border: 1px solid #d1d1d1;
-    cursor: pointer;
-}
-
-.tasks-list > *:hover {
-    background-color: var(--secondary-light);
-}
-
-
-.task-item #summary:hover, .task-item #status:hover {
-    background-color: var(--hover-hightlight-light);
-}
-
-.task-item .id {
-    color: var(--primary-light);
-    font-weight: bold;
-}
-
-.task-item input {
-    border: none;
-}
-
-.task-item input:active {
-    border: 1px solid #d1d1d1;
 }
