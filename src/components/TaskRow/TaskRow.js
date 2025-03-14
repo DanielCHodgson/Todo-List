@@ -21,7 +21,6 @@ export default class TaskRow {
         this.render();
     }
 
-
     #bindEvents() {
         this.#fields
             .filter(field => field.tagName !== "P")
@@ -30,8 +29,6 @@ export default class TaskRow {
                 field.addEventListener("blur", () => EventBus.emit("updateRow", data))
             });
     }
-
-
 
     #createElement() {
         const taskRow = DomUtility.createElement("div", "task-row");
