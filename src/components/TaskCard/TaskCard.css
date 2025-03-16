@@ -13,7 +13,15 @@
     cursor: pointer;
 }
 
-.task-header, .task-footer {
+.task-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.5rem;
+    border-radius: 5px;
+}
+
+
+.task-footer {
     display: flex;
     justify-content: space-between;
     gap: 0.5rem;
@@ -23,6 +31,15 @@
 .task-header {
     font-weight: bold;
 }
+
+.task-card .delete-icon {
+   width: 0.7rem;
+   height: 0.7rem;
+   display: grid;
+   place-content: center;
+   grid-area: 1rem 1rem;
+}
+
 
 .task-card .delete-icon:hover {
     opacity: 0.5;

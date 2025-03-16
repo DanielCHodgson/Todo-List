@@ -15,38 +15,57 @@
     min-width: 150px;
     min-height: 100%;
     display: grid;
-    grid-template-rows: auto 1fr;
+    grid-template-rows: 2.5rem 1fr;
     grid-template-columns: 100%;
     align-items: start;
     justify-content: start;
-    gap: 1rem;
     border-radius: 10px;
 }
 
 .swim-lane .close {
+    width: 1rem;
+    height: 1rem;
     fill: var(--text-sublist);
     cursor: pointer;
 }
 
 .swim-lane .close:hover {
-   opacity: 0.5;
+   opacity: 1;
 }
 
 .lane-header {
     width: 100%;
-    height: 2rem;
-    padding: 0.5rem;
+    height: 100%;
+    padding: 0 0.5rem;
     background-color: #F7F8F9;
     color: var(--text-sublist);
     font-family: "Roboto", serif;
-    display: flex;
-    justify-content: flex-start;
+   
+    display: grid;
+    grid-template-columns: 1fr auto;
     align-items: center;
+    place-content: center;
     font-size: 0.8rem;
     font-weight: 200;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+}
+
+.lane-header:hover {
+   background-color: rgba(1, 80, 155, 0.685);
+   color: #FFFFFF;
+   fill: #FFFFFF;
+   cursor: pointer;
+   border-radius: 4px;
+}
+
+
+
+.lane-header .close {
+  width: 1rem;
+  height: 1rem;
+}
+.lane-header .close svg {
+  width: 100%;
+  height: 100%;
 }
 
 .card-list {
