@@ -14,6 +14,8 @@ export default class TasksPage {
     #rows;
     #taskList;
     #viewTaskModal;
+    #updateRowHandler;
+    #launchViewTaskModalHandler;
 
     constructor() {
         this.#project = ProjectService.loadCurrentProject();
@@ -25,8 +27,12 @@ export default class TasksPage {
         this.#rows = this.#createRows();
 
         this.render();
-        EventBus.on("updateRow", (data) => this.#updateRow(data));
-        EventBus.on("launchViewTaskModal", (task) => this.#openViewTaskModal(task));
+
+        this.#updateRowHandler = (data) => this.#updateRow(data);
+        this.#launchViewTaskModalHandler = (task) => this.#openViewTaskModal(task);
+
+        EventBus.on("updateRow", this.#updateRowHandler);
+        EventBus.on("launchViewTaskModal", this.#launchViewTaskModalHandler);
 
         this.#viewTaskModal = new ViewTaskModal();
     }
@@ -114,6 +120,7 @@ export default class TasksPage {
         if (this.#element) {
             this.#element.remove();
         }
-        EventBus.off("updateRow", () => this.#updateRow(data));
+        EventBus.off("updateRow", this.#updateRowHandler);
+        EventBus.off("launchViewTaskModal", this.#launchViewTaskModalHandler);
     }
 }
