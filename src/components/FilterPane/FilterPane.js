@@ -4,8 +4,11 @@ import EventBus from "../../utilities/EventBus.js";
 import getIcons from "../../res/icons/icons.js";
 
 export default class FilterPane {
-
-    #element
+    #element;
+    #addSwimlane;
+    #searchContainer;
+    #addSwimlaneClickHandler;
+    #searchClickHandler;
 
     constructor() {
         this.#element = null;
@@ -16,11 +19,12 @@ export default class FilterPane {
         const filterPane = DomUtility.createElement("div", "filter-pane");
         filterPane.appendChild(this.#createSearch());
 
-        const addSwimlane = DomUtility.createElement("button", "addSwimlane");
-        addSwimlane.addEventListener("click", () => this.#handleNewSwimlanekClick());
-        addSwimlane.appendChild(DomUtility.renderSvg(getIcons().add));
+        this.#addSwimlane = DomUtility.createElement("button", "addSwimlane");
+        this.#addSwimlaneClickHandler = () => this.#handleNewSwimlaneClick();
+        this.#addSwimlane.addEventListener("click", this.#addSwimlaneClickHandler);
+        this.#addSwimlane.appendChild(DomUtility.renderSvg(getIcons().add));
 
-        filterPane.appendChild(addSwimlane);
+        filterPane.appendChild(this.#addSwimlane);
         return filterPane;
     }
 
@@ -30,14 +34,18 @@ export default class FilterPane {
         const searchInput = DomUtility.createElement("input", "", "", { id: "search-input", type: "text" });
         searchContainer.appendChild(searchInput);
 
+        this.#searchClickHandler = () => alert("I'm beyond the already bloated scope of this project!");
+        searchContainer.addEventListener("click", this.#searchClickHandler);
+
         const searchIcon = DomUtility.createElement("div", "search-icon");
         searchIcon.append(DomUtility.renderSvg(getIcons().search));
         searchContainer.appendChild(searchIcon);
 
+        this.#searchContainer = searchContainer;
         return searchContainer;
     }
 
-    #handleNewSwimlanekClick() {
+    #handleNewSwimlaneClick() {
         if (!document.querySelector(".create-swimlane-modal")) {
             EventBus.emit("openCreateSwimlaneModal");
         }
@@ -50,6 +58,14 @@ export default class FilterPane {
     }
 
     destroy() {
+        if (this.#addSwimlane && this.#addSwimlaneClickHandler) {
+            this.#addSwimlane.removeEventListener("click", this.#addSwimlaneClickHandler);
+        }
+
+        if (this.#searchContainer && this.#searchClickHandler) {
+            this.#searchContainer.removeEventListener("click", this.#searchClickHandler);
+        }
+
         if (this.#element) {
             this.#element.remove();
             this.#element = null;

@@ -13,6 +13,7 @@ export default class ProjectsPage {
     constructor() {
         this.#parent = document.querySelector(".content");
         this.#projects = ProjectService.getProjects();
+        console.log(this.#projects)
         this.#element = this.#createPage();
         this.render();
     }
@@ -20,15 +21,27 @@ export default class ProjectsPage {
 
     #createProjectCard(name) {
         const projectCard = DomUtility.createElement("div", "project-card");
-        projectCard.appendChild(DomUtility.createElement("p", "name", name));
-        projectCard.addEventListener("click", this.#handleOpenProjectClick(name));
+
+        const header = DomUtility.createElement("div", "header");
+        const deleteBtn = DomUtility.createElement("button", "close");
+        deleteBtn.appendChild(DomUtility.renderSvg(getIcons().close))
+        deleteBtn.addEventListener("click", () => this.#handleDeleteClick(name));
+        header.appendChild(deleteBtn);
+
+        const body = DomUtility.createElement("div", "body");
+        body.appendChild(DomUtility.createElement("p", "name", name));
+        body.addEventListener("click", () => this.#handleOpenProjectClick(name));
+
+
+        projectCard.appendChild(header);
+        projectCard.appendChild(body);
         return projectCard;
     }
 
     #createDummyCard() {
         const dummyCard = DomUtility.createElement("div", "dummy-card");
 
-        if (this.#projects === null) {
+        if (this.#projects.length === 0) {
             dummyCard.classList.add("bounce");
             dummyCard.appendChild(DomUtility.createElement("p", "prompt", "Start from scratch"));
         }
@@ -59,7 +72,7 @@ export default class ProjectsPage {
         const projectsPage = DomUtility.createElement("div", "projects-page");
         const projectsList = DomUtility.createElement("div", "projects-list");
 
-        if (this.#projects !== null) {
+        if (this.#projects.length !== 0) {
             this.#projects.forEach(project => {
                 projectsList.appendChild(this.#createProjectCard(project.name));
             });
@@ -67,7 +80,7 @@ export default class ProjectsPage {
 
         projectsList.appendChild(this.#createDummyCard());
 
-        if (this.#projects === null) {
+        if (this.#projects.length === 0) {
             projectsList.classList.add("init");
             projectsList.appendChild(this.#createDemoCard());
         }
@@ -78,9 +91,11 @@ export default class ProjectsPage {
     }
 
     #handleOpenProjectClick(name) {
-        return () => {
-            EventBus.emit("openProject", name);
-        };
+        EventBus.emit("switchProject", name);
+    }
+
+    #handleDeleteClick(name) {
+        EventBus.emit("deleteProject", name);
     }
 
     #handleNewProjectClick() {

@@ -18,7 +18,7 @@ export default class TasksPage {
     #launchViewTaskModalHandler;
 
     constructor() {
-        this.#project = ProjectService.loadCurrentProject();
+        this.#project = ProjectService.CURRENT_PROJECT;
         if (!this.#project) throw new Error("No current project found.");
 
         this.#tasks = this.#project.getTaskService().getTasks();

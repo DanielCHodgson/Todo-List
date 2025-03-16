@@ -22,11 +22,11 @@
     font-weight: bold;
 }
 
-.header svg {
+.create-project-modal .header svg {
     cursor: pointer;
 }
 
-.header svg:hover {
+.create-project-modal .header svg:hover {
     opacity: 0.5;
 }
 

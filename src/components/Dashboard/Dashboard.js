@@ -13,12 +13,12 @@ import CardService from "../../services/CardService";
 
 export default class Dashboard {
 
-    #project = ProjectService.CURRENT_PROJECT;
-    #container = document.querySelector(".content");
-    #element = this.#createDashboard();
-    #lanesContainer = this.#element.querySelector(".swim-lane-list");
-    #taskService = this.#project.getTaskService();
-    #laneService = this.#project.getLaneService();
+    #project;
+    #container
+    #element;
+    #lanesContainer;
+    #taskService;
+    #laneService;
     #modals = [];
     #eventListeners = {};
 
@@ -27,6 +27,13 @@ export default class Dashboard {
     #createSwimlaneModal = null;
 
     constructor() {
+        this.#project = ProjectService.CURRENT_PROJECT;
+        this.#container = document.querySelector(".content");
+        this.#element = this.#createDashboard();
+        this.#lanesContainer = this.#element.querySelector(".swim-lane-list");
+        this.#taskService = this.#project.getTaskService();
+        this.#laneService = this.#project.getLaneService();
+
         this.#initModals();
         this.#setupEventListeners();
         this.#renderSwimLanes();

@@ -22,11 +22,11 @@
 }
 
 
-.header svg {
+.create-swimlane-modal .header svg {
     cursor: pointer;
 }
 
-.header svg:hover {
+.create-swimlane-modal .header svg:hover {
     opacity: 0.5;
 }
 

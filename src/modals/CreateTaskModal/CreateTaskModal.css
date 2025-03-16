@@ -47,11 +47,11 @@
     gap: 0.5rem;
 }
 
-.icon-row svg {
+.create-task-modal .icon-row svg {
     cursor: pointer;
 }
 
-.icon-row svg:hover {
+.create-task-modal .icon-row svg:hover {
     opacity: 0.5;
 }
 

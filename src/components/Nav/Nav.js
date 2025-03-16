@@ -5,16 +5,19 @@ import ProjectService from "../../services/ProjectService";
 import EventBus from "../../utilities/EventBus";
 
 export default class Nav {
-
-
     #currentProject;
     #nav;
     #element;
+    #dropdownButton;
+    #dropdownClickHandler;
+    #windowClickHandler;
 
     constructor() {
         this.#currentProject = ProjectService.CURRENT_PROJECT;
         this.#nav = document.querySelector(".nav");
         this.#element = this.createElement();
+        this.#dropdownClickHandler = this.handleDropDownClick.bind(this);
+        this.#windowClickHandler = this.handleWindowClick.bind(this);
         this.render();
     }
 
@@ -34,10 +37,10 @@ export default class Nav {
             const type = DomUtility.createElement("p", "project-type", `${this.#currentProject.getType()} project`);
             navHeader.append(icon, name, type);
 
-            const dropdownButton = DomUtility.createElement("button", "dropdown-button");
+            this.#dropdownButton = DomUtility.createElement("button", "dropdown-button");
             const toggleIcon = DomUtility.renderSvg(getIcons().chevronDown);
-            dropdownButton.appendChild(toggleIcon);
-            navHeader.appendChild(dropdownButton);
+            this.#dropdownButton.appendChild(toggleIcon);
+            navHeader.appendChild(this.#dropdownButton);
 
             const dropdownContent = DomUtility.createElement("div", "dropdown-content");
             dropdownContent.classList.add("hidden");
@@ -46,56 +49,57 @@ export default class Nav {
             projects.forEach((project) => {
                 const option = DomUtility.createElement("p", "option", project.name);
                 option.addEventListener("click", () => {
-                    EventBus.emit("switchProject", option.textContent);
+                    EventBus.emit("switchProject", project.name);
                 });
                 dropdownContent.appendChild(option);
             });
 
-            dropdownButton.addEventListener("click", (event) => {
-                event.stopPropagation();
-                dropdownContent.classList.toggle("hidden");
-                dropdownContent.classList.toggle("visible");
-
-                const icon = dropdownContent.classList.contains("visible")
-                    ? getIcons().chevronUp
-                    : getIcons().chevronDown;
-                dropdownButton.firstChild.replaceWith(DomUtility.renderSvg(icon));
-            });
-
-            window.addEventListener("click", (event) => {
-                if (this.#nav && !this.#nav.contains(event.target) && dropdownContent.classList.contains("visible")) {
-                    dropdownContent.classList.remove("visible");
-                    dropdownContent.classList.add("hidden");
-                    dropdownButton.firstChild.replaceWith(DomUtility.renderSvg(getIcons().chevronDown));
-                }
-            });
+            this.#dropdownButton.addEventListener("click", (event) => this.#dropdownClickHandler(event, dropdownContent));
+            window.addEventListener("click", this.#windowClickHandler);
 
             navHeader.appendChild(dropdownContent);
         }
         return navHeader;
     }
 
+    handleDropDownClick(event, dropdownContent) {
+        event.stopPropagation();
+        dropdownContent.classList.toggle("hidden");
+        dropdownContent.classList.toggle("visible");
+
+        const icon = dropdownContent.classList.contains("visible")
+            ? getIcons().chevronUp
+            : getIcons().chevronDown;
+        this.#dropdownButton.firstChild.replaceWith(DomUtility.renderSvg(icon));
+    }
+
+    handleWindowClick(event) {
+        if (this.#nav && !this.#nav.contains(event.target)) {
+            const dropdownContent = this.#nav.querySelector(".dropdown-content");
+            if (dropdownContent?.classList.contains("visible")) {
+                dropdownContent.classList.remove("visible");
+                dropdownContent.classList.add("hidden");
+                this.#dropdownButton.firstChild.replaceWith(DomUtility.renderSvg(getIcons().chevronDown));
+            }
+        }
+    }
+
     createNavList() {
         const navList = DomUtility.createElement("ul", "nav-list");
 
-        const projects = DomUtility.createElement("li", "projects", "Projects");
-        projects.prepend(DomUtility.renderSvg(getIcons().projects));
-        projects.addEventListener("click", () => EventBus.emit("openProjectsPage"));
-        navList.appendChild(projects);
+        const items = [
+            { class: "projects", text: "Projects", event: "openProjectsPage", icon: getIcons().projects },
+            { class: "tasks", text: "Tasks", event: "openTasksPage", icon: getIcons().backlog },
+            { class: "board", text: "Dashboard", event: "loadDashboard", icon: getIcons().dashboard },
+            { class: "settings", text: "Settings", event: null, icon: getIcons().settings },
+        ];
 
-        const tasks = DomUtility.createElement("li", "tasks", "Tasks");
-        tasks.prepend(DomUtility.renderSvg(getIcons().backlog));
-        tasks.addEventListener("click", () => EventBus.emit("openTasksPage"));
-        navList.appendChild(tasks);
-
-        const board = DomUtility.createElement("li", "board", "Dashboard");
-        board.prepend(DomUtility.renderSvg(getIcons().dashboard));
-        board.addEventListener("click", () => EventBus.emit("loadDashboard"));
-        navList.appendChild(board);
-
-        const settings = DomUtility.createElement("li", "settings", "Settings");
-        settings.prepend(DomUtility.renderSvg(getIcons().settings));
-        navList.appendChild(settings);
+        items.forEach(({ class: className, text, event, icon }) => {
+            const item = DomUtility.createElement("li", className, text);
+            item.prepend(DomUtility.renderSvg(icon));
+            if (event) item.addEventListener("click", () => EventBus.emit(event));
+            navList.appendChild(item);
+        });
 
         return navList;
     }
@@ -112,16 +116,14 @@ export default class Nav {
 
         const search = DomUtility.createElement("div", "search");
         search.appendChild(DomUtility.renderSvg(getIcons().search));
+        search.addEventListener("click", () => alert("I'm beyond the already bloated scope of this project!"));
 
         const addProject = DomUtility.createElement("div", "add-project");
         addProject.appendChild(DomUtility.renderSvg(getIcons().addProject));
         addProject.addEventListener("click", () => EventBus.emit("addProject"));
 
-        iconsContainer.appendChild(search);
-        iconsContainer.appendChild(addProject);
-
-        leftNav.appendChild(logo);
-        leftNav.appendChild(iconsContainer);
+        iconsContainer.append(search, addProject);
+        leftNav.append(logo, iconsContainer);
         return leftNav;
     }
 
@@ -132,14 +134,23 @@ export default class Nav {
         return rightNav;
     }
 
+    cleanup() {
+        if (this.#dropdownButton) {
+            this.#dropdownButton.removeEventListener("click", this.#dropdownClickHandler);
+        }
+        window.removeEventListener("click", this.#windowClickHandler);
+    }
+
     destroy() {
-        if (this.#element)
+        console.log("destroying nav")
+        this.cleanup();
+        if (this.#element) {
             this.#element.remove();
+        }
     }
 
     render() {
         this.destroy();
         this.#nav.appendChild(this.#element);
     }
-
 }

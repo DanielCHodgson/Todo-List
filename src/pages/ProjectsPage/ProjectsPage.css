@@ -10,9 +10,10 @@
     }
 }
 
-.dummy-card.bounce, .demo-card.bounce {
+.dummy-card.bounce,
+.demo-card.bounce {
     animation: bounce 1s infinite alternate ease-in-out;
-  }
+}
 
 .projects-page {
     width: 100%;
@@ -42,7 +43,6 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 3rem;
-
 }
 
 .project-card {
@@ -53,6 +53,8 @@
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr;
     place-content: center;
     gap: 0.5rem;
     transition: all 0.3s ease;
@@ -60,6 +62,40 @@
     opacity: 0.9;
     font-family: "Roboto", Arial, Helvetica, sans-serif;
     font-size: 1.5rem;
+}
+
+.project-card .header {
+    padding: 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.project-card .close {
+    display: grid;
+    place-content: center;
+    width: 1.2rem;
+    height: 1.2rem;
+    outline: none;
+    border: none;
+    border-radius: 4px;
+    background-color: red;
+    opacity: 0.5;
+    fill: #FFFFFF;
+    cursor: pointer;
+}
+
+.project-card .close:hover {
+    opacity: 1;
+}
+
+.project-card .close svg {
+    width: 100%;
+}
+
+.project-card .body {
+    display: grid;
+    place-content: center;
 }
 
 .dummy-card {
@@ -85,7 +121,8 @@
     grid-template-rows: auto 1fr;
 }
 
-.dummy-card:hover, .project-card:hover {
+.dummy-card:hover,
+.project-card:hover {
     opacity: 1;
     background-color: var(--primary-light);
     color: var(--secondary-light);
