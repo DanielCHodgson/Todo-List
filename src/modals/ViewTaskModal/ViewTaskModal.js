@@ -1,8 +1,8 @@
 import "./ViewTaskModal.css";
-import DomUtility from "../../../utilities/DomUtility";
-import Validator from "../../../utilities/Validator";
-import EventBus from "../../../utilities/EventBus";
-import getIcons from "../../../res/icons/icons";
+import DomUtility from "../../utilities/DomUtility";
+import Validator from "../../utilities/Validator";
+import EventBus from "../../utilities/EventBus";
+import getIcons from "../../res/icons/icons";
 
 export default class ViewTaskModal {
 
@@ -56,7 +56,7 @@ export default class ViewTaskModal {
         this.#fields.project.value = task.getProject();
         this.#fields.priority.value = task.getPriority();
         this.#fields.status.value = task.getStatus();
-        this.#fields.date.value = task.getDueDate();
+        this.#fields.date.value = task.getDate();
     }
 
     #createElement() {
@@ -164,7 +164,7 @@ export default class ViewTaskModal {
     #handleDateMouseLeave(event) {
         if (!event.target.value) {
             event.target.type = 'text';
-            event.target.value = this.#currentTask.getDueDate();
+            event.target.value = this.#currentTask.getDate();
         }
     }
 

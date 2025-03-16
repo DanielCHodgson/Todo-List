@@ -1,9 +1,9 @@
 import "./CreateProjectModal.css";
-import DomUtility from "../../../utilities/DomUtility";
-import Validator from "../../../utilities/Validator";
-import EventBus from "../../../utilities/EventBus";
-import getIcons from "../../../res/icons/icons";
-import ProjectService from "../../../services/ProjectService";
+import DomUtility from "../../utilities/DomUtility";
+import Validator from "../../utilities/Validator";
+import EventBus from "../../utilities/EventBus";
+import getIcons from "../../res/icons/icons";
+import ProjectService from "../../services/ProjectService";
 
 export default class CreateProjectModal {
 

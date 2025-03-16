@@ -1,8 +1,8 @@
-import Utility from "../../../utilities/DomUtility.js";
+import Utility from "../../utilities/DomUtility.js";
 import "./CreateTaskModal.css";
-import Validator from "../../../utilities/Validator.js";
-import EventBus from "../../../utilities/EventBus.js";
-import getIcons from "../../../res/icons/icons.js";
+import Validator from "../../utilities/Validator.js";
+import EventBus from "../../utilities/EventBus.js";
+import getIcons from "../../res/icons/icons.js";
 
 export default class NewTaskModal {
     constructor() {

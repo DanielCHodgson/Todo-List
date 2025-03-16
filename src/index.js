@@ -5,7 +5,7 @@ import ProjectService from "./services/ProjectService.js";
 import testData from "./data/test/dummyProjects.json"
 import EventBus from "./utilities/EventBus.js";
 import Dashboard from "./components/Dashboard/Dashboard.js";
-import CreateProjectModal from "./components/modals/CreateProjectModal/CreateProjectModal.js";
+import CreateProjectModal from "./modals/CreateProjectModal/CreateProjectModal.js";
 import TaskService from "./services/TaskService.js";
 import LaneService from "./services/LaneService.js";
 import logoIcon from "./res/images/team-icon.jpg";

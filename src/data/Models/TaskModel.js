@@ -36,7 +36,7 @@ export default class Task {
     getPriority() {
         return this.#priority;
     }
-    getDueDate() {
+    getDate() {
         return this.#date;
     }
     getStatus() {
@@ -50,7 +50,7 @@ export default class Task {
             summary: this.#summary,
             description: this.#description,
             priority: this.#priority,
-            dueDate: this.#date,
+            date: this.#date,
             status: this.#status
         };
     }

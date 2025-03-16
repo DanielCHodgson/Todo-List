@@ -1,17 +1,18 @@
 .tasks-list .task-row {
     width: 100%;
 }
+.tasks-list .task-row:hover *:not(input) {
+    background-color: var(--hover-hightlight-light);
+}
 
 .tasks-list .task-form{
     width: 100%;
     height: auto;
-
     display: grid;
-    padding: 0 0.5rem;
+
     grid-template-columns: auto 1fr auto;
     grid-template-rows: 2.5rem;
-    justify-content: center;
-    align-items: center;
+    place-items: center;
     gap: 2rem;
 
     font-family: "Roboto", Arial, Helvetica, sans-serif;
@@ -20,17 +21,24 @@
     cursor: pointer;
 }
 
-.task-row #summary:hover, .task-row #status:hover {
-    background-color: var(--hover-hightlight-light);
+.tasks-list .task-form .container {
+    width: 100%;
+    height: 100%;
+    padding: 0 0.5rem;
+    display: grid;
+    place-content: center;
+    grid-template-columns: 1fr;
 }
 
 .task-row .id {
     color: var(--primary-light);
     font-weight: bold;
+    height: 100%;
 }
 
 .task-row input {
     border: none;
+    height: 1.8em;
 }
 
 .task-row input:active {

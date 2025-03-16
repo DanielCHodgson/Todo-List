@@ -4,6 +4,7 @@ import DomUtility from "../../utilities/DomUtility";
 import Task from "../../data/models/TaskModel";
 import TaskRow from "../../components/TaskRow/TaskRow";
 import EventBus from "../../utilities/EventBus";
+import ViewTaskModal from "../../modals/ViewTaskModal/ViewTaskModal"
 
 export default class TasksPage {
     #project;
@@ -12,6 +13,7 @@ export default class TasksPage {
     #element;
     #rows;
     #taskList;
+    #viewTaskModal;
 
     constructor() {
         this.#project = ProjectService.loadCurrentProject();
@@ -23,7 +25,15 @@ export default class TasksPage {
         this.#rows = this.#createRows();
 
         this.render();
-        EventBus.on("updateRow", (data) => this.#updateRow(data))
+        EventBus.on("updateRow", (data) => this.#updateRow(data));
+        EventBus.on("launchViewTaskModal", (task) => this.#openViewTaskModal(task));
+
+        this.#viewTaskModal = new ViewTaskModal();
+    }
+
+    #openViewTaskModal(task) {
+
+        this.#viewTaskModal.open(task);
     }
 
 
@@ -43,15 +53,6 @@ export default class TasksPage {
         return this.#tasks.map(task => {
             return new TaskRow(this.#taskList, task);
         });
-    }
-
-    
-    #replaceRow(rowToReplace) {
-        this.#rows = this.#rows.map(row => {
-            return row.getTaskData().id === rowToReplace.getTaskData().id ?
-                rowToReplace :
-                row
-        })
     }
 
     #createHeader() {

@@ -53,7 +53,7 @@ export default class TaskCard {
         this.#fields.slug.textContent = task.getId();
         this.#fields.summary.textContent = task.getSummary();
         this.#fields.priority.textContent = task.getPriority();
-        this.#fields.date.textContent = task.getDueDate();
+        this.#fields.date.textContent = task.getDate();
     }
 
   

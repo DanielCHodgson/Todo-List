@@ -1,8 +1,8 @@
 import "./CreateSwimlaneModal.css";
-import DomUtility from "../../../utilities/DomUtility";
-import EventBus from "../../../utilities/EventBus";
-import Validator from "../../../utilities/Validator";
-import getIcons from "../../../res/icons/icons";
+import DomUtility from "../../utilities/DomUtility";
+import EventBus from "../../utilities/EventBus";
+import Validator from "../../utilities/Validator";
+import getIcons from "../../res/icons/icons";
 
 export default class CreateSwimLaneModal {
 

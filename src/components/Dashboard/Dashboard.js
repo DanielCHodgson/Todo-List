@@ -6,9 +6,9 @@ import Task from "../../data/models/TaskModel";
 import TaskCard from "../TaskCard/TaskCard";
 import EventBus from "../../utilities/EventBus";
 import ProjectService from "../../services/ProjectService";
-import CreateTaskModal from "../modals/CreateTaskModal/CreateTaskModal";
-import ViewTaskModal from "../modals/ViewTaskModal/ViewTaskModal";
-import CreateSwimLaneModal from "../modals/CreateSwimLaneModal/CreateSwimLaneModal";
+import CreateTaskModal from "../../modals/CreateTaskModal/CreateTaskModal";
+import ViewTaskModal from "../../modals/ViewTaskModal/ViewTaskModal";
+import CreateSwimLaneModal from "../../modals/CreateSwimLaneModal/CreateSwimLaneModal";
 import CardService from "../../services/CardService";
 
 export default class Dashboard {
@@ -144,7 +144,7 @@ export default class Dashboard {
             task.getSummary(),
             task.getDescription(),
             task.getPriority(),
-            task.getDueDate(),
+            task.getDate(),
             newStatus
         );
 
