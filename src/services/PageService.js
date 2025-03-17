@@ -2,11 +2,13 @@ import Nav from "../components/Nav/Nav.js";
 import Dashboard from "../components/Dashboard/Dashboard.js";
 import ProjectsPage from "../pages/ProjectsPage/ProjectsPage.js";
 import TasksPage from "../pages/TasksPage/TasksPage.js";
+import ProjectService from "./ProjectService.js";
 
 export default class PageService {
 
     #nav = null;
     #currentPage = null;
+    #cachedCurrentPage = localStorage.getItem("currentPage");
 
     constructor() {
         this.init();
@@ -14,22 +16,17 @@ export default class PageService {
 
     init() {
         // dirty as hell way to handle page refreshes
-        // without implementing URLs and routing 
-        const storedPage = localStorage.getItem("currentPage");
-
-        if (storedPage === null) {
-            this.#currentPage = "projects";
-            this.loadPage(this.#currentPage)
+        // without implementing URLs / routing 
+        if (ProjectService.getProjects().length <= 0) {
+            this.loadPage("projects");
         } else {
-            this.#currentPage = storedPage;
-            this.loadPage(this.#currentPage)
+            this.loadPage(this.#cachedCurrentPage);
             this.loadNav();
         }
     }
 
     loadNav() {
         if (this.#nav !== null) {
-            console.log(this.#nav)
             this.#nav.destroy();
         }
         this.#nav = new Nav();
@@ -37,48 +34,37 @@ export default class PageService {
 
 
     reloadPage() {
-        this.loadPage(localStorage.getItem("currentPage"));
+        this.loadPage(this.#cachedCurrentPage);
     }
 
     loadPage(page) {
 
-        if (this.#currentPage && this.#currentPage.object) {
-            this.#currentPage.object.destroy();
+        if (this.#currentPage) {
+            this.#currentPage.destroy();
         }
 
         switch (page) {
             case "projects":
-                this.#currentPage = {
-                    "name": page,
-                    "object": new ProjectsPage(),
-                };
+                this.#currentPage = new ProjectsPage();
                 break;
             case "dashboard":
-                this.#currentPage = {
-                    "name": page,
-                    "object": new Dashboard(),
-                };
+                this.#currentPage = new Dashboard();
                 break;
             case "tasks":
-                this.#currentPage = {
-                    "name": page,
-                    "object": new TasksPage(),
-                };
-                break;
-            default:
-                console.error("Unknown page: " + page);
-                this.#currentPage = {
-                    "name": "home",
-                    "object": new ProjectsPage(),
-                };
+                this.#currentPage = new TasksPage();
                 break;
         }
 
-        localStorage.setItem("currentPage", this.#currentPage.name)
+        localStorage.setItem("currentPage", page)
+        this.#cachedCurrentPage = page;
     }
 
     getNav() {
         return this.#nav;
+    }
+
+    getCurrentPage() {
+        return this.#currentPage;
     }
 
 

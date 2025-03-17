@@ -1,19 +1,18 @@
 .tasks-list .task-row {
     width: 100%;
 }
-.tasks-list .task-row:hover *:not(input) {
+.tasks-list .task-row:hover *:not(input, .delete, svg) {
     background-color: var(--hover-hightlight-light);
 }
 
-.tasks-list .task-form{
+.tasks-list .task-form {
+    padding: 0 0.5rem;
     width: 100%;
-    height: auto;
     display: grid;
-
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto minmax(5rem, 1fr) auto auto auto;
     grid-template-rows: 2.5rem;
     place-items: center;
-    gap: 2rem;
+    gap: 1rem;
 
     font-family: "Roboto", Arial, Helvetica, sans-serif;
     font-size: 1rem;
@@ -21,19 +20,16 @@
     cursor: pointer;
 }
 
-.tasks-list .task-form .container {
+.task-row .container {
     width: 100%;
-    height: 100%;
-    padding: 0 0.5rem;
-    display: grid;
-    place-content: center;
-    grid-template-columns: 1fr;
 }
+
 
 .task-row .id {
     color: var(--primary-light);
     font-weight: bold;
     height: 100%;
+    white-space: nowrap;
 }
 
 .task-row input {
@@ -43,4 +39,48 @@
 
 .task-row input:active {
     border: 1px solid #d1d1d1;
+}
+
+.task-row select {
+    padding: 0.5rem;
+    border: 1px solid #d1d1d1;
+    border-radius: 0.5rem;
+    background-color: #f4f4f9;
+    font-size: 1rem;
+    outline: none;
+    transition: all ease 0.2s;
+    cursor: pointer;
+}
+
+.task-row select:hover {
+    border-color: #999;
+}
+
+.task-row select option {
+    padding: 0.5rem;
+    font-size: 1rem;
+    background-color: #ffffff;
+}
+
+.task-row .delete {
+    padding: 0;
+    width: 1.2rem;
+    height: 1.2rem;
+    display: grid;
+    place-content: center;
+    background-color: #f30000;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 4px;
+    opacity: 0.5;
+}
+.task-row .delete:hover {
+    opacity: 1;
+}
+
+.task-row .delete svg{
+    width: 0.8rem;
+    height: 0.8rem;
+    fill: #FFFFFF;
 }

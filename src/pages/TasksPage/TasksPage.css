@@ -15,13 +15,6 @@
     gap: 1rem;
 }
 
-.tasks-page .container {
-    width: 100%;
-    height: auto;
-    background-color: var(--secondary-light);
-    padding: 0.5rem;
-}
-
 .tasks-page .tasks-list {
     display: flex;
     flex-direction: column;

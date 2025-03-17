@@ -107,9 +107,7 @@ export default class ViewTaskModal {
             right.appendChild(DomUtility.createInputFormGroup(field, field.charAt(0).toUpperCase() + field.slice(1), true));
         });
 
-
         const priority = DomUtility.createSelectFormGroup("priority", "Priority", ["P1", "P2", "P3", "P4", "P5"]);
-
 
         const date = DomUtility.createInputField("date");
         date.addEventListener("mouseenter", (event) => this.#handleDateMouseEnter(event));

@@ -142,7 +142,6 @@ export default class Nav {
     }
 
     destroy() {
-        console.log("destroying nav")
         this.cleanup();
         if (this.#element) {
             this.#element.remove();

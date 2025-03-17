@@ -39,17 +39,16 @@ export default class TasksPage {
         this.#viewTaskModal = new ViewTaskModal();
 
         this.#launchCreateTaskModalHandler = () => this.#handleCreateTaskOpen();
-
         this.#launchViewTaskModalHandler = (task) => this.#handleViewTaskOpen(task);
 
         EventBus.on("updateRow", this.#updateRowHandler);
         EventBus.on("launchCreateTaskModal", this.#launchCreateTaskModalHandler);
         EventBus.on("launchViewTaskModal", this.#launchViewTaskModalHandler);
         EventBus.on("createTask", (data) => this.#createTask(data));
+        EventBus.on("deleteTaskRow", (task) => this.#deleteTaskRow(task));
     }
 
     #handleCreateTaskOpen() {
-        console.log("fgkjdslkgdf;")
         this.#createTaskModal.open()
     }
 
@@ -57,8 +56,6 @@ export default class TasksPage {
         this.#viewTaskModal.open(task);
     }
     
-  
-
     #createElement() {
         const tasksPage = DomUtility.createElement("div", "tasks-page");
         const container = DomUtility.createElement("div", "container");
@@ -91,6 +88,8 @@ export default class TasksPage {
 
     #updateRow(data) {
 
+        console.log(data)
+
         const fieldName = data.inputField.id;
         const newValue = data.inputField.value;
 
@@ -98,10 +97,6 @@ export default class TasksPage {
             console.error(`Invalid field: ${fieldName}`);
             return;
         }
-
-        console.log(`task data: ${data.taskData[fieldName]}`)
-        console.log(`new value: ${newValue}`)
-
 
         if (data.taskData[fieldName] === newValue)
             return;
@@ -117,18 +112,37 @@ export default class TasksPage {
         );
 
         this.saveTaskAndProject(updatedTask);
-        this.#project = ProjectService.loadCurrentProject();
-        this.#tasks = this.#project.getTaskService().getTasks();
-        this.#rows = this.#createRows();
-
+        this.reloadRows();
         DomUtility.showAlert("Task updated");
     }
 
-    #createTask() {
+    #createTask(data) {
+        const newTask = new Task(
+            `${data.project}-${this.#project.getTaskService().getIndex()}`,
+            data.project,
+            data.summary,
+            data.description,
+            data.priority,
+            data.date,
+            data.status
+        );
 
-
+        this.#project.getTaskService().addTask(newTask);
+        ProjectService.saveProject(this.#project);
+        this.reloadRows();
     }
 
+    #deleteTaskRow(task) {
+        this.#project.getTaskService().removeTask(task.getId());
+        ProjectService.saveProject(this.#project);
+        this.reloadRows();
+    }
+
+    reloadRows() {
+        this.#project = ProjectService.loadCurrentProject();
+        this.#tasks = this.#project.getTaskService().getTasks();
+        this.#rows = this.#createRows();
+    }
 
     saveTaskAndProject(task) {
         this.#project.getTaskService().updateTask(task);
@@ -146,6 +160,7 @@ export default class TasksPage {
         if (this.#element) {
             this.#element.remove();
         }
+        
         EventBus.off("updateRow", this.#updateRowHandler);
         EventBus.off("launchCreateTaskModal", this.#launchCreateTaskModalHandler);
         EventBus.off("launchViewTaskModal", this.#launchViewTaskModalHandler);

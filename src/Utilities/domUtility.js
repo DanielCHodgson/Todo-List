@@ -60,6 +60,22 @@ export default class DomUtility {
         return formGroup;
     }
 
+
+    static createSelect(id, options) {
+
+        const select = document.createElement("select");
+        select.id = id;
+
+        options.forEach(o => {
+            const option = document.createElement("option");
+            option.textContent = o;
+            option.value = o;
+            select.appendChild(option);
+        });
+
+        return select;
+    }
+
     static createInputFormGroup(id, labelText, required, minLength, maxLength) {
         const formGroup = document.createElement("div");
         formGroup.classList.add("form-group");

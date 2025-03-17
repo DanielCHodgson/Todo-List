@@ -96,7 +96,7 @@
                     "date": "14-03-2025"
                 }
             ],
-            "index": 10
+            "index": 11
         },
         "laneService": {
             "lanes": [
@@ -222,7 +222,7 @@
     {
         "name": "DOCS",
         "type": "Documentation",
-        "icon": "http://localhost:8080/docs-icon.jpg",
+        "icon": "http://localhost:8080/cb7e597cf7686128fa96.jpg",
         "taskService": {
             "tasks": [
                 {

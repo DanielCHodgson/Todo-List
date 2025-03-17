@@ -13,7 +13,6 @@ export default class ProjectsPage {
     constructor() {
         this.#parent = document.querySelector(".content");
         this.#projects = ProjectService.getProjects();
-        console.log(this.#projects)
         this.#element = this.#createPage();
         this.render();
     }
@@ -31,7 +30,6 @@ export default class ProjectsPage {
         const body = DomUtility.createElement("div", "body");
         body.appendChild(DomUtility.createElement("p", "name", name));
         body.addEventListener("click", () => this.#handleOpenProjectClick(name));
-
 
         projectCard.appendChild(header);
         projectCard.appendChild(body);
@@ -104,7 +102,6 @@ export default class ProjectsPage {
 
     destroy() {
         if (this.#element) {
-            console.log("destroying projects page!")
             this.#element.remove();
             this.#element = null;
             this.#projects = null;
