@@ -46,6 +46,9 @@ export default class TasksPage {
         EventBus.on("launchViewTaskModal", this.#launchViewTaskModalHandler);
         EventBus.on("createTask", (data) => this.#createTask(data));
         EventBus.on("deleteTaskRow", (task) => this.#deleteTaskRow(task));
+
+        console.log("loaded tasks page in:")
+        console.log(this.#project.getName());
     }
 
     #handleCreateTaskOpen() {

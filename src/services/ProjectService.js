@@ -4,8 +4,9 @@ import LaneService from "./LaneService";
 
 export default class ProjectService {
 
+    static CURR_PROJECT_NAME_STORAGE_KEY = "currentProjectName";
     static PROJECT_STORAGE_KEY = "projectData";
-    static CURRENT_PROJECT = this.loadProject(localStorage.getItem("currentProject"));
+    static CURRENT_PROJECT = this.loadProject(localStorage.getItem(this.CURR_PROJECT_NAME_STORAGE_KEY));
 
     static saveProject(savedProject) {
         let projects = this.getProjects();
@@ -23,7 +24,7 @@ export default class ProjectService {
             projects.push(savedProject.toJSON());
         }
 
-        this.setProjects(projects);
+        this.saveProjectsToLocalStorage(projects);
     }
 
     static loadProject(projectName) {
@@ -51,15 +52,14 @@ export default class ProjectService {
 
     static deleteProject(name) {
 
-        console.log(name)
         let projects = this.getProjects();
         if (!projects.length) return;
 
         const filteredProjects = projects.filter(project => project.name !== name);
-        this.setProjects(filteredProjects);
+        this.saveProjectsToLocalStorage(filteredProjects);
 
-        if (this.getCurrentProjectName() === name) {
-            localStorage.removeItem("currentProject");
+        if (this.CURRENT_PROJECT.getName() === name) {
+            localStorage.removeItem(this.CURR_PROJECT_NAME_STORAGE_KEY);
         }
     }
 
@@ -72,27 +72,23 @@ export default class ProjectService {
         }
     }
 
-    static setProjects(projects) {
+    static saveProjectsToLocalStorage(projects) {
         localStorage.setItem(this.PROJECT_STORAGE_KEY, JSON.stringify(projects));
     }
 
     static loadCurrentProject() {
-        return this.loadProject(this.getCurrentProjectName());
+        return this.loadProject(this.CURRENT_PROJECT.getName());
     }
 
-    static getCurrentProjectName() {
-        return localStorage.getItem("currentProject");
-    }
-
-    static setCurrentProject(projectName) {
+    static switchProject(projectName) {
         if (projectName) {
-            localStorage.setItem("currentProject", projectName);
+            localStorage.setItem(this.CURR_PROJECT_NAME_STORAGE_KEY, projectName);
             this.CURRENT_PROJECT = this.loadProject(projectName);
         } else {
             const firstProject = this.loadFirstProject();
             if (firstProject) {
-                localStorage.setItem("currentProject", firstProject.name);
-                this.CURRENT_PROJECT  = firstProject;
+                localStorage.setItem(this.CURR_PROJECT_NAME_STORAGE_KEY, firstProject.name);
+                this.CURRENT_PROJECT = firstProject;
             }
         }
     }

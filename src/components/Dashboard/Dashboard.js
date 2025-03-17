@@ -38,6 +38,9 @@ export default class Dashboard {
         this.#setupEventListeners();
         this.#renderSwimLanes();
         this.render();
+
+        console.log("loaded dashboard in:")
+        console.log(this.#project.getName());
     }
 
     #initModals() {
