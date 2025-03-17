@@ -9,6 +9,10 @@
 .tasks-page .tasks-header {
     font-family: "Roboto", Arial, Helvetica, sans-serif;
     font-size: 1.3rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
 }
 
 .tasks-page .container {

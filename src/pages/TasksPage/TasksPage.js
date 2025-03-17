@@ -5,6 +5,7 @@ import Task from "../../data/models/TaskModel";
 import TaskRow from "../../components/TaskRow/TaskRow";
 import EventBus from "../../utilities/EventBus";
 import ViewTaskModal from "../../modals/ViewTaskModal/ViewTaskModal"
+import CreateTaskModal from "../../modals/CreateTaskModal/CreateTaskModal"
 
 export default class TasksPage {
     #project;
@@ -13,8 +14,12 @@ export default class TasksPage {
     #element;
     #rows;
     #taskList;
-    #viewTaskModal;
     #updateRowHandler;
+
+    #createTaskModal;
+    #viewTaskModal;
+
+    #launchCreateTaskModalHandler;
     #launchViewTaskModalHandler;
 
     constructor() {
@@ -29,19 +34,30 @@ export default class TasksPage {
         this.render();
 
         this.#updateRowHandler = (data) => this.#updateRow(data);
-        this.#launchViewTaskModalHandler = (task) => this.#openViewTaskModal(task);
+
+        this.#createTaskModal = new CreateTaskModal();
+        this.#viewTaskModal = new ViewTaskModal();
+
+        this.#launchCreateTaskModalHandler = () => this.#handleCreateTaskOpen();
+
+        this.#launchViewTaskModalHandler = (task) => this.#handleViewTaskOpen(task);
 
         EventBus.on("updateRow", this.#updateRowHandler);
+        EventBus.on("launchCreateTaskModal", this.#launchCreateTaskModalHandler);
         EventBus.on("launchViewTaskModal", this.#launchViewTaskModalHandler);
-
-        this.#viewTaskModal = new ViewTaskModal();
+        EventBus.on("createTask", (data) => this.#createTask(data));
     }
 
-    #openViewTaskModal(task) {
+    #handleCreateTaskOpen() {
+        console.log("fgkjdslkgdf;")
+        this.#createTaskModal.open()
+    }
 
+    #handleViewTaskOpen(task) {
         this.#viewTaskModal.open(task);
     }
-
+    
+  
 
     #createElement() {
         const tasksPage = DomUtility.createElement("div", "tasks-page");
@@ -64,6 +80,11 @@ export default class TasksPage {
     #createHeader() {
         const header = DomUtility.createElement("div", "tasks-header");
         header.appendChild(DomUtility.createElement("h2", "title", "Tasks"));
+
+        const createBtn = DomUtility.createElement("button", "new-task", "Create");
+        createBtn.addEventListener("click", () => this.#launchCreateTaskModalHandler());
+        header.appendChild(createBtn);
+        
         return header;
     }
 
@@ -103,6 +124,11 @@ export default class TasksPage {
         DomUtility.showAlert("Task updated");
     }
 
+    #createTask() {
+
+
+    }
+
 
     saveTaskAndProject(task) {
         this.#project.getTaskService().updateTask(task);
@@ -121,6 +147,8 @@ export default class TasksPage {
             this.#element.remove();
         }
         EventBus.off("updateRow", this.#updateRowHandler);
+        EventBus.off("launchCreateTaskModal", this.#launchCreateTaskModalHandler);
         EventBus.off("launchViewTaskModal", this.#launchViewTaskModalHandler);
+        EventBus.off("createTask", (data) => this.#createTask(data));
     }
 }

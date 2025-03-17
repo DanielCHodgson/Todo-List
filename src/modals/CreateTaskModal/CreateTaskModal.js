@@ -4,7 +4,7 @@ import Validator from "../../utilities/Validator.js";
 import EventBus from "../../utilities/EventBus.js";
 import getIcons from "../../res/icons/icons.js";
 
-export default class NewTaskModal {
+export default class CreateTaskModal {
     constructor() {
         this.parent = document.querySelector(".app-wrapper");
         this.element = null;
