@@ -9,7 +9,6 @@ import ProjectService from "../../services/ProjectService";
 import CreateTaskModal from "../../modals/CreateTaskModal/CreateTaskModal";
 import ViewTaskModal from "../../modals/ViewTaskModal/ViewTaskModal";
 import CreateSwimLaneModal from "../../modals/CreateSwimLaneModal/CreateSwimLaneModal";
-import CardService from "../../services/CardService";
 
 export default class Dashboard {
 
@@ -38,9 +37,6 @@ export default class Dashboard {
         this.#setupEventListeners();
         this.#renderSwimLanes();
         this.render();
-
-        console.log("opening dashboard in:")
-        console.log(this.#project.getName())
     }
 
     #initModals() {
@@ -163,8 +159,8 @@ export default class Dashboard {
 
     #deleteTask(task) {
         this.#taskService.removeTask(task.getId());
-        this.#laneService.getLaneByStatus(task.getStatus()).getCardService().removeCard(task.getId());
         ProjectService.saveProject(this.#project);
+        this.#laneService.getLaneByStatus(task.getStatus()).renderCards();
     }
 
     #deleteSwimLane(status) {

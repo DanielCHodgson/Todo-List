@@ -1,5 +1,4 @@
 import "./TaskCard.css";
-import Utility from "../../utilities/DomUtility";
 import EventBus from "../../utilities/EventBus";
 import TaskModel from "../../data/models/TaskModel";
 import getIcons from "../../res/icons/icons";
@@ -11,6 +10,7 @@ export default class TaskCard {
     #element;
     #fields = {};
     #eventListeners = {};
+    #deleteIconClickHandler;
 
     constructor(task) {
         this.#task = task;
@@ -18,7 +18,6 @@ export default class TaskCard {
         this.#element = this.#createCardElement();
         this.#cacheFields();
         this.#setData(task);
-    
         this.#bindEvents();
     }
 
@@ -26,6 +25,9 @@ export default class TaskCard {
         this.#eventListeners.cardClick = () => EventBus.emit("viewTask", this.#task);
         this.#eventListeners.dragStart = this.#handleDragStart.bind(this);
         this.#eventListeners.dragEnd = this.#handleDragEnd.bind(this);
+
+        this.#deleteIconClickHandler = this.#handleDelete.bind(this);
+
         this.#element.addEventListener("click", this.#eventListeners.cardClick);
         this.#element.addEventListener("dragstart", this.#eventListeners.dragStart);
         this.#element.addEventListener("dragend", this.#eventListeners.dragEnd);
@@ -35,7 +37,7 @@ export default class TaskCard {
         this.#element.removeEventListener("click", this.#eventListeners.cardClick);
         this.#element.removeEventListener("dragstart", this.#eventListeners.dragStart);
         this.#element.removeEventListener("dragend", this.#eventListeners.dragEnd);
-        this.#element.querySelector(".delete-icon").removeEventListener("click", (event) => this.#handleDelete(event));
+        this.#element.querySelector(".delete-icon").removeEventListener("click", this.#deleteIconClickHandler);
         this.#eventListeners = {};
     }
 
@@ -49,16 +51,15 @@ export default class TaskCard {
     }
 
     #setData(task) {
-        if (!task) return;
+        if (!task || !task.getSummary() || !task.getPriority()) return;
         this.#fields.slug.textContent = task.getId();
         this.#fields.summary.textContent = task.getSummary();
         this.#fields.priority.textContent = task.getPriority();
         this.#fields.date.textContent = task.getDate();
     }
 
-  
     #createCardElement() {
-        const card = Utility.createElement("div", "task-card");
+        const card = DomUtility.createElement("div", "task-card");
         card.draggable = true;
         card.dataset.taskId = this.#id;
 
@@ -67,27 +68,32 @@ export default class TaskCard {
     }
 
     #createHeaderElement() {
-        const header = Utility.createElement("div", "task-header");
-
-        const deleteIcon = Utility.createElement("div", "delete-icon");
+        const header = DomUtility.createElement("div", "task-header");
+    
+        const deleteIcon = DomUtility.createElement("div", "delete-icon");
         deleteIcon.appendChild(DomUtility.renderSvg(getIcons().close));
+
         deleteIcon.addEventListener("click", (event) => this.#handleDelete(event));
     
-        header.append(Utility.createElement("p", "summary"), deleteIcon);
+        header.append(DomUtility.createElement("p", "summary"), deleteIcon);
         return header;
     }
 
     #createBodyElement() {
-        return Utility.createElement("div", "task-body");
+        return DomUtility.createElement("div", "task-body");
     }
 
     #createFooterElement() {
-        const footer = Utility.createElement("div", "task-footer");
-        footer.append(
-            Utility.createElement("p", "slug"),
-            Utility.createElement("p", "priority"),
-            Utility.createElement("p", "date")
+        const footer = DomUtility.createElement("div", "task-footer");
+        const fragment = document.createDocumentFragment();
+        
+        fragment.append(
+            DomUtility.createElement("p", "slug"),
+            DomUtility.createElement("p", "priority"),
+            DomUtility.createElement("p", "date")
         );
+
+        footer.appendChild(fragment);
         return footer;
     }
 
@@ -104,7 +110,6 @@ export default class TaskCard {
 
     #handleDelete(event) {
         event.stopPropagation();
-       
         this.destroy();
     }
 
@@ -112,6 +117,7 @@ export default class TaskCard {
         EventBus.emit("deleteTask", this.#task);
         this.#unbindEvents();
         this.#element?.remove();
+        this.#task = null;
     }
 
     render(parent) {
@@ -131,7 +137,7 @@ export default class TaskCard {
     }
 
     toJSON() {
-        return { task: this.#task };
+        return { task: this.#task.toJSON() };
     }
 
     static fromJSON(data) {

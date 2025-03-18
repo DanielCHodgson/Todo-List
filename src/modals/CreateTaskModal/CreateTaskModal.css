@@ -49,6 +49,8 @@
 
 .create-task-modal .icon-row svg {
     cursor: pointer;
+    width: 1rem;
+    height: 1rem;
 }
 
 .create-task-modal .icon-row svg:hover {

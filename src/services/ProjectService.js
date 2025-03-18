@@ -10,7 +10,7 @@ export default class ProjectService {
     static get CURRENT_PROJECT() {
         return this.loadProject(localStorage.getItem(this.CURR_PROJECT_NAME_STORAGE_KEY));
     }
-    
+
     static set CURRENT_PROJECT(projectName) {
         if (projectName) {
             localStorage.setItem(this.CURR_PROJECT_NAME_STORAGE_KEY, projectName);
@@ -36,6 +36,7 @@ export default class ProjectService {
         }
 
         this.saveProjectsToLocalStorage(projects);
+
     }
 
     static loadProject(projectName) {

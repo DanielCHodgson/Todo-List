@@ -8,7 +8,6 @@ import TaskCard from "../TaskCard/TaskCard";
 
 export default class SwimLane {
     #parent;
-    //#cardService;
     #status;
     #element;
     #cardsContainer;
@@ -90,20 +89,13 @@ export default class SwimLane {
         }
     }
 
-    /*
     renderCards() {
         this.#cardsContainer.innerHTML = "";
-        this.#cardService.getCards().forEach((card) => card.render(this.#cardsContainer));
-    }
-        */
-
-    renderCards() {
-        this.#cardsContainer.innerHTML = "";
+        
         ProjectService.CURRENT_PROJECT.getTaskService().getTasks()
             .filter(task => task.getStatus() === this.#status)
             .map(task => new TaskCard(task))
             .forEach(card => {
-                console.log(card)
                 card.render(this.#cardsContainer)}
             );
     }
