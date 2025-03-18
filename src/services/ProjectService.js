@@ -6,7 +6,18 @@ export default class ProjectService {
 
     static CURR_PROJECT_NAME_STORAGE_KEY = "currentProjectName";
     static PROJECT_STORAGE_KEY = "projectData";
-    static CURRENT_PROJECT = this.loadProject(localStorage.getItem(this.CURR_PROJECT_NAME_STORAGE_KEY));
+
+    static get CURRENT_PROJECT() {
+        return this.loadProject(localStorage.getItem(this.CURR_PROJECT_NAME_STORAGE_KEY));
+    }
+    
+    static set CURRENT_PROJECT(projectName) {
+        if (projectName) {
+            localStorage.setItem(this.CURR_PROJECT_NAME_STORAGE_KEY, projectName);
+        } else {
+            localStorage.removeItem(this.CURR_PROJECT_NAME_STORAGE_KEY);
+        }
+    }
 
     static saveProject(savedProject) {
         let projects = this.getProjects();
@@ -83,12 +94,10 @@ export default class ProjectService {
     static switchProject(projectName) {
         if (projectName) {
             localStorage.setItem(this.CURR_PROJECT_NAME_STORAGE_KEY, projectName);
-            this.CURRENT_PROJECT = this.loadProject(projectName);
         } else {
             const firstProject = this.loadFirstProject();
             if (firstProject) {
                 localStorage.setItem(this.CURR_PROJECT_NAME_STORAGE_KEY, firstProject.name);
-                this.CURRENT_PROJECT = firstProject;
             }
         }
     }

@@ -29,7 +29,7 @@ export default class Dashboard {
     constructor() {
         this.#project = ProjectService.CURRENT_PROJECT;
         this.#container = document.querySelector(".content");
-        this.#element = this.#createDashboard();
+        this.#element = this.#createElement();
         this.#lanesContainer = this.#element.querySelector(".swim-lane-list");
         this.#taskService = this.#project.getTaskService();
         this.#laneService = this.#project.getLaneService();
@@ -39,8 +39,8 @@ export default class Dashboard {
         this.#renderSwimLanes();
         this.render();
 
-        console.log("loaded dashboard in:")
-        console.log(this.#project.getName());
+        console.log("opening dashboard in:")
+        console.log(this.#project.getName())
     }
 
     #initModals() {
@@ -70,7 +70,7 @@ export default class Dashboard {
         });
     }
 
-    #createDashboard() {
+    #createElement() {
         const dashboard = Utility.createElement("div", "dashboard");
         dashboard.appendChild(this.#createHeader("Board"));
 
@@ -92,7 +92,6 @@ export default class Dashboard {
         return header;
     }
 
-
     #addSwimLane(status) {
         if (this.#laneService.getLanes().some((lane) => lane.getStatus() === status)) {
             alert("Lane already exists");
@@ -100,8 +99,8 @@ export default class Dashboard {
         }
 
         const cards = this.#taskService.getTasksByStatus(status).map((task) => new TaskCard(task));
-        const lane = new SwimLane(new CardService(cards), status);
-
+        //const lane = new SwimLane(new CardService(cards), status);
+        const lane = new SwimLane(status);
         this.#laneService.addLane(lane);
         lane.render(this.#lanesContainer);
         ProjectService.saveProject(this.#project);
@@ -122,7 +121,6 @@ export default class Dashboard {
             data.status
         );
 
-        console.log(data)
         this.#taskService.addTask(task);
         this.#addTaskToLane(task);
         ProjectService.saveProject(this.#project);
@@ -181,9 +179,7 @@ export default class Dashboard {
     }
 
     #addTaskToLane(task) {
-        console.log(task)
         const lane = this.#laneService.getLaneByStatus(task.getStatus());
-        console.log(lane)
         if (lane !== null) {
             lane.getCardService().addCard(new TaskCard(task));
             lane.renderCards();

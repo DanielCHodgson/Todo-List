@@ -3,21 +3,21 @@ import DomUtility from "../../utilities/DomUtility";
 import EventBus from "../../utilities/EventBus";
 import CardService from "../../services/CardService";
 import getIcons from "../../res/icons/icons";
+import ProjectService from "../../services/ProjectService";
+import TaskCard from "../TaskCard/TaskCard";
 
 export default class SwimLane {
     #parent;
-    #cardService;
+    //#cardService;
     #status;
     #element;
     #cardsContainer;
     #eventListeners = {};
 
-    constructor(cardService, status) {
-        this.#cardService = cardService;
+    constructor(status) {
         this.#status = status;
         this.#element = this.#createElement();
         this.#cardsContainer = this.#element.querySelector(".card-list");
-
         this.#bindEvents();
     }
 
@@ -90,9 +90,22 @@ export default class SwimLane {
         }
     }
 
+    /*
     renderCards() {
         this.#cardsContainer.innerHTML = "";
         this.#cardService.getCards().forEach((card) => card.render(this.#cardsContainer));
+    }
+        */
+
+    renderCards() {
+        this.#cardsContainer.innerHTML = "";
+        ProjectService.CURRENT_PROJECT.getTaskService().getTasks()
+            .filter(task => task.getStatus() === this.#status)
+            .map(task => new TaskCard(task))
+            .forEach(card => {
+                console.log(card)
+                card.render(this.#cardsContainer)}
+            );
     }
 
     render(parent) {
@@ -122,18 +135,23 @@ export default class SwimLane {
         return this.#element;
     }
 
+
+    /*
     getCardService() {
         return this.#cardService;
     }
 
+    */
+
     toJSON() {
         return {
-            cardService: this.#cardService.toJSON(),
+            //cardService: this.#cardService.toJSON(),
             status: this.#status,
         };
     }
 
     static fromJSON(data) {
-        return new SwimLane(CardService.fromJSON(data.cardService), data.status);
+        //return new SwimLane(CardService.fromJSON(data.cardService), data.status);
+        return new SwimLane(data.status);
     }
 }
