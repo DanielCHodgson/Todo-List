@@ -12,9 +12,10 @@ export default class TasksPage {
     #tasks;
     #parent;
     #element;
-    #rows;
     #taskList;
     #updateRowHandler;
+    #createTaskHandler;
+    #deleteTaskRowHandler;
 
     #createTaskModal;
     #viewTaskModal;
@@ -24,17 +25,18 @@ export default class TasksPage {
 
     constructor() {
         this.#project = ProjectService.CURRENT_PROJECT;
-        console.log(this.#project)
         if (!this.#project) throw new Error("No current project found.");
 
         this.#tasks = this.#project.getTaskService().getTasks();
         this.#parent = document.querySelector(".content");
         this.#element = this.#createElement();
-        this.#rows = this.#createRows();
+        this.#renderRows();
 
         this.render();
 
         this.#updateRowHandler = (data) => this.#updateRow(data);
+        this.#createTaskHandler = (data) => this.#createTask(data);
+        this.#deleteTaskRowHandler = (task) => this.#deleteTaskRow(task);
 
         this.#createTaskModal = new CreateTaskModal();
         this.#viewTaskModal = new ViewTaskModal();
@@ -42,11 +44,15 @@ export default class TasksPage {
         this.#launchCreateTaskModalHandler = () => this.#handleCreateTaskOpen();
         this.#launchViewTaskModalHandler = (task) => this.#handleViewTaskOpen(task);
 
+        this.bindEvents();
+    }
+
+    bindEvents() {
         EventBus.on("updateRow", this.#updateRowHandler);
         EventBus.on("launchCreateTaskModal", this.#launchCreateTaskModalHandler);
         EventBus.on("launchViewTaskModal", this.#launchViewTaskModalHandler);
-        EventBus.on("createTask", (data) => this.#createTask(data));
-        EventBus.on("deleteTaskRow", (task) => this.#deleteTaskRow(task));
+        EventBus.on("createTask", this.#createTaskHandler);
+        EventBus.on("deleteTaskRow", this.#deleteTaskRowHandler);
     }
 
     #handleCreateTaskOpen() {
@@ -56,7 +62,7 @@ export default class TasksPage {
     #handleViewTaskOpen(task) {
         this.#viewTaskModal.open(task);
     }
-    
+
     #createElement() {
         const tasksPage = DomUtility.createElement("div", "tasks-page");
         const container = DomUtility.createElement("div", "container");
@@ -68,7 +74,7 @@ export default class TasksPage {
         return tasksPage;
     }
 
-    #createRows() {
+    #renderRows() {
         this.#taskList.innerHTML = ""
         return this.#tasks.map(task => {
             return new TaskRow(this.#taskList, task);
@@ -82,14 +88,12 @@ export default class TasksPage {
         const createBtn = DomUtility.createElement("button", "new-task", "Create");
         createBtn.addEventListener("click", () => this.#launchCreateTaskModalHandler());
         header.appendChild(createBtn);
-        
+
         return header;
     }
 
-
     #updateRow(data) {
-
-        console.log(data)
+        console.log(data);
 
         const fieldName = data.inputField.id;
         const newValue = data.inputField.value;
@@ -129,25 +133,25 @@ export default class TasksPage {
         );
 
         this.#project.getTaskService().addTask(newTask);
-        ProjectService.saveProject(this.#project);
+        ProjectService.save(this.#project);
         this.reloadRows();
     }
 
     #deleteTaskRow(task) {
         this.#project.getTaskService().removeTask(task.getId());
-        ProjectService.saveProject(this.#project);
+        ProjectService.save(this.#project);
         this.reloadRows();
     }
 
     reloadRows() {
         this.#project = ProjectService.CURRENT_PROJECT;
         this.#tasks = this.#project.getTaskService().getTasks();
-        this.#rows = this.#createRows();
+        this.#renderRows();
     }
 
     saveTaskAndProject(task) {
         this.#project.getTaskService().updateTask(task);
-        ProjectService.saveProject(this.#project);
+        ProjectService.save(this.#project);
     }
 
     render() {
@@ -157,14 +161,18 @@ export default class TasksPage {
         }
     }
 
-    destroy() {
-        if (this.#element) {
-            this.#element.remove();
-        }
-        
+    unbindEvents() {
         EventBus.off("updateRow", this.#updateRowHandler);
         EventBus.off("launchCreateTaskModal", this.#launchCreateTaskModalHandler);
         EventBus.off("launchViewTaskModal", this.#launchViewTaskModalHandler);
-        EventBus.off("createTask", (data) => this.#createTask(data));
+        EventBus.off("createTask", this.#createTaskHandler);
+        EventBus.off("deleteTaskRow", this.#deleteTaskRowHandler);
+    }
+
+    destroy() {
+        this.unbindEvents();
+        if (this.#element) {
+            this.#element.remove();
+        }
     }
 }

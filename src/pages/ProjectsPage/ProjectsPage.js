@@ -12,7 +12,7 @@ export default class ProjectsPage {
 
     constructor() {
         this.#parent = document.querySelector(".content");
-        this.#projects = ProjectService.getProjects();
+        this.#projects = ProjectService.loadAllFromLocalStorage();
         this.#element = this.#createPage();
         this.render();
     }

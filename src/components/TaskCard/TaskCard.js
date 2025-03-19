@@ -71,9 +71,10 @@ export default class TaskCard {
         const header = DomUtility.createElement("div", "task-header");
     
         const deleteIcon = DomUtility.createElement("div", "delete-icon");
+        deleteIcon.addEventListener("click", (event) => this.#handleDelete(event));
         deleteIcon.appendChild(DomUtility.renderSvg(getIcons().close));
 
-        deleteIcon.addEventListener("click", (event) => this.#handleDelete(event));
+  
     
         header.append(DomUtility.createElement("p", "summary"), deleteIcon);
         return header;

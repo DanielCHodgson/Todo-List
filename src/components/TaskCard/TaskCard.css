@@ -33,12 +33,20 @@
 }
 
 .task-card .delete-icon {
-   width: 0.7rem;
-   height: 0.7rem;
+   width: 1rem;
+   height: 1rem;
    display: grid;
    place-content: center;
    grid-area: 1rem 1rem;
 }
+.task-card .delete-icon svg {
+    width: 0.9rem;
+    height: 0.9rem;
+    display: grid;
+    place-content: center;
+    grid-area: 1rem 1rem;
+ }
+ 
 
 
 .task-card .delete-icon:hover {

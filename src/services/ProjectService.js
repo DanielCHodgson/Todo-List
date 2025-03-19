@@ -4,23 +4,23 @@ import LaneService from "./LaneService";
 
 export default class ProjectService {
 
-    static CURR_PROJECT_NAME_STORAGE_KEY = "currentProjectName";
-    static PROJECT_STORAGE_KEY = "projectData";
+    static PROJECTS_KEY = "projectData";
+    static CURR_PROJECT_NAME_KEY = "currentProjectName";
 
     static get CURRENT_PROJECT() {
-        return this.loadProject(localStorage.getItem(this.CURR_PROJECT_NAME_STORAGE_KEY));
+        return this.load(localStorage.getItem(this.CURR_PROJECT_NAME_KEY));
     }
 
     static set CURRENT_PROJECT(projectName) {
         if (projectName) {
-            localStorage.setItem(this.CURR_PROJECT_NAME_STORAGE_KEY, projectName);
+            localStorage.setItem(this.CURR_PROJECT_NAME_KEY, projectName);
         } else {
-            localStorage.removeItem(this.CURR_PROJECT_NAME_STORAGE_KEY);
+            localStorage.removeItem(this.CURR_PROJECT_NAME_KEY);
         }
     }
 
-    static saveProject(savedProject) {
-        let projects = this.getProjects();
+    static save(savedProject) {
+        let projects = this.loadAllFromLocalStorage();
         let projectExists = false;
 
         projects = projects.map(project => {
@@ -35,71 +35,57 @@ export default class ProjectService {
             projects.push(savedProject.toJSON());
         }
 
-        this.saveProjectsToLocalStorage(projects);
-
+        this.saveAllToLocalStorage(projects);
     }
 
-    static loadProject(projectName) {
-        if (!projectName) return null;
-        const storedProjects = this.getProjects();
+    static load(projectName) {
+        if (!projectName)
+            return null;
 
-        const projectData = storedProjects.find(project => project.name === projectName);
-        if (!projectData) return null;
+        const projectData =
+            this.loadAllFromLocalStorage()
+                .find(project => project.name === projectName);
 
-        return new ProjectModel(
-            projectData.name,
-            projectData.type,
-            projectData.icon,
-            TaskService.fromJSON(projectData.taskService),
-            LaneService.fromJSON(projectData.laneService)
-        );
+        return projectData.length === 0 ?
+            null :
+            new ProjectModel(
+                projectData.name,
+                projectData.type,
+                projectData.icon,
+                TaskService.fromJSON(projectData.taskService),
+                LaneService.fromJSON(projectData.laneService)
+            );
     }
 
-    static loadFirstProject() {
-        const storedProjects = this.getProjects();
-        if (storedProjects.length === 0) return null;
-
-        return this.loadProject(storedProjects[0].name);
+    static loadFirst() {
+        return this.loadAllFromLocalStorage().length === 0 ?
+            null :
+            this.load(storedProjects[0].name);
     }
 
-    static deleteProject(name) {
+    static delete(name) {
+        let projects = this.loadAllFromLocalStorage();
 
-        let projects = this.getProjects();
-        if (!projects.length) return;
+        if (projects.length === 0)
+            return;
 
-        const filteredProjects = projects.filter(project => project.name !== name);
-        this.saveProjectsToLocalStorage(filteredProjects);
+        this.saveAllToLocalStorage(projects.filter(project => project.name !== name));
 
-        if (this.CURRENT_PROJECT.getName() === name) {
-            localStorage.removeItem(this.CURR_PROJECT_NAME_STORAGE_KEY);
-        }
+        if (this.CURRENT_PROJECT.getName() === name)
+            localStorage.removeItem(this.CURR_PROJECT_NAME_KEY);
     }
 
-    static getProjects() {
-        try {
-            return JSON.parse(localStorage.getItem(this.PROJECT_STORAGE_KEY)) || [];
-        } catch (error) {
-            console.error("Failed to parse project data:", error);
-            return [];
-        }
+    static saveAllToLocalStorage(projects) {
+        localStorage.setItem(this.PROJECTS_KEY, JSON.stringify(projects));
     }
 
-    static saveProjectsToLocalStorage(projects) {
-        localStorage.setItem(this.PROJECT_STORAGE_KEY, JSON.stringify(projects));
-    }
-
-    static loadCurrentProject() {
-        return this.loadProject(this.CURRENT_PROJECT.getName());
+    static loadAllFromLocalStorage() {
+        return JSON.parse(localStorage.getItem(this.PROJECTS_KEY)) || [];
     }
 
     static switchProject(projectName) {
-        if (projectName) {
-            localStorage.setItem(this.CURR_PROJECT_NAME_STORAGE_KEY, projectName);
-        } else {
-            const firstProject = this.loadFirstProject();
-            if (firstProject) {
-                localStorage.setItem(this.CURR_PROJECT_NAME_STORAGE_KEY, firstProject.name);
-            }
-        }
+        if (projectName)
+            localStorage.setItem(this.CURR_PROJECT_NAME_KEY, projectName);
     }
+
 }

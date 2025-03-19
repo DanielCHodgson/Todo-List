@@ -1,4 +1,5 @@
 import Task from "../data/models/TaskModel";
+import ProjectService from "./ProjectService";
 
 export default class TaskService {
 
@@ -11,9 +12,9 @@ export default class TaskService {
     }
 
     addTask(newTask) {
-        const exists = this.#tasks.some(task => task.getId() === newTask.getId());
+        const idExists = this.#tasks.some(task => task.getId() === newTask.getId());
 
-        if (exists) {
+        if (idExists) {
             console.error("Can't add new task as id already in use.");
         }
         else {

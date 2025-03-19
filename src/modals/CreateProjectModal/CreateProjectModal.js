@@ -72,7 +72,7 @@ export default class CreateProjectModal {
             Object.entries(this.#fields).map(([key, element]) => [key, element.value.trim().toUpperCase()])
         );
 
-        const projects = ProjectService.getProjects();
+        const projects = ProjectService.loadAllFromLocalStorage();
 
         if (projects !== null && projects.some(project => project.name === data.name)) {
             alert("Project name taken.");

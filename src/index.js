@@ -14,9 +14,9 @@ let pageService = new PageService();
 let createProjectModal = new CreateProjectModal();
 
 function createProject(data) {
-    ProjectService.saveProject(new ProjectModel(data.name, data.type, logoIcon, new TaskService([], 1), new LaneService([])));
+    ProjectService.save(new ProjectModel(data.name, data.type, logoIcon, new TaskService([], 1), new LaneService([])));
 
-    if (ProjectService.getProjects().length === 1) {
+    if (ProjectService.loadAllFromLocalStorage().length === 1) {
         ProjectService.switchProject(data.name);
         pageService.loadPage("dashboard");
     } else {
@@ -37,15 +37,15 @@ function switchProject(projectName) {
 function deleteProject(name) {
 
     const currentProjectName = ProjectService.CURRENT_PROJECT.getName();
-    ProjectService.deleteProject(name);
+    ProjectService.delete(name);
 
-    if (ProjectService.getProjects().length === 0) {
+    if (ProjectService.loadAllFromLocalStorage().length === 0) {
         localStorage.clear();
         location.reload();
         return;
     }
     else if (currentProjectName === name) {
-        ProjectService.CURRENT_PROJECT = ProjectService.loadFirstProject();
+        ProjectService.CURRENT_PROJECT = ProjectService.loadFirst();
         pageService.loadNav();
     }
 
@@ -53,7 +53,7 @@ function deleteProject(name) {
 }
 
 function loadDemoEnv() {
-    testData.forEach(project => ProjectService.saveProject(ProjectModel.fromJSON(project)));
+    testData.forEach(project => ProjectService.save(ProjectModel.fromJSON(project)));
     ProjectService.switchProject("SAAS");
     pageService.loadPage("dashboard");
     pageService.loadNav();

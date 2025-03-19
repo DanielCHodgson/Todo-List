@@ -1,5 +1,5 @@
 import Nav from "../components/Nav/Nav.js";
-import Dashboard from "../components/Dashboard/Dashboard.js";
+import Dashboard from "../pages/Dashboard/Dashboard.js";
 import ProjectsPage from "../pages/ProjectsPage/ProjectsPage.js";
 import TasksPage from "../pages/TasksPage/TasksPage.js";
 import ProjectService from "./ProjectService.js";
@@ -17,7 +17,7 @@ export default class PageService {
     init() {
         // dirty as hell way to handle page refreshes
         // without implementing URLs / routing 
-        if (ProjectService.getProjects().length <= 0) {
+        if (ProjectService.loadAllFromLocalStorage().length <= 0) {
             this.loadPage("projects");
         } else {
             this.loadPage(this.#cachedCurrentPage);
@@ -32,16 +32,14 @@ export default class PageService {
         this.#nav = new Nav();
     }
 
-
     reloadPage() {
         this.loadPage(this.#cachedCurrentPage);
     }
 
     loadPage(page) {
 
-        if (this.#currentPage) {
+        if (this.#currentPage)
             this.#currentPage.destroy();
-        }
 
         switch (page) {
             case "projects":

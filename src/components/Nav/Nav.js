@@ -45,7 +45,7 @@ export default class Nav {
             const dropdownContent = DomUtility.createElement("div", "dropdown-content");
             dropdownContent.classList.add("hidden");
 
-            const projects = JSON.parse(localStorage.getItem(ProjectService.PROJECT_STORAGE_KEY)) || [];
+            const projects = JSON.parse(localStorage.getItem(ProjectService.PROJECTS_KEY)) || [];
             projects.forEach((project) => {
                 const option = DomUtility.createElement("p", "option", project.name);
                 option.addEventListener("click", () => {

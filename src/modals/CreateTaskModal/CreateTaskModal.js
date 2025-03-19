@@ -27,7 +27,7 @@ export default class CreateTaskModal {
     }
 
     open() {
-        if(!this.#element) {
+        if (!this.#element) {
             this.#element = this.#createElement();
             this.#cacheElements();
             this.render();
@@ -73,14 +73,18 @@ export default class CreateTaskModal {
     #createForm() {
         this.#form = DomUtility.createElement("form", null, null, { id: "new-task-form" });
 
+        const currProjName = ProjectService.CURRENT_PROJECT.getName();
+
         const projectSelect = DomUtility.createSelectFormGroup(
             "project",
-            "Project",
-            ProjectService.getProjects().map(project => project.name)
+            `Save to (ID created from ${currProjName}'s index)`,
+            ProjectService.loadAllFromLocalStorage().map(project => project.name)
         );
 
-
-        projectSelect.value = ProjectService.CURRENT_PROJECT.getName();
+        const selectElement = projectSelect.querySelector("select");
+        if (selectElement) {
+            selectElement.value = currProjName;
+        }
 
         this.#form.append(
             projectSelect,
@@ -124,7 +128,7 @@ export default class CreateTaskModal {
 
     destroy() {
         if (this.#element) {
-            this.#removeEventListeners();
+            this.#unbindEvents();
             this.#element.remove();
             this.#element = null;
             this.#fields = {};
@@ -136,7 +140,7 @@ export default class CreateTaskModal {
         }
     }
 
-    #removeEventListeners() {
+    #unbindEvents() {
         if (this.#createBtn) this.#createBtn.removeEventListener("click", this.#boundSubmit);
         if (this.#cancelBtn) this.#cancelBtn.removeEventListener("click", this.#boundDestroy);
         if (this.#closeBtn) this.#closeBtn.removeEventListener("click", this.#boundDestroy);
@@ -148,9 +152,9 @@ export default class CreateTaskModal {
     }
 
     #createOverlay() {
-            this.#overlay = DomUtility.createElement("div", "modal-overlay");
-            this.#overlay.addEventListener("click", this.#boundOverlayClick);
-            this.#parent.appendChild(this.#overlay);
+        this.#overlay = DomUtility.createElement("div", "modal-overlay");
+        this.#overlay.addEventListener("click", this.#boundOverlayClick);
+        this.#parent.appendChild(this.#overlay);
     }
 
     #handleOverlayClick() {
