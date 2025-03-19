@@ -24,6 +24,7 @@ export default class TasksPage {
 
     constructor() {
         this.#project = ProjectService.CURRENT_PROJECT;
+        console.log(this.#project)
         if (!this.#project) throw new Error("No current project found.");
 
         this.#tasks = this.#project.getTaskService().getTasks();
@@ -139,7 +140,7 @@ export default class TasksPage {
     }
 
     reloadRows() {
-        this.#project = ProjectService.loadCurrentProject();
+        this.#project = ProjectService.CURRENT_PROJECT;
         this.#tasks = this.#project.getTaskService().getTasks();
         this.#rows = this.#createRows();
     }

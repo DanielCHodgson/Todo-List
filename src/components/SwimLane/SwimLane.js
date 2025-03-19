@@ -1,7 +1,6 @@
 import "./SwimLane.css";
 import DomUtility from "../../utilities/DomUtility";
 import EventBus from "../../utilities/EventBus";
-import CardService from "../../services/CardService";
 import getIcons from "../../res/icons/icons";
 import ProjectService from "../../services/ProjectService";
 import TaskCard from "../TaskCard/TaskCard";
@@ -115,7 +114,7 @@ export default class SwimLane {
         this.#parent = null;
         this.#element = null;
         this.#cardsContainer = null;
-
+        
         EventBus.emit("deleteSwimLane", this.#status);
     }
 
@@ -127,23 +126,13 @@ export default class SwimLane {
         return this.#element;
     }
 
-
-    /*
-    getCardService() {
-        return this.#cardService;
-    }
-
-    */
-
     toJSON() {
         return {
-            //cardService: this.#cardService.toJSON(),
             status: this.#status,
         };
     }
 
     static fromJSON(data) {
-        //return new SwimLane(CardService.fromJSON(data.cardService), data.status);
         return new SwimLane(data.status);
     }
 }

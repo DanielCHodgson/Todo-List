@@ -3,6 +3,7 @@ import DomUtility from "../../utilities/DomUtility.js";
 import Validator from "../../utilities/Validator.js";
 import EventBus from "../../utilities/EventBus.js";
 import getIcons from "../../res/icons/icons.js";
+import ProjectService from "../../services/ProjectService.js";
 
 export default class CreateTaskModal {
     #parent;
@@ -11,37 +12,34 @@ export default class CreateTaskModal {
     #fields;
     #boundSubmit;
     #boundDestroy;
+    #overlay;
+    #boundOverlayClick;
+
+    #createBtn;
+    #cancelBtn;
+    #closeBtn;
 
     constructor() {
         this.#parent = document.querySelector(".app-wrapper");
         this.#element = null;
-        this.#form = null;
         this.#fields = {};
-    }
-
-    #bindEvents() {
-        this.#boundSubmit = this.#submitTaskData.bind(this);
-        this.#boundDestroy = this.destroy.bind(this);
-        window.addEventListener("click", (event) => this.#handleOutsideModalClick(event));
-    }
-
-    open() {
-        if (!this.#element) {
-            this.#element = this.#createElement();
-            this.#cacheFields();
-        }
-        this.render();
         this.#bindEvents();
     }
 
-    #handleOutsideModalClick(event) {
-        if (this.#element && !this.#element.contains(event.target)) {
-            console.log('Clicked outside modal, closing...');
-            this.destroy();
+    open() {
+        if(!this.#element) {
+            this.#element = this.#createElement();
+            this.#cacheElements();
+            this.render();
+            this.#createOverlay();
         }
     }
 
-    #cacheFields() {
+
+    #cacheElements() {
+        this.#createBtn = this.#form?.querySelector(".create-btn");
+        this.#cancelBtn = this.#form?.querySelector(".cancel-btn");
+        this.#closeBtn = this.#element?.querySelector(".modal-header .icon-row .close");
         this.#fields = {
             summary: this.#element.querySelector("#summary"),
             description: this.#element.querySelector("#description"),
@@ -65,7 +63,8 @@ export default class CreateTaskModal {
 
         const iconRow = DomUtility.createElement("div", "icon-row");
         iconRow.appendChild(DomUtility.createIconButton("expand", getIcons().expand));
-        iconRow.appendChild(DomUtility.createIconButton("close", getIcons().close, this.#boundDestroy));
+        this.#closeBtn = DomUtility.createIconButton("close", getIcons().close, this.#boundDestroy)
+        iconRow.appendChild(this.#closeBtn);
 
         header.appendChild(iconRow);
         return header;
@@ -74,8 +73,17 @@ export default class CreateTaskModal {
     #createForm() {
         this.#form = DomUtility.createElement("form", null, null, { id: "new-task-form" });
 
+        const projectSelect = DomUtility.createSelectFormGroup(
+            "project",
+            "Project",
+            ProjectService.getProjects().map(project => project.name)
+        );
+
+
+        projectSelect.value = ProjectService.CURRENT_PROJECT.getName();
+
         this.#form.append(
-            DomUtility.createSelectFormGroup("project", "Project", ["SAAS"]),
+            projectSelect,
             DomUtility.createInputFormGroup("summary", "Summary", true, 1, 35),
             DomUtility.createTextAreaFormGroup("description", "Description", false, 0, 500),
             DomUtility.createSelectFormGroup("priority", "Priority", ["P1", "P2", "P3", "P4", "P5"]),
@@ -89,23 +97,22 @@ export default class CreateTaskModal {
     #createFooter() {
         const footer = DomUtility.createElement("div", "modal-footer");
 
-        const createBtn = DomUtility.createElement("button", "create-btn", "Create", { type: "submit" });
-        createBtn.addEventListener("click", this.#boundSubmit);
+        this.#createBtn = DomUtility.createElement("button", "create-btn", "Create", { type: "submit" });
+        this.#createBtn.addEventListener("click", this.#boundSubmit);
 
-        const cancelBtn = DomUtility.createElement("button", "cancel-btn", "Cancel", { type: "button" });
-        cancelBtn.addEventListener("click", this.#boundDestroy);
+        this.#cancelBtn = DomUtility.createElement("button", "cancel-btn", "Cancel", { type: "button" });
+        this.#cancelBtn.addEventListener("click", this.#boundDestroy);
 
-        footer.append(createBtn, cancelBtn);
+        footer.append(this.#createBtn, this.#cancelBtn);
         return footer;
     }
 
     #submitTaskData(event) {
         event.preventDefault();
-
         if (Validator.isValidTaskData(this.#fields)) {
             const data = Object.fromEntries(
                 Object.entries(this.#fields).map(([key, element]) => {
-                    return key === "status" ? 
+                    return key === "status" ?
                         [key, element.value.trim().toLowerCase()] :
                         [key, element.value.trim()];
                 })
@@ -121,21 +128,39 @@ export default class CreateTaskModal {
             this.#element.remove();
             this.#element = null;
             this.#fields = {};
+            if (this.#overlay) {
+                this.#overlay.removeEventListener("click", this.#boundOverlayClick);
+                this.#overlay.remove();
+            }
+            this.#overlay = null;
         }
     }
 
     #removeEventListeners() {
-        const createBtn = this.#form?.querySelector(".create-btn");
-        const cancelBtn = this.#form?.querySelector(".cancel-btn");
-        const closeBtn = this.#element?.querySelector(".modal-header .icon-row .close");
-
-        if (createBtn) createBtn.removeEventListener("click", this.#boundSubmit);
-        if (cancelBtn) cancelBtn.removeEventListener("click", this.#boundDestroy);
-        if (closeBtn) closeBtn.removeEventListener("click", this.#boundDestroy);
+        if (this.#createBtn) this.#createBtn.removeEventListener("click", this.#boundSubmit);
+        if (this.#cancelBtn) this.#cancelBtn.removeEventListener("click", this.#boundDestroy);
+        if (this.#closeBtn) this.#closeBtn.removeEventListener("click", this.#boundDestroy);
     }
 
     render() {
-        if (!this.#element || this.#parent.contains(this.#element)) return;
-        this.#parent.appendChild(this.#element);
+        if (this.#element && !this.#parent.contains(this.#element))
+            this.#parent.appendChild(this.#element);
     }
+
+    #createOverlay() {
+            this.#overlay = DomUtility.createElement("div", "modal-overlay");
+            this.#overlay.addEventListener("click", this.#boundOverlayClick);
+            this.#parent.appendChild(this.#overlay);
+    }
+
+    #handleOverlayClick() {
+        this.destroy();
+    }
+
+    #bindEvents() {
+        this.#boundSubmit = this.#submitTaskData.bind(this);
+        this.#boundDestroy = this.destroy.bind(this);
+        this.#boundOverlayClick = this.#handleOverlayClick.bind(this);
+    }
+
 }

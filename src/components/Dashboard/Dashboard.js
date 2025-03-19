@@ -27,6 +27,7 @@ export default class Dashboard {
 
     constructor() {
         this.#project = ProjectService.CURRENT_PROJECT;
+        console.log(this.#project)
         this.#container = document.querySelector(".content");
         this.#element = this.#createElement();
         this.#lanesContainer = this.#element.querySelector(".swim-lane-list");
@@ -94,12 +95,10 @@ export default class Dashboard {
             return;
         }
 
-        const cards = this.#taskService.getTasksByStatus(status).map((task) => new TaskCard(task));
-        //const lane = new SwimLane(new CardService(cards), status);
         const lane = new SwimLane(status);
         this.#laneService.addLane(lane);
-        lane.render(this.#lanesContainer);
         ProjectService.saveProject(this.#project);
+        lane.render(this.#lanesContainer);
     }
 
     #renderSwimLanes() {
@@ -107,6 +106,9 @@ export default class Dashboard {
     }
 
     #createTask(data) {
+
+        console.log(data)
+
         const task = new Task(
             `${data.project}-${this.#taskService.getIndex()}`,
             data.project,
@@ -134,8 +136,8 @@ export default class Dashboard {
         );
 
         this.#taskService.updateTask(updatedTask);
-        this.#moveUpdatedTask(updatedTask, data.task);
         ProjectService.saveProject(this.#project);
+        this.#renderMovedTaskLanes(updatedTask, data.task);
     }
 
     #moveTask(taskId, newStatus) {
@@ -153,8 +155,8 @@ export default class Dashboard {
         );
 
         this.#taskService.updateTask(movedTask);
-        this.#moveUpdatedTask(movedTask, task);
         ProjectService.saveProject(this.#project);
+        this.#renderMovedTaskLanes(movedTask, task);
     }
 
     #deleteTask(task) {
@@ -182,19 +184,13 @@ export default class Dashboard {
         }
     }
 
-    #moveUpdatedTask(updatedTask, oldTask) {
+    #renderMovedTaskLanes(updatedTask, oldTask) {
         const newLane = this.#laneService.getLaneByStatus(updatedTask.getStatus());
         const oldLane = this.#laneService.getLaneByStatus(oldTask.getStatus());
 
-        if (newLane !== oldLane) {
-            oldLane.getCardService().removeCard(oldTask.getId());
-            newLane.getCardService().addCard(new TaskCard(updatedTask));
-        } else {
-            newLane.getCardService().updateCard(oldTask.getId(), new TaskCard(updatedTask));
-        }
-
+        if (oldLane !== newLane)
+            oldLane.renderCards();
         newLane.renderCards();
-        if (oldLane !== newLane) oldLane.renderCards();
     }
 
     destroy() {

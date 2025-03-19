@@ -10,7 +10,6 @@ export default class CreateSwimLaneModal {
     #element;
     #statusField;
     #overlay;
-
     #boundSubmit;
     #boundOverlayClick;
 
@@ -19,17 +18,17 @@ export default class CreateSwimLaneModal {
         this.#element = null;
         this.#statusField = null;
         this.#overlay = null;
-
         this.#boundSubmit = this.#handleSubmit.bind(this);
         this.#boundOverlayClick = this.#handleOverlayClick.bind(this);
     }
 
     open() {
-        console.log("opening!")
-        this.#element = this.#createElement();
-        this.#cacheFields();
-        this.render();
-        this.#createOverlay();
+        if (!this.#element) {
+            this.#element = this.#createElement();
+            this.#cacheFields();
+            this.render();
+            this.#createOverlay();
+        }
     }
 
     #cacheFields() {
@@ -79,13 +78,12 @@ export default class CreateSwimLaneModal {
     destroy() {
         if (this.#element) {
             this.#unbindEvents();
-
+            this.#element.remove();
+            this.#element = null;
             if (this.#overlay) {
                 this.#overlay.removeEventListener("click", this.#boundOverlayClick);
                 this.#overlay.remove();
             }
-            this.#element.remove();
-            this.#element = null;
             this.#overlay = null;
         }
     }
