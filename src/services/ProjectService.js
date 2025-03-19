@@ -45,7 +45,7 @@ export default class ProjectService {
         const projectData =
             this.loadAllFromLocalStorage()
                 .find(project => project.name === projectName);
-
+                
         return projectData.length === 0 ?
             null :
             new ProjectModel(

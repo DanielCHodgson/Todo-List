@@ -49,7 +49,7 @@ export default class Dashboard {
             { event: "createTask", handler: (data) => this.#createTask(data) },
             { event: "updateTask", handler: (data) => this.#updateTask(data) },
             { event: "deleteTask", handler: (task) => this.#deleteTask(task) },
-            { event: "moveTask", handler: ({ taskId, newStatus }) => this.#moveTask(taskId, newStatus) },
+            { event: "moveTask", handler: ({ taskId, newStatus }) => this.#updateTaskStatus(taskId, newStatus) },
             { event: "viewTask", handler: (task) => this.#modals[1].open(task) },
             { event: "createSwimLane", handler: (status) => this.#addSwimLane(status) },
             { event: "deleteSwimLane", handler: (status) => this.#deleteSwimLane(status) },
@@ -89,14 +89,14 @@ export default class Dashboard {
             data.status
         );
 
-        this.#project.getTaskService().addTask(task);
-        ProjectService.save(this.#project);
+        this.saveTaskToProject(task, data.project)
         this.#renderLane(task.getStatus());
     }
 
+
     #updateTask(data) {
 
-        const updatedTask = new Task(
+        const task = new Task(
             data.task.getId(),
             data.newData.project,
             data.newData.summary,
@@ -106,36 +106,62 @@ export default class Dashboard {
             data.newData.status
         );
 
-        this.#taskService.updateTask(updatedTask);
-        ProjectService.save(this.#project);
-        this.#renderUpdatedSwimLanes(updatedTask, data.task);
+        this.updateTaskToProject(task, data.project);
+        this.#renderUpdatedSwimLanes(task, data.task);
     }
 
-    #moveTask(taskId, newStatus) {
 
-        const movedTask = this.#taskService.getTaskById(taskId);
-        if (!movedTask || movedTask.getStatus() === newStatus) return;
+    #updateTaskStatus(taskId, newStatus) {
 
+        const targetTask = this.#taskService.getTaskById(taskId);
+        if (!targetTask || targetTask.getStatus() === newStatus) return;
 
         const updatedTask = new Task(
-            movedTask.getId(),
-            movedTask.getProject(),
-            movedTask.getSummary(),
-            movedTask.getDescription(),
-            movedTask.getPriority(),
-            movedTask.getDate(),
+            targetTask.getId(),
+            targetTask.getProject(),
+            targetTask.getSummary(),
+            targetTask.getDescription(),
+            targetTask.getPriority(),
+            targetTask.getDate(),
             newStatus
         );
 
-        this.#taskService.updateTask(updatedTask);
-        ProjectService.save(this.#project);
-        this.#renderUpdatedSwimLanes(movedTask, updatedTask);
+        this.updateTaskToProject(updatedTask, this.#project);
+        this.#renderUpdatedSwimLanes(targetTask, updatedTask);
     }
 
     #deleteTask(task) {
         this.#taskService.removeTask(task.getId());
         ProjectService.save(this.#project);
         this.#laneService.getLaneByStatus(task.getStatus()).renderCards();
+    }
+
+    saveTaskToProject(task, projectName) {
+        if(this.#project.getName() === projectName) {
+            this.#taskService.add(task);
+            ProjectService.save(project);
+        } else {
+           this.moveTaskToProject(task, project);
+        }
+    }
+
+    updateTaskToProject(task, project) {
+        if(this.#project.getName() === project.getName()) {
+            this.#taskService.updateTask(task);
+            ProjectService.save(project);
+        } else {
+           this.moveTaskToProject(task, project.getName());
+        }
+    }
+
+    moveTaskToProject(task, projectName) {
+        const otherProject = ProjectService.load(projectName);
+
+        this.#taskService.removeTask(task.getId());
+        ProjectService.save(project);
+
+        otherProject.getTaskService().addTask(task);
+        ProjectService.save(otherProject);
     }
 
     #handleNewTaskClick() {
