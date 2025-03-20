@@ -23,4 +23,11 @@ export default class EventBus {
         this.events[event].forEach(listener => listener(data));
     }
 
+    static registerEventListeners(eventListeners, events) {
+        events.forEach(({ event, handler }) => {
+            eventListeners[event] = handler;
+            EventBus.on(event, handler);
+        });
+    }
+
 }

@@ -3,7 +3,6 @@ import FilterPane from "../../components/FilterPane/FilterPane";
 import SwimLane from "../../components/SwimLane/SwimLane";
 import Utility from "../../utilities/DomUtility";
 import Task from "../../data/models/TaskModel";
-import TaskCard from "../../components/TaskCard/TaskCard";
 import EventBus from "../../utilities/EventBus";
 import ProjectService from "../../services/ProjectService";
 import CreateTaskModal from "../../modals/CreateTaskModal/CreateTaskModal";
@@ -46,19 +45,18 @@ export default class Dashboard {
         const events = [
             { event: "openNewTaskModal", handler: () => this.#modals[0].open(this.#laneService) },
             { event: "openCreateSwimlaneModal", handler: () => this.#modals[2].open() },
+
             { event: "createTask", handler: (data) => this.#createTask(data) },
             { event: "updateTask", handler: (data) => this.#updateTask(data) },
             { event: "deleteTask", handler: (task) => this.#deleteTask(task) },
             { event: "moveTask", handler: ({ taskId, newStatus }) => this.#updateTaskStatus(taskId, newStatus) },
             { event: "viewTask", handler: (task) => this.#modals[1].open(task) },
+            
             { event: "createSwimLane", handler: (status) => this.#addSwimLane(status) },
             { event: "deleteSwimLane", handler: (status) => this.#deleteSwimLane(status) },
         ];
 
-        events.forEach(({ event, handler }) => {
-            this.#eventListeners[event] = handler;
-            EventBus.on(event, handler);
-        });
+        EventBus.registerEventListeners(this.#eventListeners, events);
     }
 
     #createElement() {
@@ -89,13 +87,11 @@ export default class Dashboard {
             data.status
         );
 
-        this.saveTaskToProject(task, data.project)
+        this.#taskService.createAndSave(task, ProjectService.load(data.project));
         this.#renderLane(task.getStatus());
     }
 
-
     #updateTask(data) {
-
         const task = new Task(
             data.task.getId(),
             data.newData.project,
@@ -105,16 +101,15 @@ export default class Dashboard {
             data.newData.date,
             data.newData.status
         );
-
-        this.updateTaskToProject(task, data.project);
+        this.#taskService.updateAndSave(task, ProjectService.load(data.newData.project));
         this.#renderUpdatedSwimLanes(task, data.task);
     }
 
-
     #updateTaskStatus(taskId, newStatus) {
-
         const targetTask = this.#taskService.getTaskById(taskId);
-        if (!targetTask || targetTask.getStatus() === newStatus) return;
+
+        if (!targetTask || targetTask.getStatus() === newStatus) 
+            return;
 
         const updatedTask = new Task(
             targetTask.getId(),
@@ -125,43 +120,13 @@ export default class Dashboard {
             targetTask.getDate(),
             newStatus
         );
-
-        this.updateTaskToProject(updatedTask, this.#project);
+        this.#taskService.updateAndSave(updatedTask, this.#project);
         this.#renderUpdatedSwimLanes(targetTask, updatedTask);
     }
 
     #deleteTask(task) {
-        this.#taskService.removeTask(task.getId());
-        ProjectService.save(this.#project);
+        this.#taskService.deleteAndSave(task, this.#project);
         this.#laneService.getLaneByStatus(task.getStatus()).renderCards();
-    }
-
-    saveTaskToProject(task, projectName) {
-        if(this.#project.getName() === projectName) {
-            this.#taskService.add(task);
-            ProjectService.save(project);
-        } else {
-           this.moveTaskToProject(task, project);
-        }
-    }
-
-    updateTaskToProject(task, project) {
-        if(this.#project.getName() === project.getName()) {
-            this.#taskService.updateTask(task);
-            ProjectService.save(project);
-        } else {
-           this.moveTaskToProject(task, project.getName());
-        }
-    }
-
-    moveTaskToProject(task, projectName) {
-        const otherProject = ProjectService.load(projectName);
-
-        this.#taskService.removeTask(task.getId());
-        ProjectService.save(project);
-
-        otherProject.getTaskService().addTask(task);
-        ProjectService.save(otherProject);
     }
 
     #handleNewTaskClick() {
@@ -192,8 +157,6 @@ export default class Dashboard {
     }
 
     #renderLane(status) {
-        console.log(status)
-        console.log(this.#laneService.getLaneByStatus(status))
         const lane = this.#laneService.getLaneByStatus(status);
         if (lane !== null)
             lane.renderCards();

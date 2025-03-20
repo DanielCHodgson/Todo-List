@@ -67,7 +67,7 @@ export default class TaskRow {
     #handleDeleteClick = (event) => {
         event.preventDefault();
         event.stopPropagation();
-        EventBus.emit("deleteTaskRow", this.#task);
+        EventBus.emit("deleteTask", this.#task);
     };
 
     #createElement() {

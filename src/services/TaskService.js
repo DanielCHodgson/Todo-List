@@ -13,24 +13,12 @@ export default class TaskService {
 
     addTask(newTask) {
         const idExists = this.#tasks.some(task => task.getId() === newTask.getId());
-
         if (idExists) {
             console.error("Can't add new task as id already in use.");
         }
         else {
             this.#tasks.push(newTask);
-            this.#index += 1;
         }
-    }
-
-    addTasks(tasks) {
-        tasks.forEach(task => {
-            const exists = this.#tasks.some(task => getId() === task.id);
-            if (!exists) {
-                this.#tasks.push(task);
-                this.#index += 1;
-            }
-        });
     }
 
     updateTask(updatedTask) {
@@ -42,6 +30,37 @@ export default class TaskService {
 
     removeTask(id) {
         this.#tasks = this.#tasks.filter(task => task.getId() !== id);
+    }
+
+    createAndSave(task, project) {
+        this.addTask(task);
+        ProjectService.save(project);
+
+        if (ProjectService.CURRENT_PROJECT.getName() === project.getName()) {
+           this.incrementIndex();
+        } 
+    }
+
+    updateAndSave(task, project) {
+        if (ProjectService.CURRENT_PROJECT.getName() === project.getName()) {
+            this.updateTask(task);
+            ProjectService.save(project);
+        } else {
+            this.moveAndSave(task, project);
+        }
+    }
+
+    moveAndSave(task, newProject) {
+        this.removeTask(task.getId());
+        ProjectService.save(ProjectService.CURRENT_PROJECT);
+
+        newProject.getTaskService().addTask(task);
+        ProjectService.save(newProject);
+    }
+
+    deleteAndSave(task, project) {
+        this.removeTask(task.getId());
+        ProjectService.save(project);
     }
 
     getTaskById(id) {
@@ -58,6 +77,10 @@ export default class TaskService {
 
     getIndex() {
         return this.#index;
+    }
+
+    incrementIndex() {
+        this.#index += 1;
     }
 
     toJSON() {
