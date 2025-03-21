@@ -1,3 +1,5 @@
+import ProjectService from "../services/ProjectService";
+
 export default class DomUtility {
 
 
@@ -74,6 +76,25 @@ export default class DomUtility {
         });
 
         return select;
+    }
+
+
+    static createProjectSelect() {
+
+        const currProjName = ProjectService.CURRENT_PROJECT.getName();
+
+        const projectSelect = DomUtility.createSelectFormGroup(
+            "project",
+            "Project",
+            ProjectService.loadAllFromLocalStorage().map(project => project.name)
+        );
+
+        const selectElement = projectSelect.querySelector("select");
+        if (selectElement) {
+            selectElement.value = currProjName;
+        }
+
+        return projectSelect;
     }
 
     static createInputFormGroup(id, labelText, required, minLength, maxLength) {

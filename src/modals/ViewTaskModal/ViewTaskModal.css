@@ -56,16 +56,20 @@
     cursor: pointer;
 }
 
-.view-task-header select:hover {
-
-    background-color: var(--secondary-light);
-}
-
-.view-task-header select:focus {
-    border: 2px solid #4D90FE;
+.view-task-modal select {
+    width: 100%;
+    padding: 0.5rem 0.5rem;
+    border-radius: 5px;
+    font-size: 16px;
     outline: none;
-    box-shadow: 0 0 5px rgba(77, 144, 254, 0.5);
+    border: 1px solid black;
 }
+
+.view-task-modal option {
+    padding: 10px;
+    background-color: #fff;
+}
+
 
 .view-task-header select option {
     background: transparent;

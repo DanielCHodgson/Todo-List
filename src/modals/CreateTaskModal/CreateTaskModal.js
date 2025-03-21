@@ -73,21 +73,10 @@ export default class CreateTaskModal {
     #createForm() {
         this.#form = DomUtility.createElement("form", null, null, { id: "new-task-form" });
 
-        const currProjName = ProjectService.CURRENT_PROJECT.getName();
-
-        const projectSelect = DomUtility.createSelectFormGroup(
-            "project",
-            `Save to (ID created from ${currProjName}'s index)`,
-            ProjectService.loadAllFromLocalStorage().map(project => project.name)
-        );
-
-        const selectElement = projectSelect.querySelector("select");
-        if (selectElement) {
-            selectElement.value = currProjName;
-        }
+        
 
         this.#form.append(
-            projectSelect,
+            DomUtility.createProjectSelect(),
             DomUtility.createInputFormGroup("summary", "Summary", true, 1, 35),
             DomUtility.createTextAreaFormGroup("description", "Description", false, 0, 500),
             DomUtility.createSelectFormGroup("priority", "Priority", ["P1", "P2", "P3", "P4", "P5"]),

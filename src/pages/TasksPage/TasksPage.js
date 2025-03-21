@@ -39,7 +39,8 @@ export default class TasksPage {
             { event: "launchViewTaskModal", handler: (task) => this.#handleViewTaskOpen(task) },
 
             { event: "createTask", handler: (data) => this.#createTask(data) },
-            { event: "updateRow", handler: (data) => this.#updateTask(data) },
+            { event: "updateRow", handler: (data) => this.#updateRow(data) },
+            { event: "updateTask", handler: (data) => this.#updateTask(data) },
             { event: "deleteTask", handler: (task) => this.#deleteTask(task) },
         ];
 
@@ -94,17 +95,20 @@ export default class TasksPage {
             data.status
         );
 
-        if (ProjectService.CURRENT_PROJECT.getName() === project.getName()) {
+        if (data.project === this.#project.getName()) {
             this.#taskService.createAndSave(task, this.#project);
         } else {
-            project.getTaskService().createAndSave(task, project);
+            const otherProject = ProjectService.load(data.project);
+            otherProject.getTaskService().createAndSave(task, otherProject);
         }
 
-        this.#taskService.createAndSave(task, ProjectService.load(data.project));
         this.#renderRows();
     }
 
-    #updateTask(data) {
+    #updateRow(data) {
+
+        console.log(data)
+
         const fieldName = data.inputField.id;
         const newValue = data.inputField.value;
 
@@ -127,11 +131,41 @@ export default class TasksPage {
         );
 
 
-        data.taskData.project === null
+        console.log(updatedTask.getProject())
 
-        this.#taskService.updateAndSave(updatedTask, ProjectService.load(data.taskData.project))
+        if (updatedTask.getProject() === this.#project.getName()) {
+            this.#taskService.updateAndSave(updatedTask, this.#project);
+        } else {
+
+            this.#taskService.deleteAndSave(updatedTask, this.#project);
+            const otherProject = ProjectService.load(updatedTask.getProject());
+            otherProject.getTaskService().createAndSave(updatedTask, otherProject);
+        }
+
         this.#renderRows();
         DomUtility.showAlert("Task updated");
+    }
+
+    #updateTask(data) {
+
+        const updatedTask = new Task(
+            data.task.getId(),
+            data.newData.project,
+            data.newData.summary,
+            data.newData.description,
+            data.newData.priority,
+            data.newData.date,
+            data.newData.status
+        );
+
+        if (data.newData.project === this.#project.getName()) {
+            this.#taskService.updateAndSave(updatedTask, this.#project);
+        } else {
+            this.#taskService.deleteAndSave(updatedTask, this.#project);
+            const otherProject = ProjectService.load(data.newData.project);
+            otherProject.getTaskService().createAndSave(updatedTask, otherProject);
+        }
+        this.#renderRows();
     }
 
     #deleteTask(task) {

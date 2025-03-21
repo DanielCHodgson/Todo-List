@@ -51,7 +51,7 @@ export default class Dashboard {
             { event: "deleteTask", handler: (task) => this.#deleteTask(task) },
             { event: "moveTask", handler: ({ taskId, newStatus }) => this.#updateTaskStatus(taskId, newStatus) },
             { event: "viewTask", handler: (task) => this.#modals[1].open(task) },
-            
+
             { event: "createSwimLane", handler: (status) => this.#addSwimLane(status) },
             { event: "deleteSwimLane", handler: (status) => this.#deleteSwimLane(status) },
         ];
@@ -87,12 +87,18 @@ export default class Dashboard {
             data.status
         );
 
-        this.#taskService.createAndSave(task, ProjectService.load(data.project));
+        if (this.#project.getName() === data.project) {
+            this.#taskService.createAndSave(task, this.#project);
+        } else {
+            const otherProject = ProjectService.load(data.project);
+            otherProject.getTaskService().createAndSave(task, project);
+        }
+
         this.#renderLane(task.getStatus());
     }
 
     #updateTask(data) {
-        const task = new Task(
+        const updatedTask = new Task(
             data.task.getId(),
             data.newData.project,
             data.newData.summary,
@@ -101,14 +107,22 @@ export default class Dashboard {
             data.newData.date,
             data.newData.status
         );
-        this.#taskService.updateAndSave(task, ProjectService.load(data.newData.project));
-        this.#renderUpdatedSwimLanes(task, data.task);
+
+        if (data.newData.project === this.#project.getName()) {
+            this.#taskService.updateAndSave(updatedTask, this.#project);
+        } else {
+            this.#taskService.deleteAndSave(updatedTask, this.#project);
+            const otherProject = ProjectService.load(data.newData.project);
+            otherProject.getTaskService().createAndSave(updatedTask, otherProject);
+        }
+        
+        this.#renderUpdatedSwimLanes(updatedTask, data.task);
     }
 
     #updateTaskStatus(taskId, newStatus) {
         const targetTask = this.#taskService.getTaskById(taskId);
 
-        if (!targetTask || targetTask.getStatus() === newStatus) 
+        if (!targetTask || targetTask.getStatus() === newStatus)
             return;
 
         const updatedTask = new Task(

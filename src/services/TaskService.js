@@ -13,12 +13,10 @@ export default class TaskService {
 
     addTask(newTask) {
         const idExists = this.#tasks.some(task => task.getId() === newTask.getId());
-        if (idExists) {
-            console.error("Can't add new task as id already in use.");
-        }
-        else {
+
+        idExists ?
+            console.error("Can't add new task as id already in use.") :
             this.#tasks.push(newTask);
-        }
     }
 
     updateTask(updatedTask) {
@@ -34,11 +32,10 @@ export default class TaskService {
 
     createAndSave(task, project) {
         this.addTask(task);
-        ProjectService.save(project);
-
         if (ProjectService.CURRENT_PROJECT.getName() === project.getName()) {
-           this.incrementIndex();
-        } 
+            this.incrementIndex();
+        }
+        ProjectService.save(project);
     }
 
     updateAndSave(task, project) {

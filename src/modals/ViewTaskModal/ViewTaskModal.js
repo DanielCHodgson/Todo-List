@@ -3,6 +3,7 @@ import DomUtility from "../../utilities/DomUtility";
 import Validator from "../../utilities/Validator";
 import EventBus from "../../utilities/EventBus";
 import getIcons from "../../res/icons/icons";
+import ProjectService from "../../services/ProjectService";
 
 export default class ViewTaskModal {
 
@@ -53,7 +54,6 @@ export default class ViewTaskModal {
         this.#fields.id.textContent = task.getId();
         this.#fields.summary.value = task.getSummary();
         this.#fields.description.value = task.getDescription();
-        this.#fields.project.value = task.getProject();
         this.#fields.priority.value = task.getPriority();
         this.#fields.status.value = task.getStatus();
         this.#fields.date.value = task.getDate();
@@ -103,10 +103,7 @@ export default class ViewTaskModal {
         left.appendChild(DomUtility.createTextAreaFormGroup("description", "Description", false, 0, 1000));
 
         const right = DomUtility.createElement("div", "modal-right");
-        ["project", "status"].forEach(field => {
-            right.appendChild(DomUtility.createInputFormGroup(field, field.charAt(0).toUpperCase() + field.slice(1), true));
-        });
-
+        
         const priority = DomUtility.createSelectFormGroup("priority", "Priority", ["P1", "P2", "P3", "P4", "P5"]);
 
         const date = DomUtility.createInputField("date");
@@ -118,6 +115,9 @@ export default class ViewTaskModal {
         date.addEventListener("mouseenter", this.#dateMouseEnterListener);
         date.addEventListener("mouseleave", this.#dateMouseLeaveListener);
 
+
+        right.appendChild(DomUtility.createProjectSelect());
+        right.appendChild(DomUtility.createInputFormGroup("status", "Status", true));
         right.appendChild(priority);
         right.appendChild(date);
 
