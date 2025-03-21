@@ -10,7 +10,6 @@ export default class TaskCard {
     #element;
     #fields = {};
     #eventListeners = {};
-    #deleteIconClickHandler;
 
     constructor(task) {
         this.#task = task;
@@ -22,22 +21,37 @@ export default class TaskCard {
     }
 
     #bindEvents() {
-        this.#eventListeners.cardClick = () => EventBus.emit("viewTask", this.#task);
-        this.#eventListeners.dragStart = this.#handleDragStart.bind(this);
-        this.#eventListeners.dragEnd = this.#handleDragEnd.bind(this);
-
-        this.#deleteIconClickHandler = this.#handleDelete.bind(this);
-
+        this.#eventListeners = {
+            cardClick: () => EventBus.emit("viewTask", this.#task),
+            dragStart: this.#handleDragStart.bind(this),
+            dragEnd: this.#handleDragEnd.bind(this),
+            deleteClick: (event) => this.#handleDelete(event)
+        };
+    
+        this.#addEventListeners();
+    }
+    
+    #addEventListeners() {
         this.#element.addEventListener("click", this.#eventListeners.cardClick);
         this.#element.addEventListener("dragstart", this.#eventListeners.dragStart);
         this.#element.addEventListener("dragend", this.#eventListeners.dragEnd);
+    
+        const deleteIcon = this.#element.querySelector(".delete-icon");
+        if (deleteIcon) {
+            deleteIcon.addEventListener("click", this.#eventListeners.deleteClick);
+        }
     }
-
-    #unbindEvents() {
+    
+    #removeEventListeners() {
         this.#element.removeEventListener("click", this.#eventListeners.cardClick);
         this.#element.removeEventListener("dragstart", this.#eventListeners.dragStart);
         this.#element.removeEventListener("dragend", this.#eventListeners.dragEnd);
-        this.#element.querySelector(".delete-icon").removeEventListener("click", this.#deleteIconClickHandler);
+    
+        const deleteIcon = this.#element.querySelector(".delete-icon");
+        if (deleteIcon) {
+            deleteIcon.removeEventListener("click", this.#eventListeners.deleteClick);
+        }
+    
         this.#eventListeners = {};
     }
 
@@ -116,7 +130,7 @@ export default class TaskCard {
 
     destroy() {
         EventBus.emit("deleteTask", this.#task);
-        this.#unbindEvents();
+        this.#removeEventListeners();
         this.#element?.remove();
         this.#task = null;
     }

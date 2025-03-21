@@ -20,16 +20,25 @@ export default class SwimLane {
     }
 
     #bindEvents() {
-        this.#eventListeners.dragStart = (status) => this.#toggleDroppableStyles(status, true);
-        this.#eventListeners.dragEnd = (status) => this.#toggleDroppableStyles(status, false);
 
-        EventBus.on("cardDragStart", this.#eventListeners.dragStart);
-        EventBus.on("cardDragEnd", this.#eventListeners.dragEnd);
+        this.#addEventListeners();
+        
+        const events = [
+            { event: "cardDragStart", handler: (status) => this.#toggleDroppableStyles(status, true) },
+            { event: "cardDragEnd", handler: (status) => this.#toggleDroppableStyles(status, false) },
+        ];
+
+        EventBus.registerEventListeners(this.#eventListeners, events);
+    }
+
+    #addEventListeners() {
+
     }
 
     #unbindEvents() {
-        EventBus.off("cardDragStart", this.#eventListeners.dragStart);
-        EventBus.off("cardDragEnd", this.#eventListeners.dragEnd);
+        Object.entries(this.#eventListeners).forEach(([event, handler]) => {
+            EventBus.off(event, handler);
+        });
         this.#eventListeners = {};
     }
 
@@ -90,12 +99,13 @@ export default class SwimLane {
 
     renderCards() {
         this.#cardsContainer.innerHTML = "";
-        
+
         ProjectService.CURRENT_PROJECT.getTaskService().getTasks()
             .filter(task => task.getStatus() === this.#status)
             .map(task => new TaskCard(task))
             .forEach(card => {
-                card.render(this.#cardsContainer)}
+                card.render(this.#cardsContainer)
+            }
             );
     }
 
@@ -114,7 +124,7 @@ export default class SwimLane {
         this.#parent = null;
         this.#element = null;
         this.#cardsContainer = null;
-        
+
         EventBus.emit("deleteSwimLane", this.#status);
     }
 
