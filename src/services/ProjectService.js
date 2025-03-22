@@ -20,7 +20,7 @@ export default class ProjectService {
     }
 
     static save(savedProject) {
-        let projects = this.loadAllFromLocalStorage();
+        let projects = this.loadFromLocalStorage();
         let projectExists = false;
 
         projects = projects.map(project => {
@@ -35,18 +35,17 @@ export default class ProjectService {
             projects.push(savedProject.toJSON());
         }
 
-        this.saveAllToLocalStorage(projects);
+        this.saveToLocalStorage(projects);
     }
 
     static load(projectName) {
         if (!projectName)
             return null;
 
-        const projectData =
-            this.loadAllFromLocalStorage()
-                .find(project => project.name === projectName);
-                
-        return projectData.length === 0 ?
+        const projectData = this.loadFromLocalStorage().find(project => project.name === projectName);
+        console.log(projectData)
+
+        return projectData === null ?
             null :
             new ProjectModel(
                 projectData.name,
@@ -58,28 +57,33 @@ export default class ProjectService {
     }
 
     static loadFirst() {
-        return this.loadAllFromLocalStorage().length === 0 ?
-            null :
-            this.load(storedProjects[0].name);
+
+        const projects = this.loadFromLocalStorage();
+
+        if (projects.length === 0) {
+            return null;
+        }
+
+        return this.load(projects[0].name);
     }
 
     static delete(name) {
-        let projects = this.loadAllFromLocalStorage();
+        let projects = this.loadFromLocalStorage();
 
         if (projects.length === 0)
             return;
 
-        this.saveAllToLocalStorage(projects.filter(project => project.name !== name));
+        this.saveToLocalStorage(projects.filter(project => project.name !== name));
 
-        if (this.CURRENT_PROJECT.getName() === name)
+        if (localStorage.getItem(this.CURR_PROJECT_NAME_KEY) === name)
             localStorage.removeItem(this.CURR_PROJECT_NAME_KEY);
     }
 
-    static saveAllToLocalStorage(projects) {
+    static saveToLocalStorage(projects) {
         localStorage.setItem(this.PROJECTS_KEY, JSON.stringify(projects));
     }
 
-    static loadAllFromLocalStorage() {
+    static loadFromLocalStorage() {
         return JSON.parse(localStorage.getItem(this.PROJECTS_KEY)) || [];
     }
 

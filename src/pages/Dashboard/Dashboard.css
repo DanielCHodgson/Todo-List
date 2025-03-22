@@ -38,7 +38,7 @@
 
 .swim-lanes {
     width: 100%;
-    height: calc(100vh - 10rem);
+    height: auto;
     padding: 0 2rem;
     overflow-y: auto;
 }

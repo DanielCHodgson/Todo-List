@@ -34,7 +34,7 @@ export default class FilterPane {
         const searchInput = DomUtility.createElement("input", "", "", { id: "search-input", type: "text" });
         searchContainer.appendChild(searchInput);
 
-        this.#searchClickHandler = () => alert("I'm beyond the already bloated scope of this project!");
+        this.#searchClickHandler = () => alert("I'm beyond the scope of this project!");
         searchContainer.addEventListener("click", this.#searchClickHandler);
 
         const searchIcon = DomUtility.createElement("div", "search-icon");

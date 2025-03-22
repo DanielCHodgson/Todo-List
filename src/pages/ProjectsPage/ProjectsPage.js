@@ -12,11 +12,10 @@ export default class ProjectsPage {
 
     constructor() {
         this.#parent = document.querySelector(".content");
-        this.#projects = ProjectService.loadAllFromLocalStorage();
+        this.#projects = ProjectService.loadFromLocalStorage();
         this.#element = this.#createPage();
         this.render();
     }
-
 
     #createProjectCard(name) {
         const projectCard = DomUtility.createElement("div", "project-card");

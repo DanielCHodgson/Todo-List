@@ -17,7 +17,7 @@ export default class PageService {
     init() {
         // dirty as hell way to handle page refreshes
         // without implementing URLs / routing 
-        if (ProjectService.loadAllFromLocalStorage().length <= 0) {
+        if (ProjectService.loadFromLocalStorage().length <= 0) {
             this.loadPage("projects");
         } else {
             this.loadPage(this.#cachedCurrentPage);

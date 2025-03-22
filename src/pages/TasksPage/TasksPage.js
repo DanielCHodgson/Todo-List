@@ -13,7 +13,7 @@ export default class TasksPage {
     #parent;
     #element;
     #taskList;
-    #eventListeners = {};
+    #events = {};
     #createTaskModal;
     #viewTaskModal;
 
@@ -44,7 +44,7 @@ export default class TasksPage {
             { event: "deleteTask", handler: (task) => this.#deleteTask(task) },
         ];
 
-        EventBus.registerEventListeners(this.#eventListeners, events);
+        EventBus.registerEvents(this.#events, events);
     }
 
     #handleCreateTaskOpen() {
@@ -188,9 +188,9 @@ export default class TasksPage {
     }
 
     unbindEvents() {
-        Object.entries(this.#eventListeners).forEach(([event, handler]) => {
+        Object.entries(this.#events).forEach(([event, handler]) => {
             EventBus.off(event, handler);
         });
-        this.#eventListeners = {};
+        this.#events = {};
     }
 }

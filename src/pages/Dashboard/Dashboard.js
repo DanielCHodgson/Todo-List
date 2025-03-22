@@ -17,7 +17,7 @@ export default class Dashboard {
     #taskService;
     #laneService;
     #modals = [];
-    #eventListeners = {};
+    #events = {};
 
     constructor() {
         this.#project = ProjectService.CURRENT_PROJECT;
@@ -56,7 +56,7 @@ export default class Dashboard {
             { event: "deleteSwimLane", handler: (status) => this.#deleteSwimLane(status) },
         ];
 
-        EventBus.registerEventListeners(this.#eventListeners, events);
+        EventBus.registerEvents(this.#events, events);
     }
 
     #createElement() {
@@ -115,7 +115,7 @@ export default class Dashboard {
             const otherProject = ProjectService.load(data.newData.project);
             otherProject.getTaskService().createAndSave(updatedTask, otherProject);
         }
-        
+
         this.#renderUpdatedSwimLanes(updatedTask, data.task);
     }
 
@@ -176,6 +176,11 @@ export default class Dashboard {
             lane.renderCards();
     }
 
+    
+    #toggleDroppableStyles(status, shouldAdd) {
+        console.log("yo");
+    }
+
     #renderUpdatedSwimLanes(movedTask, updatedTask) {
         const oldLane = this.#laneService.getLaneByStatus(movedTask.getStatus());
         const newLane = this.#laneService.getLaneByStatus(updatedTask.getStatus());
@@ -191,10 +196,10 @@ export default class Dashboard {
     }
 
     #unbindEvents() {
-        Object.entries(this.#eventListeners).forEach(([event, handler]) => {
+        Object.entries(this.#events).forEach(([event, handler]) => {
             EventBus.off(event, handler);
         });
-        this.#eventListeners = {};
+        this.#events = {};
     }
 
     #cleanUp() {

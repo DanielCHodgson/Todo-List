@@ -88,8 +88,6 @@ export default class TaskCard {
         deleteIcon.addEventListener("click", (event) => this.#handleDelete(event));
         deleteIcon.appendChild(DomUtility.renderSvg(getIcons().close));
 
-  
-    
         header.append(DomUtility.createElement("p", "summary"), deleteIcon);
         return header;
     }

@@ -86,7 +86,7 @@ export default class DomUtility {
         const projectSelect = DomUtility.createSelectFormGroup(
             "project",
             "Project",
-            ProjectService.loadAllFromLocalStorage().map(project => project.name)
+            ProjectService.loadFromLocalStorage().map(project => project.name)
         );
 
         const selectElement = projectSelect.querySelector("select");

@@ -116,7 +116,7 @@ export default class Nav {
 
         const search = DomUtility.createElement("div", "search");
         search.appendChild(DomUtility.renderSvg(getIcons().search));
-        search.addEventListener("click", () => alert("I'm beyond the already bloated scope of this project!"));
+        search.addEventListener("click", () => alert("I'm beyond the scope of this project!"));
 
         const addProject = DomUtility.createElement("div", "add-project");
         addProject.appendChild(DomUtility.renderSvg(getIcons().addProject));

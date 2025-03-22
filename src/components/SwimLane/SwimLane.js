@@ -10,7 +10,7 @@ export default class SwimLane {
     #status;
     #element;
     #cardsContainer;
-    #eventListeners = {};
+    #events = {};
 
     constructor(status) {
         this.#status = status;
@@ -21,25 +21,27 @@ export default class SwimLane {
 
     #bindEvents() {
 
-        this.#addEventListeners();
-        
         const events = [
             { event: "cardDragStart", handler: (status) => this.#toggleDroppableStyles(status, true) },
             { event: "cardDragEnd", handler: (status) => this.#toggleDroppableStyles(status, false) },
         ];
 
-        EventBus.registerEventListeners(this.#eventListeners, events);
+        EventBus.registerEvents(this.#events, events);
+        //this.#addEventListeners();
     }
 
     #addEventListeners() {
-
+        //this.#element.querySelector(".lane-header").addEventListener("dragstart", () => this.#handleDragStart());
+        // this.#element.querySelector(".lane-header").addEventListener("dragend", () => this.#handleDragEnd());
     }
 
     #unbindEvents() {
-        Object.entries(this.#eventListeners).forEach(([event, handler]) => {
+        Object.entries(this.#events).forEach(([event, handler]) => {
             EventBus.off(event, handler);
         });
-        this.#eventListeners = {};
+        this.#events = {};
+        // this.#element.querySelector(".lane-header").removeEventListener("dragstart", () => this.#handleDragStart());
+        // this.#element.querySelector(".lane-header").removeEventListener("dragend", () => this.#handleDragEnd());
     }
 
     #createElement() {
@@ -95,6 +97,16 @@ export default class SwimLane {
         if (this.#status !== status) {
             this.#cardsContainer.classList.toggle("droppable", shouldAdd);
         }
+    }
+
+    #handleDragStart() {
+        this.#element.classList.add("dragging");
+        EventBus.emit("laneDragStart", this.#status);
+    }
+
+    #handleDragEnd() {
+        this.#element.classList.remove("dragging");
+        EventBus.emit("laneDragEnd", this.#status);
     }
 
     renderCards() {
