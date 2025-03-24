@@ -90,8 +90,8 @@ export default class Nav {
         const items = [
             { class: "projects", text: "Projects", event: "openProjectsPage", icon: getIcons().projects },
             { class: "tasks", text: "Tasks", event: "openTasksPage", icon: getIcons().backlog },
-            { class: "board", text: "Dashboard", event: "loadDashboard", icon: getIcons().dashboard },
-            { class: "settings", text: "Settings", event: null, icon: getIcons().settings },
+            { class: "board", text: "Dashboard", event: "openDashboardPage", icon: getIcons().dashboard },
+            { class: "settings", text: "Settings", event: "openSettingsPage", icon: getIcons().settings },
         ];
 
         items.forEach(({ class: className, text, event, icon }) => {

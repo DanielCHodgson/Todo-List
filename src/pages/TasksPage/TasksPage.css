@@ -1,21 +1,27 @@
 .tasks-page {
     width: 100%;
-    padding: 2rem;
     display: grid;
     grid-template-rows: auto 1fr;
     gap: 2rem;
 }
 
-.tasks-page .tasks-header {
+.tasks-page .header {
     font-family: "Roboto", Arial, Helvetica, sans-serif;
-    font-size: 1.3rem;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    gap: 1rem;
 }
 
 .tasks-page .tasks-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: start;
+    align-items: center;
+}
+
+.tasks-page .container {
+    padding: 0 2rem;
     display: flex;
     flex-direction: column;
     width: 100%;

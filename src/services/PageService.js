@@ -1,6 +1,7 @@
 import Nav from "../components/Nav/Nav.js";
 import Dashboard from "../pages/Dashboard/Dashboard.js";
 import ProjectsPage from "../pages/ProjectsPage/ProjectsPage.js";
+import SettingsPage from "../pages/Settings/SettingsPage.js";
 import TasksPage from "../pages/TasksPage/TasksPage.js";
 import ProjectService from "./ProjectService.js";
 
@@ -50,6 +51,9 @@ export default class PageService {
                 break;
             case "tasks":
                 this.#currentPage = new TasksPage();
+                break;
+            case "settings":
+                this.#currentPage = new SettingsPage();
                 break;
         }
 

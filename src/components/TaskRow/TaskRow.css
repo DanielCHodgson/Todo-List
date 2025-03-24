@@ -16,7 +16,8 @@
 
     font-family: "Roboto", Arial, Helvetica, sans-serif;
     font-size: 1rem;
-    border: 1px solid #d1d1d1;
+    border: 1px solid var(--table-border);
+    outline: 1px solid var(--table-border);
     cursor: pointer;
 }
 
@@ -43,23 +44,17 @@
 
 .task-row select {
     padding: 0.5rem;
-    border: 1px solid #d1d1d1;
     border-radius: 0.5rem;
-    background-color: #f4f4f9;
     font-size: 1rem;
     outline: none;
     transition: all ease 0.2s;
     cursor: pointer;
 }
 
-.task-row select:hover {
-    border-color: #999;
-}
 
 .task-row select option {
     padding: 0.5rem;
     font-size: 1rem;
-    background-color: #ffffff;
 }
 
 .task-row .delete {
@@ -82,5 +77,5 @@
 .task-row .delete svg{
     width: 0.8rem;
     height: 0.8rem;
-    fill: #FFFFFF;
+    fill: var(--white);
 }

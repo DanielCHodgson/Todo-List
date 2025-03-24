@@ -179,4 +179,27 @@ export default class DomUtility {
         }, 3000);
     }
 
+
+    static createToggle(id, isChecked, onChange) {
+        const toggle = this.createElement("label", "switch");
+    
+        const checkbox = document.createElement("input");
+        checkbox.id = id;
+        checkbox.type = "checkbox";
+        checkbox.checked = isChecked;
+    
+        const slider = document.createElement("span");
+        slider.classList.add("slider", "round");
+    
+        checkbox.addEventListener("change", () => {
+            if (onChange) {
+                onChange(checkbox.checked);
+            }
+        });
+    
+        toggle.appendChild(checkbox);
+        toggle.appendChild(slider);
+        return toggle;
+    }
+
 }

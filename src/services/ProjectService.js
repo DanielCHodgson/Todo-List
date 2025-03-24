@@ -43,7 +43,6 @@ export default class ProjectService {
             return null;
 
         const projectData = this.loadFromLocalStorage().find(project => project.name === projectName);
-        console.log(projectData)
 
         return projectData === null ?
             null :

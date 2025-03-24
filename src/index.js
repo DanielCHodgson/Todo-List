@@ -7,11 +7,30 @@ import EventBus from "./utilities/EventBus.js";
 import CreateProjectModal from "./modals/CreateProjectModal/CreateProjectModal.js";
 import TaskService from "./services/TaskService.js";
 import LaneService from "./services/LaneService.js";
-import logoIcon from "./res/images/team-icon.jpg";
+import logoIcon from "./res/images/team-icon.png";
 import PageService from "./services/PageService.js";
 
-let pageService = new PageService();
-let createProjectModal = new CreateProjectModal();
+
+let pageService = null;
+let createProjectModal = null;
+
+init();
+
+function init() {
+    pageService = new PageService();
+    createProjectModal = new CreateProjectModal();
+    setDisplayMode();
+    registerEvents();
+}
+
+function setDisplayMode() {
+    if (localStorage.getItem("isDarkMode") === null) {
+        localStorage.setItem("isDarkMode", "false");
+    } else if (localStorage.getItem("isDarkMode") === "true") {
+        document.body.classList.toggle("dark-mode", "true");
+    } else
+        return;
+}
 
 function createProject(data) {
     ProjectService.save(new ProjectModel(data.name, data.type, logoIcon, new TaskService([], 1), new LaneService([])));
@@ -57,12 +76,16 @@ function loadDemoEnv() {
     pageService.loadNav();
 }
 
-EventBus.on("addProject", () => createProjectModal.open());
-EventBus.on("createProject", (data) => createProject(data));
-EventBus.on("switchProject", (projectName) => switchProject(projectName));
-EventBus.on("openProjectsPage", () => pageService.loadPage("projects"));
-EventBus.on("openTasksPage", () => pageService.loadPage("tasks"));
-EventBus.on("loadDashboard", () => pageService.loadPage("dashboard"));
-EventBus.on("loadDemoEnv", () => loadDemoEnv());
-EventBus.on("deleteProject", (name) => deleteProject(name));
+function registerEvents() {
+    EventBus.on("addProject", () => createProjectModal.open());
+    EventBus.on("createProject", (data) => createProject(data));
+    EventBus.on("switchProject", (projectName) => switchProject(projectName));
+    EventBus.on("openProjectsPage", () => pageService.loadPage("projects"));
+    EventBus.on("openTasksPage", () => pageService.loadPage("tasks"));
+    EventBus.on("openSettingsPage", (name) => pageService.loadPage("settings"));
+    EventBus.on("openDashboardPage", () => pageService.loadPage("dashboard"));
+    EventBus.on("loadDemoEnv", () => loadDemoEnv());
+    EventBus.on("deleteProject", (name) => deleteProject(name));
+}
+
 

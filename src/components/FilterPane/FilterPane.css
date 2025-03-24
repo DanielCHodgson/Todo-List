@@ -8,7 +8,7 @@
     align-self: flex-end;
     width: 2rem;
     height: 2rem;
-    background-color: var(--primary-light);
+    background-color: var(--primary);
     border: none;
     border-radius: 8px;
     display: grid;
@@ -21,7 +21,7 @@
 }
 
 .addSwimlane svg {
-    fill: #FFFFFF;
+    fill: var(--white);
 }
 
 .search-container {
@@ -36,20 +36,20 @@
     height: 2.5rem;
     outline: none;
     border: none;
-    background-color: #F4F5F7;
+    border-radius: 0;
 }
 
 
 .search-icon {
     height: 2.5rem;
-    background-color: #F4F5F7;
-    fill: #FFFFFF;
+    background-color: var(--secondary);
+    fill: var(--white);
     display: flex;
     align-items: center;
 }
 
 .search-icon svg {
-    fill: #969696;
+    fill: var(--contrast);
     padding-right: 0.5rem;
     width: 2rem;
 }

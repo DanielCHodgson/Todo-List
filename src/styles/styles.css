@@ -1,12 +1,43 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
-:root {
-    --primary-light: #0049B0;
-    --secondary-light: #F7F8F9;
-    --tertiary-light: #FFFFFF;
-    --icons-light: #223558;
-    --text-sublist-light: #626f86;
-    --hover-hightlight-light: #dddddd;
+body {
+    --behind-app: #EEEFF2;
+    --primary: #0049B0;
+    --secondary: #F7F8F9;
+    --secondary-hover: #f0f1f4;
+    --tertiary: #FFFFFF;
+    --contrast:#1E201E;
+    --cards: #FFFFFF;
+    --card-text: #000;
+    --icons: #223558;
+    --text-sublist: #626f86;
+    --hover-hightlight: #dddddd;
+    --nav-icons: #223558;
+    --nav-list: #5e5e5e;
+    --card-border: #33dd11;
+    --white: #FFFFFF;
+    --table-border: #d1d1d1;
+    color: #000;
+
+}
+
+body.dark-mode {
+    --behind-app: #697565;
+    --primary: #697565;
+    --secondary: #1E201E;
+    --secondary-hover: #565a56;
+    --tertiary: #3C3D37;
+    --contrast:#F7F8F9;
+    --cards: #ECDFCC;
+    --card-text: #181C14;
+    --text-sublist: #626f86;
+    --hover-hightlight: #3C3D37;
+    --nav-icons: #ECDFCC;
+    --nav-list: #ECDFCC;
+    --card-border: #697565;
+    --white: #FFFFFF;
+    --table-border: #ECDFCC;
+    color: #FFFFFF;
 }
 
 .app-wrapper {
@@ -15,7 +46,7 @@
     display: grid;
     grid-template-columns: 300px auto;
     position: relative;
-    background-color: #EEEFF2;
+    background-color: var(--behind-app);
     gap: 0.2rem;
 }
 
@@ -25,7 +56,7 @@
 
 .content {
     height: 100%;
-    background-color: var(--tertiary-light);
+    background-color: var(--tertiary);
 }
 
 #modal {
@@ -47,7 +78,7 @@
     position: fixed;
     top: 20px;
     right: 20px;
-    background-color: var(--primary-light);
+    background-color: var(--primary);
     color: white;
     padding: 15px;
     border-radius: 5px;
@@ -56,3 +87,30 @@
     transition: opacity 0.5s ease-out;
     font-family: "Roboto", Arial, Helvetica, sans-serif;
 }
+
+.title {
+    font-family: "Roboto", serif;
+    font-size: 2rem;
+}
+
+.btn {
+    width: 5rem;
+    height: 2.5rem;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--primary);
+    color: white;
+    font-family: "Roboto", serif;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn:hover {
+    opacity: 0.8;
+}
+
+input, input, select, textarea {
+    background-color: var(--secondary);
+    color: var(--contrast);
+}
+

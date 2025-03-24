@@ -69,8 +69,8 @@ export default class Dashboard {
 
     #createHeader(title) {
         const header = Utility.createElement("div", "header");
-        const heading = Utility.createElement("h2", "dashboard-title", title);
-        const newTaskBtn = Utility.createElement("button", "new-task", "Create");
+        const heading = Utility.createElement("h2", "title", title);
+        const newTaskBtn = Utility.createElement("button", "btn", "Create");
         newTaskBtn.addEventListener("click", () => this.#handleNewTaskClick());
         header.append(heading, newTaskBtn);
         return header;

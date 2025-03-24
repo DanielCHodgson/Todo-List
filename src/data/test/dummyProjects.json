@@ -2,7 +2,7 @@
     {
         "name": "SAAS",
         "type": "Software",
-        "icon": "http://localhost:8080/cb7e597cf7686128fa96.jpg",
+        "icon": "http://localhost:8087/6ee8420bd4d604ccff22.png",
         "taskService": {
             "tasks": [
                 {
@@ -118,7 +118,7 @@
     {
         "name": "DOCS",
         "type": "Documentation",
-        "icon": "http://localhost:8080/cb7e597cf7686128fa96.jpg",
+        "icon": "http://localhost:8087/6ee8420bd4d604ccff22.png",
         "taskService": {
             "tasks": [
                 {

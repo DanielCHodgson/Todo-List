@@ -1,12 +1,13 @@
 .task-card {
     width: 100%;
     height: auto;
-    background-color: var(--tertiary-light);
-    border-left: 1rem solid #33dd11;
+    background-color: var(--cards);
+    border-left: 1rem solid var(--card-border);
     border-radius: 5px;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
     padding: 1rem;
     font-family: "Roboto", serif;
+    color: var(--card-text);
     display: grid;
     grid-template-rows: auto 1fr auto;
     gap: 0.5rem;
@@ -19,7 +20,6 @@
     gap: 0.5rem;
     border-radius: 5px;
 }
-
 
 .task-footer {
     display: flex;

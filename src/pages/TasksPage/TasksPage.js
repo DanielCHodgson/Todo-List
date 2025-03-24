@@ -67,10 +67,10 @@ export default class TasksPage {
     }
 
     #createHeader() {
-        const header = DomUtility.createElement("div", "tasks-header");
+        const header = DomUtility.createElement("div", "header");
         header.appendChild(DomUtility.createElement("h2", "title", "Tasks"));
 
-        const createBtn = DomUtility.createElement("button", "new-task", "Create");
+        const createBtn = DomUtility.createElement("button", "btn", "Create");
         createBtn.addEventListener("click", () => this.#handleCreateTaskOpen());
         header.appendChild(createBtn);
 

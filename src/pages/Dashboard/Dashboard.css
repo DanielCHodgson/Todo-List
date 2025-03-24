@@ -1,6 +1,5 @@
 .dashboard {
     display: grid;
-    padding: 0 2rem 0 1rem;
     grid-template-rows: auto auto 1fr;
     gap: 1rem;
 }
@@ -14,26 +13,8 @@
     padding-bottom: 0;
 }
 
-.new-task {
-    width: 5rem;
-    height: 2.5rem;
-    border: none;
-    border-radius: 8px;
-    background-color: #0049B0;
-    color: white;
-    font-family: "Roboto", serif;
-    font-weight: bold;
-    cursor: pointer;
-}
-
 .new-task:hover {
     opacity: 0.8;
-}
-
-
-.dashboard-title {
-    font-family: "Roboto", serif;
-    font-size: 2rem;
 }
 
 .swim-lanes {
