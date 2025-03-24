@@ -23,6 +23,7 @@
 }
 
 .create-project-modal .header svg {
+    fill: var(--contrast);
     cursor: pointer;
 }
 
@@ -45,7 +46,7 @@
     border: none;
     border-radius: 8px;
     background-color: var(--primary);
-    color: #FFFFFF;
+    color: var(--white);
     cursor: pointer;
 }
 
