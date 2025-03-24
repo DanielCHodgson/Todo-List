@@ -9,10 +9,13 @@ export default class ProjectsPage {
     #parent;
     #projects;
     #element;
+    #cards;
+    #selectedCard;
 
     constructor() {
         this.#parent = document.querySelector(".content");
         this.#projects = ProjectService.loadFromLocalStorage();
+        this.#cards = [];
         this.#element = this.#createPage();
         this.render();
     }
@@ -28,7 +31,7 @@ export default class ProjectsPage {
 
         const body = DomUtility.createElement("div", "body");
         body.appendChild(DomUtility.createElement("p", "name", name));
-        body.addEventListener("click", () => this.#handleOpenProjectClick(name));
+        body.addEventListener("click", (event) => this.#handleOpenProjectClick(event, name));
 
         projectCard.appendChild(header);
         projectCard.appendChild(body);
@@ -69,9 +72,18 @@ export default class ProjectsPage {
         const projectsPage = DomUtility.createElement("div", "projects-page");
         const projectsList = DomUtility.createElement("div", "projects-list");
 
-        if (this.#projects.length !== 0) {
+        if (this.#projects.length > 0) {
             this.#projects.forEach(project => {
-                projectsList.appendChild(this.#createProjectCard(project.name));
+                
+                const projectCard = this.#createProjectCard(project.name);
+                
+                if(project.name === ProjectService.CURRENT_PROJECT.getName()) {
+                    projectCard.classList.toggle("selected")
+                    this.#selectedCard = projectCard;
+                }
+
+                this.#cards.push(projectCard);
+                projectsList.appendChild(projectCard);
             });
         }
 
@@ -87,8 +99,11 @@ export default class ProjectsPage {
         return projectsPage;
     }
 
-    #handleOpenProjectClick(name) {
+    #handleOpenProjectClick(event, name) {
         EventBus.emit("switchProject", name);
+        this.#selectedCard.classList.toggle("selected");
+        event.target.classList.toggle("selected");
+        this.#selectedCard = event.target;
     }
 
     #handleDeleteClick(name) {

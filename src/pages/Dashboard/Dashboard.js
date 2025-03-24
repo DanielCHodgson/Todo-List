@@ -176,11 +176,6 @@ export default class Dashboard {
             lane.renderCards();
     }
 
-    
-    #toggleDroppableStyles(status, shouldAdd) {
-        console.log("yo");
-    }
-
     #renderUpdatedSwimLanes(movedTask, updatedTask) {
         const oldLane = this.#laneService.getLaneByStatus(movedTask.getStatus());
         const newLane = this.#laneService.getLaneByStatus(updatedTask.getStatus());

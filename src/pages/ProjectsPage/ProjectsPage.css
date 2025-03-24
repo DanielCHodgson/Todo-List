@@ -124,6 +124,13 @@
 .dummy-card:hover,
 .project-card:hover {
     opacity: 1;
+    background-color: #dddddd;
+    color: var(--text-sublist-light);
+    fill: var(--text-sublist-light);
+}
+
+.project-card.selected {
+    opacity: 1;
     background-color: var(--primary-light);
     color: var(--secondary-light);
     fill: var(--secondary-light);

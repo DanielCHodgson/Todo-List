@@ -27,12 +27,6 @@ export default class SwimLane {
         ];
 
         EventBus.registerEvents(this.#events, events);
-        //this.#addEventListeners();
-    }
-
-    #addEventListeners() {
-        //this.#element.querySelector(".lane-header").addEventListener("dragstart", () => this.#handleDragStart());
-        // this.#element.querySelector(".lane-header").addEventListener("dragend", () => this.#handleDragEnd());
     }
 
     #unbindEvents() {
@@ -40,8 +34,6 @@ export default class SwimLane {
             EventBus.off(event, handler);
         });
         this.#events = {};
-        // this.#element.querySelector(".lane-header").removeEventListener("dragstart", () => this.#handleDragStart());
-        // this.#element.querySelector(".lane-header").removeEventListener("dragend", () => this.#handleDragEnd());
     }
 
     #createElement() {
@@ -97,16 +89,6 @@ export default class SwimLane {
         if (this.#status !== status) {
             this.#cardsContainer.classList.toggle("droppable", shouldAdd);
         }
-    }
-
-    #handleDragStart() {
-        this.#element.classList.add("dragging");
-        EventBus.emit("laneDragStart", this.#status);
-    }
-
-    #handleDragEnd() {
-        this.#element.classList.remove("dragging");
-        EventBus.emit("laneDragEnd", this.#status);
     }
 
     renderCards() {
